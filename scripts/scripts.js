@@ -138,9 +138,9 @@ async function getAndApplyOffers() {
     options.forEach((o) => o.content = o.content.filter((c) => !getElementForOffer(c)));
     // keeping track of metrics that were already applied
     metrics.map((m, i) => getElementForMetric(m) ? i : -1)
-        .filter((i) => i >= 0)
-        .reverse()
-        .map((i) => metrics.splice(i, 1));
+      .filter((i) => i >= 0)
+      .reverse()
+      .map((i) => metrics.splice(i, 1));
   });
 }
 
@@ -169,21 +169,21 @@ async function loadEager(doc) {
   decorateTemplateAndTheme();
   const main = doc.querySelector('main');
   if (main) {
-      decorateMain(main);
-      document.body.classList.add('appear');
-      // wait for atjs to finish loading
-      await atjsPromise;
-      // break up possible long tasks before showing the LCP block to reduce TBT
-      await new Promise((resolve) => {
-        window.setTimeout(async () => {
-          // For newer AEM boilerplate, use this
-          await loadSection(main.querySelector('.section'), waitForFirstImage)
-          // For older AEM boilerplate versions, use this instead
-          // await waitForLCP(LCP_BLOCKS);
-          resolve();
-        }, 0);
-      });
-    }
+    decorateMain(main);
+    document.body.classList.add('appear');
+    // wait for atjs to finish loading
+    await atjsPromise;
+    // break up possible long tasks before showing the LCP block to reduce TBT
+    await new Promise((resolve) => {
+      window.setTimeout(async () => {
+        // For newer AEM boilerplate, use this
+        await loadSection(main.querySelector('.section'), waitForFirstImage)
+        // For older AEM boilerplate versions, use this instead
+        // await waitForLCP(LCP_BLOCKS);
+        resolve();
+      }, 0);
+    });
+  }
 
 
   try {
