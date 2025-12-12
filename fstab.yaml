@@ -1,5 +1,5 @@
 mountpoints:
   /:
-    url: "https://author-p24103-e71623.adobeaemcloud.com/bin/franklin.delivery/PradeepDubeyEPAM/EDSUEDemo/main"
+    url: "https://author-p24103-e71623.adobeaemcloud.com/bin/franklin.delivery/PradeepDubeyEPAM/EDSUEDemo/feature/target-int"
     type: "markup"
     suffix: ".html"
