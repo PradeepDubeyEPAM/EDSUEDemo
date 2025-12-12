@@ -146,7 +146,9 @@ async function getAndApplyOffers() {
 }
 
 let atjsPromise = Promise.resolve();
+console.log("outside at");
 if (getMetadata('target')) {
+  console.log("inside at");
   atjsPromise = initATJS('./at.js', {
     clientCode: 'epam',
     serverDomain: 'epam.tt.omtrdc.net',
