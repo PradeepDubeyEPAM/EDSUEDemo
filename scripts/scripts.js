@@ -147,7 +147,7 @@ async function getAndApplyOffers() {
 
 let atjsPromise = Promise.resolve();
 if (getMetadata('target')) {
-  atjsPromise = initATJS('./at.js', {
+  atjsPromise = initATJS('./martech/libraries/at.js', {
     clientCode: 'epam',
     serverDomain: 'epam.tt.omtrdc.net',
     imsOrgId: '36DE898555D732137F000101@AdobeOrg',
