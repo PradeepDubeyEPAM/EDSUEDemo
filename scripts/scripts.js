@@ -152,7 +152,7 @@ if (getMetadata('target')) {
   atjsPromise = initATJS('./at.js', {
     clientCode: 'epam',
     serverDomain: 'epam.tt.omtrdc.net',
-    imsOrgId: '36DE898555D732137F000101@AdobeOrg',
+    imsOrgId: '36DE898555D732137F000101',
     bodyHidingEnabled: false,
     cookieDomain: window.location.hostname,
     pageLoadEnabled: false,
