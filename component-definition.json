@@ -63,51 +63,6 @@
       "id": "sections",
       "components": [
         {
-  "title": "Blog List",
-  "id": "blog-list",
-  "plugins": {
-    "xwalk": {
-      "page": {
-        "resourceType": "core/franklin/components/block/v1/block",
-        "template": {
-          "name": "Blog List",
-          "filter": "blog-list"
-        }
-      }
-    }
-  }
-},
-{
-  "title": "Blog Post",
-  "id": "blog-post",
-  "plugins": {
-    "xwalk": {
-      "page": {
-        "resourceType": "core/franklin/components/block/v1/block",
-        "template": {
-          "name": "Blog Post",
-          "model": "blog-post"
-        }
-      }
-    }
-  }
-},
-{
-  "title": "Blog Author",
-  "id": "blog-author",
-  "plugins": {
-    "xwalk": {
-      "page": {
-        "resourceType": "core/franklin/components/block/v1/block",
-        "template": {
-          "name": "Blog Author",
-          "model": "blog-author"
-        }
-      }
-    }
-  }
-},
-        {
           "title": "Section",
           "id": "section",
           "plugins": {
@@ -127,6 +82,36 @@
       "title": "Blocks",
       "id": "blocks",
       "components": [
+        {
+          "title": "Blog",
+          "id": "blog",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Blog",
+                  "filter": "blog"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Blog Post",
+          "id": "blog-post",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block/item",
+                "template": {
+                  "name": "Blog Post",
+                  "model": "blog-post"
+                }
+              }
+            }
+          }
+        },
         {
           "title": "Cards",
           "id": "cards",
@@ -167,21 +152,6 @@
                 "template": {
                   "columns": "2",
                   "rows": "1"
-                }
-              }
-            }
-          }
-        },
-        {
-          "title": "Embed Adaptive Form",
-          "id": "embed-adaptive-form",
-          "plugins": {
-            "xwalk": {
-              "page": {
-                "resourceType": "core/franklin/components/block/v1/block",
-                "template": {
-                  "name": "Embed Adaptive Form",
-                  "model": "embed-adaptive-form"
                 }
               }
             }

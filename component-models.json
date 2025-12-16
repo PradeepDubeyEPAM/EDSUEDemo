@@ -142,6 +142,35 @@
     ]
   },
   {
+    "id": "blog-post",
+    "fields": [
+      {
+        "component": "text",
+        "name": "title",
+        "label": "Title",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "author",
+        "label": "Author",
+        "valueType": "string"
+      },
+      {
+        "component": "date",
+        "name": "date",
+        "label": "Date",
+        "valueType": "string"
+      },
+      {
+        "component": "richtext",
+        "name": "content",
+        "label": "Content",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
     "id": "card",
     "fields": [
       {
@@ -176,21 +205,6 @@
         "name": "rows",
         "value": "",
         "label": "Rows"
-      }
-    ]
-  },
-  {
-    "id": "embed-adaptive-form",
-    "fields": [
-      {
-        "component": "aem-content",
-        "valueType": "string",
-        "name": "formPath",
-        "value": "",
-        "label": "Form Path",
-        "validation": {
-          "rootPath": "/content/forms/af"
-        }
       }
     ]
   },
