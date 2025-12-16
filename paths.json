@@ -7,6 +7,6 @@
   "includes": [
     "/content/edsuedemo/",
     "/content/experience-fragments/eds_demo",
-    "content/dam"
+    "/content/dam"
   ]
 }
