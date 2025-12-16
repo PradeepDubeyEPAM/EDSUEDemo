@@ -1,17 +1,20 @@
 .blog-posts {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
+
 .blog-post {
-  padding: 1rem;
-  border-bottom: 1px solid #eee;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
 }
+
 .blog-meta {
-  color: #888;
-  font-size: 0.9em;
-  margin-bottom: 0.5rem;
+    color: #888;
+    font-size: 0.9em;
+    margin-bottom: 0.5rem;
 }
+
 .blog-content {
-  margin-top: 1rem;
+    margin-top: 1rem;
 }
