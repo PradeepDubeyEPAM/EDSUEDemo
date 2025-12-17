@@ -30,7 +30,6 @@ export default function decorate(block) {
     if (window.digitalDataLayer && typeof window.digitalDataLayer.push === 'function') {
       window.digitalDataLayer.push(dataLayerObject);
     }
-   // console.log(`Button with text "${buttonText}" was clicked! It links to: ${buttonHref}`);
   });
 
   block.append(button);
