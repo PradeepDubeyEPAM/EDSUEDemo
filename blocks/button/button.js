@@ -15,11 +15,7 @@ export default function decorate(block) {
   button.textContent = buttonText;
 
   const LINK_CLICK_EVENT_NAME = 'link_click';
-
-  // Set data attribute for tracking
-  button.setAttribute('data-wae-event', LINK_CLICK_EVENT_NAME);
-
-  button.addEventListener('click', (event) => {
+  button.addEventListener('click', () => {
     // datalayer push event
     const dataLayerObject = {
       event: LINK_CLICK_EVENT_NAME,
@@ -34,7 +30,7 @@ export default function decorate(block) {
     if (window.digitalDataLayer && typeof window.digitalDataLayer.push === 'function') {
       window.digitalDataLayer.push(dataLayerObject);
     }
-    console.log(`Button with text "${buttonText}" was clicked! It links to: ${buttonHref}`);
+   // console.log(`Button with text "${buttonText}" was clicked! It links to: ${buttonHref}`);
   });
 
   block.append(button);
