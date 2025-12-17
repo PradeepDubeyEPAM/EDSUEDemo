@@ -1,20 +1,30 @@
-.blog-posts {
+.block.blog {
+    background-color: #ccc;
+    padding: 0 0 24px;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    margin: 1rem 0;
 }
 
-.blog-post {
-    padding: 1rem;
-    border-bottom: 1px solid #eee;
+.block.blog blockquote {
+    margin: 16px;
+    text-indent: 0;
 }
 
-.blog-meta {
-    color: #888;
-    font-size: 0.9em;
-    margin-bottom: 0.5rem;
+.block.blog > div:last-child > div {
+    margin: 0 16px;
+    font-size: small;
+    font-style: italic;
+    position: relative;
 }
 
-.blog-content {
-    margin-top: 1rem;
+.block.blog > div:last-child > div::after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: -8px;
+    height: 5px;
+    width: 30px;
+    background-color: darkgray;
 }
