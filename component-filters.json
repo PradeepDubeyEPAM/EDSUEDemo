@@ -21,12 +21,6 @@
     ]
   },
   {
-    "id": "blog",
-    "components": [
-      "blog-post"
-    ]
-  },
-  {
     "id": "cards",
     "components": [
       "card"
