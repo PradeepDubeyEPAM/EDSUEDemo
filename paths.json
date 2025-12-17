@@ -5,6 +5,8 @@
     "/content/edsuedemo/metadata:/metadata.json"
   ],
   "includes": [
-    "/content/edsuedemo/"
+    "/content/edsuedemo/",
+    "/content/experience-fragments/eds_demo",
+    "/content/dam"
   ]
 }
