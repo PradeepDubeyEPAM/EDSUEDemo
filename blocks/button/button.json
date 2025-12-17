@@ -1,0 +1,18 @@
+{
+  "id": "button",
+  "title": "Click Button",
+  "fields": [
+    {
+      "name": "buttonText",
+      "label": "Button Text",
+      "type": "text",
+      "default": "Click Me"
+    },
+    {
+      "name": "Link",
+      "label": "Button Link",
+      "type": "aem-content",
+      "description": "Select the button link"
+    }
+  ]
+}
