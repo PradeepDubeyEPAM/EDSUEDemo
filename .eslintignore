@@ -8,3 +8,4 @@ scripts/editor-support-rte.js
 scripts/martech/libraries/at.js
 scripts/scripts.js
 rollup/*
+test/*
