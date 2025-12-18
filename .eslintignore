@@ -7,4 +7,5 @@ scripts/editor-support.js
 scripts/editor-support-rte.js
 scripts/martech/libraries/at.js
 scripts/scripts.js
-component-models.json
+rollup/*
+test/*
