@@ -1,4 +1,4 @@
-.button-element {
+.custom-button-element {
   background-color: #fff; 
   color: #000;  
   border: 3px solid #000; 
@@ -10,7 +10,7 @@
   display: inline-block;
 }
 
-.button-element:hover {
+.custom-button-element:hover {
   background-color: #f0f0f0;   
   color: #000;
   border-color: #000;

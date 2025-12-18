@@ -199,6 +199,25 @@
     ]
   },
   {
+    "id": "custombutton",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "label",
+        "label": "Button Label",
+        "value": ""
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "link",
+        "label": "Button Link",
+        "value": ""
+      }
+    ]
+  },
+  {
     "id": "form",
     "fields": [
       {

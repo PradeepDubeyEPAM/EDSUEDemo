@@ -11,7 +11,7 @@ export default function decorate(block) {
 
   const button = document.createElement('a');
   button.href = buttonHref;
-  button.className = 'button-element';
+  button.className = 'custom-button-element';
   button.textContent = buttonText;
 
   const LINK_CLICK_EVENT_NAME = 'link_click';
