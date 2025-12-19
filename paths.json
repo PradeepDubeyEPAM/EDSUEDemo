@@ -8,6 +8,8 @@
     "/content/edsuedemo/",
     "/content/experience-fragments/eds_demo",
     "/content/dam",
-    "/content/forms/af"
+    "/content/forms/af",
+    "/etc.clientlibs/",
+    "/libs/"
   ]
 }
