@@ -8,6 +8,7 @@ export default function decorate(block) {
   const buttonHref = buttonLinkDiv.href;
 
   block.innerHTML = '';
+  const internalCampaignId = '';
 
   const button = document.createElement('a');
   button.href = buttonHref;
@@ -20,10 +21,9 @@ export default function decorate(block) {
     const dataLayerObject = {
       event: LINK_CLICK_EVENT_NAME,
       details: {
-        block_type: 'button-click',
-        card_title: buttonText,
         url: buttonHref,
         cta_text: buttonText,
+        internal_campaign_id: internalCampaignId,
       },
     };
 
