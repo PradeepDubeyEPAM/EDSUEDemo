@@ -202,18 +202,19 @@
     "id": "custombutton",
     "fields": [
       {
-        "component": "text",
-        "valueType": "string",
-        "name": "label",
-        "label": "Button Label",
-        "value": ""
+        "component": "aem-content",
+        "name": "link",
+        "label": "Link"
       },
       {
         "component": "text",
-        "valueType": "string",
-        "name": "link",
-        "label": "Button Link",
-        "value": ""
+        "name": "linkText",
+        "label": "Text"
+      },
+      {
+        "component": "text",
+        "name": "linkTitle",
+        "label": "Title"
       }
     ]
   },
