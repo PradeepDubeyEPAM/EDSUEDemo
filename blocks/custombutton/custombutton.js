@@ -12,7 +12,6 @@ export default function decorate(block) {
 
   const button = document.createElement('a');
   button.href = buttonHref;
-  button.className = 'custom-button-element';
   button.textContent = buttonText;
 
   const LINK_CLICK_EVENT_NAME = 'link_click';
@@ -27,8 +26,8 @@ export default function decorate(block) {
       },
     };
 
-    if (window.digitalDataLayer && typeof window.digitalDataLayer.push === 'function') {
-      window.digitalDataLayer.push(dataLayerObject);
+    if (window.adobeDataLayer && typeof window.adobeDataLayer.push === 'function') {
+      window.adobeDataLayer.push(dataLayerObject);
     }
   });
 
