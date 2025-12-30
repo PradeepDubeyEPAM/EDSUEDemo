@@ -27,11 +27,6 @@
         },
         {
           "component": "text",
-          "name": "linkText",
-          "label": "Text"
-        },
-        {
-          "component": "text",
           "name": "linkTitle",
           "label": "Title"
         },
