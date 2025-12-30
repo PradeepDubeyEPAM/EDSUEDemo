@@ -54,7 +54,7 @@
         "form",
         "embed-adaptive-form",
         "blog",
-		"custombutton"
+		    "custom-button"
       ]
     }
   ]
