@@ -136,6 +136,14 @@
           {
             "name": "Highlight",
             "value": "highlight"
+          },
+          {
+            "name": "Default Section",
+            "value": "default-section"
+          },
+          {
+            "name": "FR Section",
+            "value": "fr-section"
           }
         ]
       }

@@ -12,6 +12,7 @@ import {
   loadCSS,
   getMetadata,
 } from './aem.js';
+//import { hello } from "./utils.js";
 
 /**
  * Moves all the attributes from a given elmenet to another given element.
@@ -233,3 +234,25 @@ async function loadPage() {
 }
 
 loadPage();
+
+window.addEventListener("load", function () {
+    toggleLanguageDivs();
+});
+
+function toggleLanguageDivs() {
+    const userLang = navigator?.language?.toLowerCase?.() || "en";
+    const defaultDiv = document.querySelectorAll(".default-section");
+    const frDiv = document.querySelectorAll(".fr-section");
+
+    if (userLang.startsWith("en")) {  
+      if(frDiv)
+      frDiv.forEach(e => e.style.setProperty("display", "none", "important"));
+    if(defaultDiv)
+      defaultDiv.forEach(e => e.style.setProperty("display", "block", "important"));
+    } else {
+      if(defaultDiv)
+      defaultDiv.forEach(e => e.style.setProperty("display", "none", "important")); 
+      if(frDiv)
+      frDiv.forEach(e => e.style.setProperty("display", "block", "important"));
+    }
+}
