@@ -53,7 +53,8 @@
         "fragment",
         "form",
         "embed-adaptive-form",
-        "blog"
+        "blog",
+		    "custom-button"
       ]
     }
   ]

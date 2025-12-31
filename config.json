@@ -1,5 +1,7 @@
 {
   "includes": [
-    "/content/"
+    "/content/",
+    "/etc.clientlibs/",
+    "/libs/"
   ]
 }
