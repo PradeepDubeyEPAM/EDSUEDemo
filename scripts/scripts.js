@@ -235,24 +235,8 @@ async function loadPage() {
 
 loadPage();
 
-window.addEventListener("load", function () {
-    toggleLanguageDivs();
+document.addEventListener("DOMContentLoaded", () => {
+  const userLang = navigator?.language?.toLowerCase?.() || "en";
+  document.documentElement.setAttribute("data-lang", userLang.startsWith("en") ? "en" : "fr");
 });
 
-function toggleLanguageDivs() {
-    const userLang = navigator?.language?.toLowerCase?.() || "en";
-    const defaultDiv = document.querySelectorAll(".default-section");
-    const frDiv = document.querySelectorAll(".fr-section");
-
-    if (userLang.startsWith("en")) {  
-      if(frDiv)
-      frDiv.forEach(e => e.style.setProperty("display", "none", "important"));
-    if(defaultDiv)
-      defaultDiv.forEach(e => e.style.setProperty("display", "block", "important"));
-    } else {
-      if(defaultDiv)
-      defaultDiv.forEach(e => e.style.setProperty("display", "none", "important")); 
-      if(frDiv)
-      frDiv.forEach(e => e.style.setProperty("display", "block", "important"));
-    }
-}

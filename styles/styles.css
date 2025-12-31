@@ -255,3 +255,20 @@ main .section.highlight {
   margin: 0;
   padding: 40px 0;
 }
+
+/* Default hidden */
+.default-section,
+.fr-section {
+  display: none;
+}
+
+/* Show English sections */
+html[data-lang="en"] .default-section {
+  display: block;
+}
+
+/* Show French sections */
+html[data-lang="fr"] .fr-section {
+  display: block;
+}
+
