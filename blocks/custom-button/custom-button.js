@@ -1,20 +1,19 @@
 export default function decorate(block) {
   const button = document.querySelector('.custom-button .button.secondary');
   window.adobeDataLayer = window.adobeDataLayer || [];
-  window.addEventListener('load', () => {
-    const pageLoadData = {
-      event: 'page-load',
-      page: {
-        pageInfo: {
-          url: window.location.href,
-          pageName: document.title,
-          region: 'us',
-        },
+
+  const pageLoadData = {
+    event: 'page-load',
+    page: {
+      pageInfo: {
+        url: window.location.href,
+        pageName: document.title,
+        region: 'us',
       },
-    };
-    window.adobeDataLayer.push(pageLoadData);
-    _satellite.track(pageLoadData.event, window.adobeDataLayer);
-  });
+    },
+  };
+  window.adobeDataLayer.push(pageLoadData);
+  _satellite.track(pageLoadData.event, window.adobeDataLayer);
   if (button) {
     const LINK_CLICK_EVENT_NAME = 'custom_button_click';
 
