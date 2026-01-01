@@ -1,6 +1,6 @@
 {
   "includes": [
-    "/content/",
+    "/content/experience-fragments/eds-demo",
     "/etc.clientlibs/",
     "/libs/"
   ]
