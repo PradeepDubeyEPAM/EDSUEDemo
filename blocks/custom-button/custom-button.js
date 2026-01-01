@@ -17,7 +17,6 @@ export default function decorate(block) {
   });
   if (button) {
     const LINK_CLICK_EVENT_NAME = 'custom_button_click';
-    const internalCampaignId = '';
 
     button.addEventListener('click', () => {
     // datalayer push event
@@ -27,7 +26,6 @@ export default function decorate(block) {
           block_type: 'custom-button',
           url: button.href,
           cta_text: button.textContent,
-          internal_campaign_id: internalCampaignId,
         },
       };
 
