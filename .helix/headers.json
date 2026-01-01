@@ -1,0 +1,11 @@
+{
+  "headers": [
+    {
+      "source": "/registration-form",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "https://main--edsuedemo--pradeepdubeyepam.aem.live/" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, OPTIONS" }
+      ]
+    }
+  ]
+}
