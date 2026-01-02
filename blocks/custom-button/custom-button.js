@@ -13,7 +13,6 @@ export default function decorate(block) {
     },
   };
   window.adobeDataLayer.push(pageLoadData);
-  _satellite.track(pageLoadData.event, window.adobeDataLayer);
   if (button) {
     const LINK_CLICK_EVENT_NAME = 'custom_button_click';
 
@@ -31,8 +30,6 @@ export default function decorate(block) {
       if (window.adobeDataLayer && typeof window.adobeDataLayer.push === 'function') {
         window.adobeDataLayer.push(dataLayerObject);
       }
-      /* global _satellite:readonly */
-      _satellite.track(dataLayerObject.event, window.adobeDataLayer);
     });
   }
 
