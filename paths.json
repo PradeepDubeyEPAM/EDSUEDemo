@@ -1,12 +1,13 @@
 {
   "mappings": [
     "/content/edsuedemo/:/",
+    "/content/experience-fragments/eds-demo/:/fragments/",
     "/content/edsuedemo/configuration:/.helix/config.json",
     "/content/edsuedemo/metadata:/metadata.json"
   ],
   "includes": [
     "/content/edsuedemo/",
-    "/content/experience-fragments/eds_demo",
+    "/content/experience-fragments/eds-demo",
     "/content/dam",
     "/content/forms/af",
     "/etc.clientlibs/",
