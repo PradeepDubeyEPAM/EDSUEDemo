@@ -431,7 +431,9 @@ export function createDropdownUsingEnum(fd, wrapper) {
 export async function fetchData(id, search = '') {
   try {
     const url = externalize(`/adobe/forms/af/data/${id}${search}`);
+    console.log('Externalize : ', url);
     const response = await fetch(url);
+    console.log('Fetch Response : \n', response);
     const json = await response.json();
     const { data: prefillData } = json;
     const { data: { afData: { afBoundData: { data = {} } = {} } = {} } = {} } = json;
