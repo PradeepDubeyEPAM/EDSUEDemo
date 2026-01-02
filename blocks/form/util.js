@@ -439,6 +439,7 @@ export async function fetchData(id, search = '') {
     const { data: { afData: { afBoundData: { data = {} } = {} } = {} } = {} } = json;
     return Object.keys(data).length > 0 ? data : (prefillData || json);
   } catch (ex) {
+    console.log('Exception : \n', ex);
     return null;
   }
 }
