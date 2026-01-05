@@ -26,11 +26,9 @@ export default function decorate(block) {
           cta_text: button.textContent,
         },
       };
-
       if (window.adobeDataLayer && typeof window.adobeDataLayer.push === 'function') {
         window.adobeDataLayer.push(dataLayerObject);
       }
-      
     });
   }
 
