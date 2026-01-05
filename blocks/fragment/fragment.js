@@ -21,8 +21,20 @@ import {
 export async function loadFragment(path) {
   if (path && path.startsWith('/')) {
     // eslint-disable-next-line no-param-reassign
-    path = path.replace(/(\.plain)?\.html/, '');
-    const resp = await fetch(`${path}.plain.html`);
+    let finalPath = path.replace(/(\.plain)?\.html/, '');
+    const userLang = navigator?.language?.toLowerCase?.() || 'en';
+    if (finalPath.endsWith('/banners')) {
+      if (userLang.endsWith('en') || userLang.startsWith('en')) {
+        finalPath += '/promo-en';
+      } else if (userLang.endsWith('fr') || userLang.startsWith('fr')) {
+        finalPath += '/promo-fr';
+      } else if (userLang.endsWith('hi') || userLang.startsWith('hi')) {
+        finalPath += '/promo-hi';
+      } else {
+        finalPath += '/promo-default';
+      }
+    }
+    const resp = await fetch(`${finalPath}.plain.html`);
     if (resp.ok) {
       const main = document.createElement('main');
       main.innerHTML = await resp.text();
@@ -30,7 +42,7 @@ export async function loadFragment(path) {
       // reset base path for media to fragment base
       const resetAttributeBase = (tag, attr) => {
         main.querySelectorAll(`${tag}[${attr}^="./media_"]`).forEach((elem) => {
-          elem[attr] = new URL(elem.getAttribute(attr), new URL(path, window.location)).href;
+          elem[attr] = new URL(elem.getAttribute(attr), new URL(finalPath, window.location)).href;
         });
       };
       resetAttributeBase('img', 'src');
