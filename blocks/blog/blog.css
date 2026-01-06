@@ -1,5 +1,23 @@
 /* Blog Block Styles */
 
+/* Position selector styling */
+.block.blog .blog-position-selector {
+  margin: 16px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.block.blog .blog-position-selector:focus {
+  border-color: #007acc;
+}
+
 /* Main blog block container */
 .block.blog {
   background-color: #fff;
@@ -12,7 +30,7 @@
   overflow: hidden;
 }
 
-/* Blog image styling - full width, maintain aspect ratio */
+/* Default image styling - full width */
 .block.blog .blog-image {
   width: 100%;
   height: auto;
@@ -34,5 +52,51 @@
   font-size: 1rem;
   line-height: 1.6;
   color: #555;
+}
+
+/* Position: Top (default) */
+.block.blog[data-position="top"] {
+  flex-direction: column;
+}
+
+/* Position: Left */
+.block.blog[data-position="left"] .blog-image {
+  width: 50%;
+  height: auto;
+  float: left;
+  margin-right: 16px;
+  margin-bottom: 16px;
+}
+
+.block.blog[data-position="left"] h2,
+.block.blog[data-position="left"] p {
+  margin-left: calc(50% + 16px);
+  margin-right: 16px;
+}
+
+/* Position: Right */
+.block.blog[data-position="right"] .blog-image {
+  width: 50%;
+  height: auto;
+  float: right;
+  margin-left: 16px;
+  margin-bottom: 16px;
+}
+
+.block.blog[data-position="right"] h2,
+.block.blog[data-position="right"] p {
+  margin-right: calc(50% + 16px);
+  margin-left: 16px;
+}
+
+/* Position: Bottom */
+.block.blog[data-position="bottom"] {
+  flex-direction: column-reverse;
+}
+
+.block.blog[data-position="bottom"] .blog-image {
+  width: 100%;
+  height: auto;
+  margin-top: 16px;
 }
 

@@ -23,4 +23,25 @@ export default function decorate(block) {
     p.textContent = descriptionWrapper.textContent.trim();
     descriptionWrapper.replaceChildren(p);
   }
+
+  // Add position selector for authoring
+  const positionSelector = document.createElement('select');
+  positionSelector.classList.add('blog-position-selector');
+  positionSelector.innerHTML = `
+    <option value="top">Image Top</option>
+    <option value="left">Image Left</option>
+    <option value="right">Image Right</option>
+    <option value="bottom">Image Bottom</option>
+  `;
+
+  // Set default position
+  block.setAttribute('data-position', 'top');
+
+  // Add event listener to change position
+  positionSelector.addEventListener('change', (e) => {
+    block.setAttribute('data-position', e.target.value);
+  });
+
+  // Insert selector at the top for authoring
+  block.insertBefore(positionSelector, block.firstChild);
 }
