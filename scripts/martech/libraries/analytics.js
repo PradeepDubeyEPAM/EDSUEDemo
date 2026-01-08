@@ -11,11 +11,10 @@ export default function firePageLoadEvent() {
     },
   };
   window.adobeDataLayer.push(dataLayerObject);
- 
   if (window._satellite && typeof window._satellite.track === 'function') {
     _satellite.track(dataLayerObject.event, window.adobeDataLayer);
   }
-
 }
 
 firePageLoadEvent();
+
