@@ -1,9 +1,3 @@
 mountpoints:
-  /:
-    url: "https://author-p24103-e71623.adobeaemcloud.com/bin/franklin.delivery/PradeepDubeyEPAM/EDSUEDemo/main"
-    type: "markup"
-    suffix: ".html"
-  /form-data:
-    url: "https://drive.google.com/drive/u/0/folders/1HGYp8wcs6wIPWzPpzfzLetCx7kOey1uw"
-    type: "sheet"
-    suffix: ".json"
+  /: "https://author-p24103-e71623.adobeaemcloud.com/bin/franklin.delivery/PradeepDubeyEPAM/EDSUEDemo/main"
+  /form-data: "https://drive.google.com/drive/u/0/folders/1HGYp8wcs6wIPWzPpzfzLetCx7kOey1uw"
