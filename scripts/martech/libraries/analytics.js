@@ -1,7 +1,6 @@
 export default function firePageLoadEvent() {
   window.adobeDataLayer = window.adobeDataLayer || [];
-
-  window.adobeDataLayer.push({
+  const dataLayerObject = {
     event: 'page-load',
     page: {
       pageInfo: {
@@ -10,8 +9,12 @@ export default function firePageLoadEvent() {
         language: document.documentElement.lang || 'en',
       },
     },
-  });
-  console.log('from page load.js');
+  };
+  window.adobeDataLayer.push(dataLayerObject);
+  if (window._satellite && typeof window._satellite.track === 'function') {
+    _satellite.track(dataLayerObject.event, window.adobeDataLayer);
+  }
 }
 
 firePageLoadEvent();
+
