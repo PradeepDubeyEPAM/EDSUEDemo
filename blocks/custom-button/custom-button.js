@@ -9,10 +9,10 @@ export default function decorate(block) {
       window.adobeDataLayer.push({
         event: 'custom_button_click',
         eventInfo: {
-        block_type: 'custom-button',
-        url: button.href,
-        cta_text: button.textContent.trim(),
-        position: index + 1,
+          block_type: 'custom-button',
+          url: button.href,
+          cta_text: button.textContent.trim(),
+          position: index + 1,
         },
       });
     });
