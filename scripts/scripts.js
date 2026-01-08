@@ -13,7 +13,7 @@ import {
   getMetadata,
 } from './aem.js';
 //import { hello } from "./utils.js";
-
+import './page-load.js';
 /**
  * Moves all the attributes from a given elmenet to another given element.
  * @param {Element} from the element to copy attributes from
