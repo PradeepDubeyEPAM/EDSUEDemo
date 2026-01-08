@@ -1,4 +1,4 @@
-export function firePageLoadEvent() {
+export default function firePageLoadEvent() {
   window.adobeDataLayer = window.adobeDataLayer || [];
 
   if (window.__pageLoadTracked) return;
@@ -14,7 +14,7 @@ export function firePageLoadEvent() {
       },
     },
   });
-  console.log("from page load.js");
+  console.log('from page load.js');
 }
 
 firePageLoadEvent();
