@@ -1,9 +1,6 @@
 export default function firePageLoadEvent() {
   window.adobeDataLayer = window.adobeDataLayer || [];
 
-  if (window.__pageLoadTracked) return;
-  window.__pageLoadTracked = true;
-
   window.adobeDataLayer.push({
     event: 'page-load',
     page: {
