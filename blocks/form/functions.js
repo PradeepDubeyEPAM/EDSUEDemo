@@ -43,58 +43,54 @@ function days(endDate, startDate) {
 }
 
 /**
- * Custom Submit Function
- * Overrides default submit, sends data to JCR Servlet, and updates the 'id' field.
+ * Submits form data to the JCR servlet and updates the 'id' field with the response.
+ * @name submitFormArrayToString
+ * @param {object} globals The global context provided by AEM Forms
  */
-function submitAndSetId() {
-  // 1. Get the Bridge (The connection to the Form Model)
-  const bridge = window.guideBridge;
-
-  if (!bridge) {
-    console.error('AEM Forms GuideBridge not found.');
-    return;
-  }
-
-  // 2. Validate the Form first
-  const validationResult = bridge.validate();
-  // In some versions, validate() returns a boolean or a promise.
-  // If it returns an object with errors, check that.
-  if (validationResult === false) {
-    console.warn('Form validation failed.');
-    return; // Stop if invalid
-  }
-
-  // 3. Get Data from the Model (XML or JSON)
-  // We request JSON because our Servlet expects JSON
-  const formData = bridge.getFormDataJson();
-
+async function submitAndSetId(globals) {
+  // 1. Get the current form data
+  const data = globals.functions.exportData();
+  // 2. Your existing logic: Convert Arrays to Strings
+  Object.keys(data).forEach((key) => {
+    if (Array.isArray(data[key])) {
+      data[key] = data[key].join(',');
+    }
+  });
   try {
-    // 4. Perform the Fetch to your Custom Servlet
-    const response = fetch('/bin/saveFormToJcr', {
+    // 3. Send to Servlet using fetch (Replaces submitForm)
+    // We use fetch so we can 'await' the response and read the new ID
+    const response = await fetch('/bin/saveFormToJcr', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: formData, // bridge.getFormDataJson() returns a JSON string
+      body: JSON.stringify(data),
     });
-
-    if (!response.ok) throw new Error('Network response was not ok');
-
-    const result = response.json();
-
-    // 5. Check success and Update the 'id' field in the Form
+    if (!response.ok) {
+      throw new Error('Network response was not ok: ', response.statusText);
+    }
+    // 4. Parse the JSON response
+    const result = await response.json();
+    // 5. Update the 'id' field in the form
     if (result.status === 'success' && result.id) {
-      // "id" is the name of the field in your Adaptive Form
-      // We use the Bridge to update the value so the UI refreshes automatically
-      bridge.setProperty(['id'], 'value', result.id);
-      console.log('Form saved. ID updated to:', result.id);
-      // Optional: Show success message
-      alert('Submission Successful! Reference ID: ', result.id);
+      // Find the field named "id" in the form structure
+      const idField = globals.form.resolveNode('id');
+      if (idField) {
+        // Use globals.functions.setProperty to update the UI and Model
+        globals.functions.setProperty(idField, 'value', result.id);
+        console.log('Success: Form ID updated to', result.id);
+      } else {
+        console.warn('Warning: Field named not found in the form.');
+      }
     } else {
-      console.error('Server returned error:', result);
+      console.error('Server returned an error:', result);
     }
   } catch (error) {
-    console.error('Submission error:', error);
+    console.error('Submission failed:', error);
+    // Optional: You could set an error message field here if you have one
+    // const errField = globals.form.resolveNode('errorMsg');
+    // if(errField) globals.functions.setProperty(errField, 'value',
+    // "Submission failed. Try again.");
   }
 }
 
