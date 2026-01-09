@@ -47,7 +47,7 @@ function days(endDate, startDate) {
  * @name submitFormArrayToString
  * @param {object} globals The global context provided by AEM Forms
  */
-async function submitAndSetId(globals) {
+function submitAndSetId(globals) {
   // 1. Get the current form data
   const data = globals.functions.exportData();
   // 2. Your existing logic: Convert Arrays to Strings
@@ -59,7 +59,7 @@ async function submitAndSetId(globals) {
   try {
     // 3. Send to Servlet using fetch (Replaces submitForm)
     // We use fetch so we can 'await' the response and read the new ID
-    const response = await fetch('/bin/saveFormToJcr', {
+    const response = fetch('/bin/saveFormToJcr', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ async function submitAndSetId(globals) {
       throw new Error('Network response was not ok: ', response.statusText);
     }
     // 4. Parse the JSON response
-    const result = await response.json();
+    const result = response.json();
     // 5. Update the 'id' field in the form
     if (result.status === 'success' && result.id) {
       // Find the field named "id" in the form structure
