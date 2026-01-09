@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-undef */
 export default function firePageLoadEvent() {
   window.adobeDataLayer = window.adobeDataLayer || [];
   const dataLayerObject = {
@@ -17,4 +19,3 @@ export default function firePageLoadEvent() {
 }
 
 firePageLoadEvent();
-
