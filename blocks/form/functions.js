@@ -1,3 +1,5 @@
+import { getSubmitBaseUrl } from './constant.js';
+
 /**
  * Get Full Name
  * @name getFullName Concats first name and last name
@@ -57,9 +59,10 @@ function submitAndSetId(globals) {
     }
   });
   try {
+    const submitUrl = getSubmitBaseUrl();
     // 3. Send to Servlet using fetch (Replaces submitForm)
     // We use fetch so we can 'await' the response and read the new ID
-    const response = fetch('/bin/saveFormToJcr', {
+    const response = fetch(`${submitUrl}${'/bin/saveFormToJcr'}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
