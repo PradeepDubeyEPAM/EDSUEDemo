@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 export default function firePageLoadEvent() {
   window.adobeDataLayer = window.adobeDataLayer || [];
   const dataLayerObject = {

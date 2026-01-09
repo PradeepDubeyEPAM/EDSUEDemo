@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 export default function decorate(block) {
   if (!block.classList.contains('custom-button')) return;
 
