@@ -22,14 +22,17 @@ export async function loadFragment(path) {
   if (path && path.startsWith('/')) {
     // eslint-disable-next-line no-param-reassign
     let finalPath = path.replace(/(\.plain)?\.html/, '');
+    const isXF = finalPath.startsWith('/content/experience-fragments');
     const supported = ['en', 'fr', 'hi'];
     const userLang = navigator?.language?.toLowerCase?.() || 'en';
     const lang = userLang.slice(0, 2);
     const promoLang = supported.includes(lang) ? lang : 'default';
-    finalPath += `/promo-${promoLang}`;
-    const isMobile = window.matchMedia('(max-width: 899px)').matches;
-    if (isMobile) {
-      finalPath += '/mobile';
+    if (finalPath.endsWith('/banners') && !isXF) {
+      finalPath += `/promo-${promoLang}`;
+      const isMobile = window.matchMedia('(max-width: 899px)').matches;
+      if (isMobile) {
+        finalPath += '/mobile';
+      }
     }
     const resp = await fetch(`${finalPath}.plain.html`);
     if (resp.ok) {
