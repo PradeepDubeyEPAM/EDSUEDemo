@@ -22,17 +22,14 @@ export async function loadFragment(path) {
   if (path && path.startsWith('/')) {
     // eslint-disable-next-line no-param-reassign
     let finalPath = path.replace(/(\.plain)?\.html/, '');
+    const supported = ['en', 'fr', 'hi'];
     const userLang = navigator?.language?.toLowerCase?.() || 'en';
-    if (finalPath.endsWith('/banners')) {
-      if (userLang.endsWith('en') || userLang.startsWith('en')) {
-        finalPath += '/promo-en';
-      } else if (userLang.endsWith('fr') || userLang.startsWith('fr')) {
-        finalPath += '/promo-fr';
-      } else if (userLang.endsWith('hi') || userLang.startsWith('hi')) {
-        finalPath += '/promo-hi';
-      } else {
-        finalPath += '/promo-default';
-      }
+    const lang = userLang.slice(0, 2);
+    const promoLang = supported.includes(lang) ? lang : 'default';
+    finalPath += `/promo-${promoLang}`;
+    const isMobile = window.matchMedia('(max-width: 899px)').matches;
+    if (isMobile) {
+      finalPath += '/mobile';
     }
     const resp = await fetch(`${finalPath}.plain.html`);
     if (resp.ok) {
