@@ -2,7 +2,7 @@ import { fetchPlaceholders } from '../../scripts/placeholders.js';
 
 export default async function decorate(block) {
   const placeholders = await fetchPlaceholders();
-  console.log("This is placeholder value",placeholders.herobannertitle, placeholders.herobannerdescription);
+  console.log('This is placeholder value', placeholders.herobannertitle, placeholders.herobannerdescription);
   // Clear whatever UE generated
   block.innerHTML = '';
 

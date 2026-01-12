@@ -5,9 +5,10 @@ import { toCamelCase } from './aem.js';
  * @param {string} [prefix] Location of placeholders
  * @returns {object} Window placeholders object
  */
+// eslint-disable-next-line import/prefer-default-export
 export function fetchPlaceholders(prefix = 'default') {
   window.placeholders = window.placeholders || {};
-  const resolvedLocale  = document.documentElement.getAttribute("data-lang");
+  const resolvedLocale = document.documentElement.getAttribute('data-lang');
   if (!window.placeholders[prefix]) {
     window.placeholders[prefix] = new Promise((resolve) => {
       fetch(`${prefix === 'default' ? '' : prefix}/placeholders.json`)
@@ -21,7 +22,8 @@ export function fetchPlaceholders(prefix = 'default') {
           json.data
             .filter((placeholder) => placeholder.Key)
             .forEach((placeholder) => {
-              placeholders[toCamelCase(placeholder.Key)] = placeholder[resolvedLocale] || placeholder.en
+                const localizedText = placeholder[resolvedLocale] || placeholder.en;
+                placeholders[toCamelCase(placeholder.Key)] = localizedText;
             });
           window.placeholders[prefix] = placeholders;
           resolve(window.placeholders[prefix]);
