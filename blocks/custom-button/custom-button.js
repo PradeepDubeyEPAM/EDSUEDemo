@@ -16,7 +16,8 @@ export default function decorate(block) {
         },
       };
       window.adobeDataLayer.push(dataLayerObject);
-      if (window._satellite && typeof window._satellite.track === 'function') {
+      /* global _satellite */
+      if (_satellite && typeof _satellite.track === 'function') {
         _satellite.track(dataLayerObject.event, window.adobeDataLayer);
       }
     });
