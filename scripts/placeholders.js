@@ -22,8 +22,8 @@ export function fetchPlaceholders(prefix = 'default') {
           json.data
             .filter((placeholder) => placeholder.Key)
             .forEach((placeholder) => {
-                const localizedText = placeholder[resolvedLocale] || placeholder.en;
-                placeholders[toCamelCase(placeholder.Key)] = localizedText;
+              const localizedText = placeholder[resolvedLocale] || placeholder.en;
+              placeholders[toCamelCase(placeholder.Key)] = localizedText;
             });
           window.placeholders[prefix] = placeholders;
           resolve(window.placeholders[prefix]);
