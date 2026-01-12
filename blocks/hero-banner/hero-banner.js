@@ -8,16 +8,16 @@ export default async function decorate(block) {
 
   // Root wrapper
   const wrapper = document.createElement('div');
-  wrapper.className = 'hero-banner__wrapper';
+  wrapper.className = 'hero-banner-wrapper';
 
   // Background image
   const bg = document.createElement('div');
-  bg.className = 'hero-banner__bg';
+  bg.className = 'hero-banner-bg';
   bg.style.backgroundImage = `url(${placeholders.herobannerimage})`;
 
   // Content overlay
   const content = document.createElement('div');
-  content.className = 'hero-banner__content';
+  content.className = 'hero-banner-content';
 
   const title = document.createElement('h1');
   title.textContent = placeholders.herobannertitle || '';

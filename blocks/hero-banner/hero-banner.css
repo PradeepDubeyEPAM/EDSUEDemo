@@ -7,7 +7,7 @@
 }
 
 /* Background image */
-.hero-banner__bg {
+.hero-banner-bg {
   position: absolute;
   inset: 0;
   background-size: cover;
@@ -16,15 +16,15 @@
 }
 
 /* Overlay for readability */
-.hero-banner__bg::after {
+.hero-banner-bg::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgb(0 0 0 / 45%);
 }
 
 /* Text content */
-.hero-banner__content {
+.hero-banner-content {
   position: relative;
   z-index: 2;
   color: #fff;
@@ -32,12 +32,12 @@
   max-width: 800px;
 }
 
-.hero-banner__content h1 {
+.hero-banner-content h1 {
   font-size: clamp(2rem, 4vw, 3.5rem);
   margin-bottom: 1rem;
 }
 
-.hero-banner__content p {
+.hero-banner-content p {
   font-size: clamp(1rem, 2vw, 1.25rem);
   line-height: 1.6;
 }
