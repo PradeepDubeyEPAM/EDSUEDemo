@@ -1,0 +1,54 @@
+.custom-button,
+a.custom-button,
+button.custom-button {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    font-size: 0.95rem;
+    line-height: 1;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #0f172a;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.custom-button:hover:not(:disabled),
+.custom-button:focus:not(:disabled) {
+    transform: translateY(-1px) scale(1.04);
+    box-shadow: 0 12px 28px rgba(2,6,23,0.08);
+}
+
+[data-block-name="custom-button"] .button,
+.custom-button .button,
+.custom-button-block .button,
+[data-block-name="custom-button"] a.button,
+.custom-button a.button {
+    background: #87CEEB !important; /* skyblue */
+    color: #04263a !important;
+    border-color: rgba(4,38,58,0.06) !important;
+    display: inline-flex !important;
+    align-items: center;
+    padding: 0.5rem 1rem !important;
+    border-radius: 10px !important;
+    text-decoration: none !important;
+    box-shadow: 0 6px 18px rgba(135,206,235,0.12) !important;
+    transition: transform .14s ease, box-shadow .14s ease, background-color .12s ease !important;
+}
+
+[data-block-name="custom-button"] .button:hover:not(:disabled),
+[data-block-name="custom-button"] .button:focus:not(:disabled),
+.custom-button .button:hover:not(:disabled),
+.custom-button .button:focus:not(:disabled),
+.custom-button-block .button:hover:not(:disabled),
+.custom-button-block .button:focus:not(:disabled),
+[data-block-name="custom-button"] a.button:hover:not(:disabled),
+.custom-button a.button:hover:not(:disabled),
+.custom-button a.button:focus:not(:disabled) {
+    transform: translateY(-1px) scale(1.04) !important;
+    box-shadow: 0 12px 28px rgba(4,38,58,0.09) !important;
+    background: #66c0e6 !important;
+}
+
+
