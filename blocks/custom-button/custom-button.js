@@ -1,4 +1,5 @@
 export default function decorate(block) {
+  /* global _satellite:readonly */
   if (!block.classList.contains('custom-button')) return;
 
   const buttons = block.querySelectorAll('.button.secondary');
@@ -16,9 +17,8 @@ export default function decorate(block) {
         },
       };
       window.adobeDataLayer.push(dataLayerObject);
-      /* global _satellite:readonly */
-      if (_satellite && typeof _satellite.track === 'function') {
-        _satellite.track(dataLayerObject.event, window.adobeDataLayer);
+      if (window._satellite && typeof window._satellite.track === 'function') {
+        window._satellite.track(dataLayerObject.event, window.adobeDataLayer);
       }
     });
   });
