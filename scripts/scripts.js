@@ -236,6 +236,6 @@ loadPage();
 
 document.addEventListener("DOMContentLoaded", () => {
   const userLang = navigator?.language?.toLowerCase?.() || "en";
-  document.documentElement.setAttribute("data-lang", userLang.startsWith("en") ? "en" : "fr");
+  document.documentElement.setAttribute("data-lang", userLang);
 });
 
