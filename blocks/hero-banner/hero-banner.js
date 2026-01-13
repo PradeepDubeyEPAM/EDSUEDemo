@@ -34,7 +34,7 @@ export default async function decorate(block) {
       link.href = placeholders.herobannerctalink;
     }
     content.append(buttonContainer);
-   }
+  }
 
   content.append(title, description);
   wrapper.append(bg, content);
