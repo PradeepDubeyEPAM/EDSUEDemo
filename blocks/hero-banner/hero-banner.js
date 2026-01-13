@@ -28,13 +28,13 @@ export default async function decorate(block) {
   description.textContent = placeholders.herobannerdescription || '';
 
   if (buttonContainer) {
-  const link = buttonContainer.querySelector('a');
-  if (link) {
-    link.textContent = placeholders.herobannerctatext;
-    link.href = placeholders.herobannerctalink;
+    const link = buttonContainer.querySelector('a');
+    if (link) {
+      link.textContent = placeholders.herobannerctatext;
+      link.href = placeholders.herobannerctalink;
     }
-  content.append(buttonContainer);
- }
+    content.append(buttonContainer);
+   }
 
   content.append(title, description);
   wrapper.append(bg, content);
