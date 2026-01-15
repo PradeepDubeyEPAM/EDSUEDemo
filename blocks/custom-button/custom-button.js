@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-undef */
-/* global _satellite:readonly */
+
 export default function decorate(block) {
   if (!block.classList.contains('custom-button')) return;
 
