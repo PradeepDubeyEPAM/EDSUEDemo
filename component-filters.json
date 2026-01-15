@@ -79,5 +79,11 @@
       "wizard",
       "range"
     ]
+  }, 
+  {
+    "id": "hero-banner",
+    "components": [
+      "button"
+    ]
   }
 ]

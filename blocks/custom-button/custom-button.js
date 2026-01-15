@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-undef */
+
 export default function decorate(block) {
-  /* global _satellite:readonly */
   if (!block.classList.contains('custom-button')) return;
 
   const buttons = block.querySelectorAll('.button.secondary');
