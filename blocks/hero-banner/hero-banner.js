@@ -2,12 +2,7 @@ import { fetchPlaceholders } from '../../scripts/placeholders.js';
 
 export default async function decorate(block) {
   const placeholders = await fetchPlaceholders();
-  console.log('This is placeholder value', placeholders.herobannertitle, placeholders.herobannerdescription);
   const buttonContainer = block.querySelector('.button-container');
-
-  // Clear whatever UE generated
-  block.innerHTML = '';
-
   // Root wrapper
   const wrapper = document.createElement('div');
   wrapper.className = 'hero-banner-wrapper';
@@ -27,6 +22,8 @@ export default async function decorate(block) {
   const description = document.createElement('p');
   description.textContent = placeholders.herobannerdescription || '';
 
+  content.append(title, description);
+
   if (buttonContainer) {
     const link = buttonContainer.querySelector('a');
     if (link) {
@@ -36,7 +33,6 @@ export default async function decorate(block) {
     content.append(buttonContainer);
   }
 
-  content.append(title, description);
   wrapper.append(bg, content);
-  block.append(wrapper);
+  block.replaceChildren(wrapper);
 }
