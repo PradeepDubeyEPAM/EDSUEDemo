@@ -27,12 +27,10 @@ export async function loadFragment(path) {
     const userLang = navigator?.language?.toLowerCase?.() || 'en';
     const lang = userLang.slice(0, 2);
     const promoLang = supported.includes(lang) ? lang : 'default';
+    const isMobile = window.matchMedia('(max-width: 899px)').matches;
+    const device = isMobile ? 'mobile' : 'desktop';
     if (finalPath.endsWith('/banners') && !isXF) {
-      finalPath += `/promo-${promoLang}`;
-      const isMobile = window.matchMedia('(max-width: 899px)').matches;
-      if (isMobile) {
-        finalPath += '/mobile';
-      }
+      finalPath += `/promo-${promoLang}/${device}`;
     }
     const resp = await fetch(`${finalPath}.plain.html`);
     if (resp.ok) {
