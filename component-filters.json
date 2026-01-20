@@ -84,7 +84,7 @@
   {
     "id": "hero-banner",
     "components": [
-      "button"
+      "custom-button"
     ]
   }
 ]

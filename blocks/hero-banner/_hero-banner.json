@@ -14,22 +14,6 @@
           }
         }
       }
-    },
-    {
-      "title": "Button",
-      "id": "button",
-      "plugins": {
-        "xwalk": {
-          "page": {
-            "resourceType": "core/franklin/components/button/v1/button",
-            "template": {
-              "name": "Button",
-              "model": "button",
-              "linkType": "default"
-            }
-          }
-        }
-      }
     }
   ],
   "models": [],
@@ -37,7 +21,7 @@
     {
       "id": "hero-banner",
       "components": [
-        "button"
+        "custom-button"
       ]
     }
   ]
