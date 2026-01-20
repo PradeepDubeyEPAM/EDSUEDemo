@@ -261,6 +261,18 @@
     ]
   },
   {
+    "id": "external-data-table",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "endpoint",
+        "label": "API Endpoint URL",
+        "required": true
+      }
+    ]
+  },
+  {
     "id": "form",
     "fields": [
       {

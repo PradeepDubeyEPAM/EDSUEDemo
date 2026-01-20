@@ -1,0 +1,48 @@
+.external-data-table {
+    margin: 2rem 0;
+    font-family: sans-serif;
+}
+
+.external-data-table .table-wrapper {
+    overflow-x: auto; /* Scroll horizontally on mobile */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.external-data-table table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px; /* Force scroll on small screens */
+}
+
+.external-data-table th,
+.external-data-table td {
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+}
+
+.external-data-table th {
+    background-color: #f4f4f4;
+    font-weight: 600;
+    color: #333;
+}
+
+.external-data-table tr:hover {
+    background-color: #fafafa;
+}
+
+/* State messaging */
+.external-data-table .loading-spinner {
+    color: #666;
+    font-style: italic;
+    padding: 20px;
+    text-align: center;
+}
+
+.external-data-table .error-message {
+    color: #ffffff;
+    background-color: #000000;
+    padding: 10px;
+    border-radius: 4px;
+}
