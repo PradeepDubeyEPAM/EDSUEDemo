@@ -5028,5 +5028,23 @@
         "valueType": "string"
       }
     ]
+  },
+  {
+    "id": "tile",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "tile_title",
+        "label": "Title",
+        "required": true
+      },
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "tile_description",
+        "label": "Enter Description"
+      }
+    ]
   }
 ]
