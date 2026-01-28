@@ -1,0 +1,14 @@
+
+.tile {
+  --tile-bg: #ffffff;
+  --tile-border: #d9d9d9;
+  --tile-title: #111;
+  --tile-text: #444;
+
+  box-sizing: border-box;
+  border: 1px solid var(--tile-border);
+  background: var(--tile-bg);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+}
