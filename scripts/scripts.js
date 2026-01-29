@@ -136,7 +136,7 @@ async function getAndApplyOffers() {
   onDecoratedElement(() => {
     window.adobe.target.applyOffers({ response });
     // keeping track of offers that were already applied
-    options.forEach((o) => o.content = o.content.filter((c) => !getElementForOffer(c)));
+    options.forEach((o) => o.content ? o.content.filter((c) => !getElementForOffer(c)) : '');
     // keeping track of metrics that were already applied
     metrics.map((m, i) => getElementForMetric(m) ? i : -1)
       .filter((i) => i >= 0)
