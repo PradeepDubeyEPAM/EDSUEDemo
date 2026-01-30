@@ -5030,7 +5030,7 @@
     ]
   },
   {
-    "id": "custom-tile",
+    "id": "tile",
     "fields": [
       {
         "component": "text",
