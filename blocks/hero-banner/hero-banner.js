@@ -2,7 +2,7 @@ import { fetchPlaceholders } from '../../scripts/placeholders.js';
 
 export default async function decorate(block) {
   const placeholders = await fetchPlaceholders();
-  //const buttonContainer = block.querySelector('.button-container');
+  // const buttonContainer = block.querySelector('.button-container');
   // Root wrapper
   const wrapper = document.createElement('div');
   wrapper.className = 'hero-banner-wrapper';
