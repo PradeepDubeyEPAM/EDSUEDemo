@@ -9,8 +9,6 @@
     "/content/edsuedemo/",
     "/content/experience-fragments/eds-demo/",
     "/content/dam/edsuedemo/",
-    "/content/forms/af/",
-    "/etc.clientlibs/",
-    "/libs/"
+    "/content/forms/af/"
   ]
 }
