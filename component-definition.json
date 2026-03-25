@@ -75,17 +75,6 @@
               }
             }
           }
-        },
-        {
-          "id": "login",
-          "title": "Login",
-          "plugins": {
-            "xwalk": {
-              "page": {
-                "resourceType": "blocks/login"
-              }
-            }
-          }
         }
       ]
     },
@@ -743,6 +732,17 @@
                   "name": "Hero",
                   "model": "hero"
                 }
+              }
+            }
+          }
+        },
+        {
+          "id": "login",
+          "title": "Login",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "blocks/login"
               }
             }
           }
