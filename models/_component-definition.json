@@ -24,6 +24,9 @@
       "components": [
         {
           "...": "./_section.json#/definitions"
+        },
+        {
+          "...": "./_login.json#/definitions"
         }
       ]
     },
@@ -36,5 +39,6 @@
         }
       ]
     }
+
   ]
 }

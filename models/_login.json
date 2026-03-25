@@ -1,0 +1,15 @@
+{
+  "definitions": [
+    {
+      "id": "login",
+      "title": "Login",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "blocks/login"
+          }
+        }
+      }
+    }
+  ]
+}
