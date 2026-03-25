@@ -29,6 +29,13 @@
           btnContainer.append(backBtn);
         }
       }
+
+    const parts = window.location.pathname.split('/').filter(Boolean);
+    const homeBtn = document.querySelector('.error-button-home');
+
+    homeBtn.href = parts.length >= 2
+      ? `/${parts[0]}/${parts[1]}/homepage`
+      : '/homepage';
     });
   </script>
   <script nonce="aem" type="module">
@@ -41,6 +48,7 @@
       min-height: calc(100vh - var(--nav-height));
       display: flex;
       align-items: center;
+      justify-content: center;
     }
 
     main.error .error-number {
