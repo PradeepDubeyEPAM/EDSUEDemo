@@ -87,9 +87,5 @@
     "components": [
       "custom-button"
     ]
-  },
-  {
-    "id": "login",
-    "components": []
   }
 ]

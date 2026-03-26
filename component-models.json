@@ -5007,31 +5007,31 @@
     "id": "login",
     "fields": [
       {
-        "component": "text",
+        "component": "text-input",
+        "valueType": "string",
         "name": "usernamePlaceholder",
         "label": "Username Placeholder",
-        "valueType": "string",
         "value": "Enter username"
       },
       {
-        "component": "text",
+        "component": "text-input",
+        "valueType": "string",
         "name": "passwordPlaceholder",
         "label": "Password Placeholder",
-        "valueType": "string",
         "value": "Enter password"
       },
       {
-        "component": "text",
+        "component": "text-input",
+        "valueType": "string",
         "name": "buttonText",
         "label": "Button Text",
-        "valueType": "string",
         "value": "Login"
       },
       {
-        "component": "text",
+        "component": "text-input",
+        "valueType": "string",
         "name": "forgotPasswordText",
         "label": "Forgot Password Text",
-        "valueType": "string",
         "value": "Forgot password?"
       }
     ]
