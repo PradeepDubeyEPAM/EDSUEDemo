@@ -9,7 +9,7 @@ export default async function decorate(block) {
     }
   });
 
-  // Clear block so we render our own markup
+  
   block.innerHTML = '';
 
   const session = getSession();

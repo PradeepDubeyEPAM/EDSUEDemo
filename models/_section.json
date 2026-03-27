@@ -65,8 +65,9 @@
 		    "custom-button",
         "hero-banner",
         "external-data-table",
-        "tile",
-        "language-navigation"
+         "tile",
+        "language-navigation",
+         "login"
       ]
     }
   ]
