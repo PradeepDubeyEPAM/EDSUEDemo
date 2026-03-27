@@ -5004,6 +5004,39 @@
     ]
   },
   {
+    "id": "login",
+    "fields": [
+      {
+        "component": "text-input",
+        "valueType": "string",
+        "name": "usernamePlaceholder",
+        "label": "Username Placeholder",
+        "value": "Enter username"
+      },
+      {
+        "component": "text-input",
+        "valueType": "string",
+        "name": "passwordPlaceholder",
+        "label": "Password Placeholder",
+        "value": "Enter password"
+      },
+      {
+        "component": "text-input",
+        "valueType": "string",
+        "name": "buttonText",
+        "label": "Button Text",
+        "value": "Login"
+      },
+      {
+        "component": "text-input",
+        "valueType": "string",
+        "name": "forgotPasswordText",
+        "label": "Forgot Password Text",
+        "value": "Forgot password?"
+      }
+    ]
+  },
+  {
     "id": "hero",
     "fields": [
       {
