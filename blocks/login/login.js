@@ -42,7 +42,7 @@ function clearSession() {
 
 
 async function fetchData() {
-  const resp = await fetch('/blocks/login/login.json');
+  const resp = await fetch('/blocks/login/data.json');
   if (!resp.ok) throw new Error('Failed to load login data');
   return resp.json();
 }
