@@ -1,0 +1,216 @@
+/*
+ * Block: Hero Section
+ * Design tokens sourced from: figma-tokens/heroBanner-spec.md
+ * Figma node: Hero-section
+ *
+ * Design token reference:
+ *   Background:        #043873
+ *   Min-height:        51.8125rem  (829px)
+ *   Padding V:          8.75rem   (140px)
+ *   Padding H:         13.75rem   (220px)
+ *   Heading:           4rem / 700 / #ffffff
+ *   Body:              1.125rem / 400 / #ffffff / lh 1.875rem
+ *   Content gap:       1.5rem     (24px  heading ↔ body)
+ *   Section gap:       3.75rem    (60px  text-block ↔ CTA)
+ *   CTA bg:            #4f9cf9
+ *   CTA padding:       1.25rem    (20px)
+ *   CTA font:          1.125rem / 500 / lh 1.4375rem
+ *   CTA width:         13.6875rem (219px)
+ *   CTA height:        3.9375rem  (63px)
+ *   CTA icon gap:      0.625rem   (10px)
+ *   Image width:       51.5rem    (824px)
+ *   Image height:      34.3125rem (549px)
+ *   Image placeholder: #c4defd
+ *   Decor colour:      #ffe492
+ */
+
+/* ── Full-width wrapper ─────────────────────────────────────────────────── */
+.hero-section-wrapper {
+  width: 100%;
+  padding: 0;
+}
+
+/* ── Block root ─────────────────────────────────────────────────────────── */
+.hero-section.block {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+  min-height: 51.8125rem;
+  padding: 8.75rem 13.75rem;
+  background-color: #043873;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* ── Decorative wave overlay ────────────────────────────────────────────── */
+.hero-section__decor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(ellipse 60% 40% at 80% 110%, #ffe49233 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 110% 50%, #ffe49222 0%, transparent 60%);
+  z-index: 0;
+}
+
+/* ── Left column: content ───────────────────────────────────────────────── */
+.hero-section__content {
+  display: flex;
+  flex-direction: column;
+  gap: 3.75rem; /* 60px – text-block ↔ CTA */
+  flex: 0 0 41rem; /* ~656px */
+  z-index: 1;
+}
+
+/* Text block (heading + body) */
+.hero-section__text-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* 24px – heading ↔ body */
+}
+
+/* Heading */
+.hero-section__heading {
+  margin: 0;
+  font-size: 4rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: #fff;
+}
+
+/* Body */
+.hero-section__body {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1.875rem;
+  color: #fff;
+}
+
+.hero-section__body p {
+  margin: 0;
+}
+
+/* ── CTA button ─────────────────────────────────────────────────────────── */
+.hero-section__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem; /* 10px – label ↔ arrow icon */
+  width: 13.6875rem;  /* 219px */
+  height: 3.9375rem;  /* 63px */
+  padding: 1.25rem;   /* 20px */
+  background-color: #4f9cf9;
+  color: #fff;
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.4375rem;
+  text-decoration: none;
+  border-radius: 4px;
+  box-sizing: border-box;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  white-space: nowrap;
+}
+
+.hero-section__cta:hover {
+  background-color: #2e7de0;
+}
+
+.hero-section__cta:active {
+  transform: translateY(1px);
+}
+
+/* Arrow icon – CSS-drawn right-pointing chevron */
+.hero-section__cta-icon {
+  display: inline-block;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-right: 2px solid #fff;
+  border-top: 2px solid #fff;
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+/* ── Right column: media ────────────────────────────────────────────────── */
+.hero-section__media {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  z-index: 1;
+}
+
+.hero-section__media picture {
+  display: block;
+  line-height: 0;
+}
+
+.hero-section__image,
+.hero-section__media img {
+  width: 51.5rem;    /* 824px */
+  height: 34.3125rem; /* 549px */
+  object-fit: cover;
+  background-color: #c4defd; /* image placeholder from Figma */
+  display: block;
+}
+
+/* ── Tablet (768px – 1024px) ────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .hero-section.block {
+    padding: 6rem 4rem;
+  }
+
+  .hero-section__content {
+    flex: 0 0 50%;
+  }
+
+  .hero-section__image,
+  .hero-section__media img {
+    width: 100%;
+    height: auto;
+    max-height: 28rem;
+  }
+}
+
+/* ── Mobile (≤ 767px) ───────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .hero-section.block {
+    flex-direction: column;
+    padding: 5rem 1.5rem;
+    min-height: unset;
+    gap: 2.5rem;
+  }
+
+  .hero-section__decor {
+    opacity: 0.3;
+  }
+
+  .hero-section__content {
+    flex: 1;
+    width: 100%;
+    gap: 2.5rem;
+  }
+
+  .hero-section__heading {
+    font-size: 3rem;
+  }
+
+  .hero-section__cta {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-section__media {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-section__image,
+  .hero-section__media img {
+    width: 100%;
+    height: auto;
+    max-height: 20rem;
+  }
+}

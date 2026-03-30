@@ -1,0 +1,2220 @@
+[
+  {
+    "id": "9:102",
+    "name": "Hero-section",
+    "type": "FRAME",
+    "properties": {
+      "position": {
+        "x": -960,
+        "y": -4147
+      },
+      "size": {
+        "width": 1920,
+        "height": 829
+      },
+      "rotation": 0,
+      "styles": {
+        "fills": [
+          {
+            "type": "SOLID",
+            "color": {
+              "r": 4,
+              "g": 56,
+              "b": 115,
+              "a": 1
+            },
+            "opacity": 1
+          }
+        ],
+        "strokes": [],
+        "effects": []
+      },
+      "layout": {
+        "direction": "HORIZONTAL",
+        "itemSpacing": 0,
+        "padding": {
+          "left": 220,
+          "top": 140,
+          "right": 220,
+          "bottom": 140
+        }
+      }
+    },
+    "children": [
+      {
+        "id": "9:103",
+        "name": "Element",
+        "type": "GROUP",
+        "properties": {
+          "position": {
+            "x": -960,
+            "y": -3954.728759765625
+          },
+          "size": {
+            "width": 1920,
+            "height": 547.001953125
+          },
+          "rotation": 5.096078935782188e-16,
+          "styles": {
+            "effects": []
+          }
+        },
+        "children": [
+          {
+            "id": "9:104",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3795.905029296875
+              },
+              "size": {
+                "width": 1920,
+                "height": 388.17822265625
+              },
+              "rotation": 9.873280895507735e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:105",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3795.905029296875
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 388.17822265625
+                  },
+                  "rotation": 9.873280895507735e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:106",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3805.541015625
+              },
+              "size": {
+                "width": 1920,
+                "height": 385.484375
+              },
+              "rotation": 9.873280895507735e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:107",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3805.541015625
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 385.484375
+                  },
+                  "rotation": 9.873280895507735e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:108",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3815.210205078125
+              },
+              "size": {
+                "width": 1920,
+                "height": 383.10595703125
+              },
+              "rotation": 9.873280895507735e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:109",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3815.210205078125
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 383.10595703125
+                  },
+                  "rotation": 9.873280895507735e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:110",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3824.93310546875
+              },
+              "size": {
+                "width": 1920,
+                "height": 385.43017578125
+              },
+              "rotation": 5.096078935782188e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:111",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3824.93310546875
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 385.43017578125
+                  },
+                  "rotation": 5.096078935782188e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:112",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3834.685546875
+              },
+              "size": {
+                "width": 1920,
+                "height": 393.10845947265625
+              },
+              "rotation": 9.873280895507735e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:113",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3834.685546875
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 393.1083984375
+                  },
+                  "rotation": 9.873280895507735e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:114",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3844.482666015625
+              },
+              "size": {
+                "width": 1920,
+                "height": 400.832275390625
+              },
+              "rotation": 5.096078935782188e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:115",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3844.482666015625
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 400.832275390625
+                  },
+                  "rotation": 5.096078935782188e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:116",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3854.30908203125
+              },
+              "size": {
+                "width": 1920,
+                "height": 408.5852966308594
+              },
+              "rotation": 9.873280895507735e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:117",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3854.30908203125
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 408.585205078125
+                  },
+                  "rotation": 9.873280895507735e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:118",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3864.181884765625
+              },
+              "size": {
+                "width": 1920,
+                "height": 416.3841552734375
+              },
+              "rotation": 5.096078935782188e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:119",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3864.181884765625
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 416.384033203125
+                  },
+                  "rotation": 5.096078935782188e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:120",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3874.085693359375
+              },
+              "size": {
+                "width": 1920,
+                "height": 424.21441650390625
+              },
+              "rotation": 5.096078935782188e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:121",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3874.085693359375
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 424.21435546875
+                  },
+                  "rotation": 5.096078935782188e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:122",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3884.041015625
+              },
+              "size": {
+                "width": 1920,
+                "height": 432.09619140625
+              },
+              "rotation": 9.873280895507735e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:123",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3884.041015625
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 432.09619140625
+                  },
+                  "rotation": 9.873280895507735e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:124",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3894.023681640625
+              },
+              "size": {
+                "width": 1920,
+                "height": 440.0049133300781
+              },
+              "rotation": 9.873280895507735e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:125",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3894.023681640625
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 440.0048828125
+                  },
+                  "rotation": 9.873280895507735e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:126",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3904.047119140625
+              },
+              "size": {
+                "width": 1920,
+                "height": 447.9544372558594
+              },
+              "rotation": 5.096078935782188e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:127",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3904.047119140625
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 447.954345703125
+                  },
+                  "rotation": 5.096078935782188e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:128",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3914.107421875
+              },
+              "size": {
+                "width": 1920,
+                "height": 455.93902587890625
+              },
+              "rotation": 5.096078935782188e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:129",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3914.107421875
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 455.93896484375
+                  },
+                  "rotation": 5.096078935782188e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:130",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3924.20361328125
+              },
+              "size": {
+                "width": 1920,
+                "height": 463.961181640625
+              },
+              "rotation": 9.873280895507735e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:131",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3924.20361328125
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 463.961181640625
+                  },
+                  "rotation": 9.873280895507735e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:132",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3934.341796875
+              },
+              "size": {
+                "width": 1920,
+                "height": 472.0263671875
+              },
+              "rotation": 5.096078935782188e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:133",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3934.341796875
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 472.0263671875
+                  },
+                  "rotation": 5.096078935782188e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:134",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3944.518798828125
+              },
+              "size": {
+                "width": 1920,
+                "height": 480.129638671875
+              },
+              "rotation": 9.873280895507735e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:135",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3944.518798828125
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 480.129638671875
+                  },
+                  "rotation": 9.873280895507735e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:136",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3954.728759765625
+              },
+              "size": {
+                "width": 1920,
+                "height": 488.2657165527344
+              },
+              "rotation": 1.2549923868416456e-15,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:137",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3954.728759765625
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 488.265625
+                  },
+                  "rotation": 1.2549923868416456e-15,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:138",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3924.238037109375
+              },
+              "size": {
+                "width": 1920,
+                "height": 441.78857421875
+              },
+              "rotation": 5.096078935782188e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:139",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3924.238037109375
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 441.78857421875
+                  },
+                  "rotation": 5.096078935782188e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:140",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3893.862548828125
+              },
+              "size": {
+                "width": 1920,
+                "height": 395.4227294921875
+              },
+              "rotation": 9.873280895507735e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:141",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3893.862548828125
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 395.422607421875
+                  },
+                  "rotation": 9.873280895507735e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:142",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3863.720703125
+              },
+              "size": {
+                "width": 1920,
+                "height": 349.290771484375
+              },
+              "rotation": 9.873280895507735e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:143",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3863.720703125
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 349.290771484375
+                  },
+                  "rotation": 9.873280895507735e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:144",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3835.10546875
+              },
+              "size": {
+                "width": 1920,
+                "height": 304.6826171875
+              },
+              "rotation": 9.873280895507735e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:145",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3835.10546875
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 304.6826171875
+                  },
+                  "rotation": 9.873280895507735e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:146",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3813.819580078125
+              },
+              "size": {
+                "width": 1920,
+                "height": 267.39892578125
+              },
+              "rotation": 5.096078935782188e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:147",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3813.819580078125
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 267.39892578125
+                  },
+                  "rotation": 5.096078935782188e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:148",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3815.22412109375
+              },
+              "size": {
+                "width": 1920,
+                "height": 262.420166015625
+              },
+              "rotation": 9.873280895507735e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:149",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3815.22412109375
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 262.420166015625
+                  },
+                  "rotation": 9.873280895507735e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:150",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3824.73095703125
+              },
+              "size": {
+                "width": 1920,
+                "height": 273.029541015625
+              },
+              "rotation": 5.096078935782188e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:151",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3824.73095703125
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 273.029541015625
+                  },
+                  "rotation": 5.096078935782188e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:152",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3835.199951171875
+              },
+              "size": {
+                "width": 1920,
+                "height": 285.88262939453125
+              },
+              "rotation": 5.096078935782188e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:153",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3835.199951171875
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 285.882568359375
+                  },
+                  "rotation": 5.096078935782188e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:154",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3846.688232421875
+              },
+              "size": {
+                "width": 1920,
+                "height": 300.47003173828125
+              },
+              "rotation": 9.873280895507735e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:155",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3846.688232421875
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 300.469970703125
+                  },
+                  "rotation": 9.873280895507735e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:156",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3859.051025390625
+              },
+              "size": {
+                "width": 1920,
+                "height": 316.38604736328125
+              },
+              "rotation": 5.096078935782188e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:157",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3859.051025390625
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 316.385986328125
+                  },
+                  "rotation": 5.096078935782188e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:158",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3872.311279296875
+              },
+              "size": {
+                "width": 1920,
+                "height": 333.54443359375
+              },
+              "rotation": 5.096078935782188e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:159",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3872.311279296875
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 333.54443359375
+                  },
+                  "rotation": 5.096078935782188e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:160",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3886.310791015625
+              },
+              "size": {
+                "width": 1920,
+                "height": 351.6611328125
+              },
+              "rotation": 9.873280895507735e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:161",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3886.310791015625
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 351.6611328125
+                  },
+                  "rotation": 9.873280895507735e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:162",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3900.990966796875
+              },
+              "size": {
+                "width": 1920,
+                "height": 370.627685546875
+              },
+              "rotation": 5.096078935782188e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:163",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3900.990966796875
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 370.627685546875
+                  },
+                  "rotation": 5.096078935782188e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:164",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3916.246337890625
+              },
+              "size": {
+                "width": 1920,
+                "height": 391.2734680175781
+              },
+              "rotation": 5.096078935782188e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:165",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3916.246337890625
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 391.2734375
+                  },
+                  "rotation": 5.096078935782188e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:166",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3931.9267578125
+              },
+              "size": {
+                "width": 1920,
+                "height": 437.601806640625
+              },
+              "rotation": 5.096078935782188e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:167",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3931.9267578125
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 437.601806640625
+                  },
+                  "rotation": 5.096078935782188e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:168",
+            "name": "Group",
+            "type": "GROUP",
+            "properties": {
+              "position": {
+                "x": -960,
+                "y": -3948.049560546875
+              },
+              "size": {
+                "width": 1920,
+                "height": 484.37353515625
+              },
+              "rotation": 5.096078935782188e-16,
+              "styles": {
+                "effects": []
+              }
+            },
+            "children": [
+              {
+                "id": "9:169",
+                "name": "Vector",
+                "type": "VECTOR",
+                "properties": {
+                  "position": {
+                    "x": -960,
+                    "y": -3948.049560546875
+                  },
+                  "size": {
+                    "width": 1920,
+                    "height": 484.37353515625
+                  },
+                  "rotation": 5.096078935782188e-16,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 228,
+                          "b": 146,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  }
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "9:170",
+        "name": "Heading",
+        "type": "FRAME",
+        "properties": {
+          "position": {
+            "x": -740,
+            "y": -3913
+          },
+          "size": {
+            "width": 656,
+            "height": 361
+          },
+          "rotation": 0,
+          "styles": {
+            "fills": [],
+            "strokes": [],
+            "effects": []
+          },
+          "layout": {
+            "direction": "VERTICAL",
+            "itemSpacing": 60,
+            "padding": {
+              "left": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0
+            }
+          }
+        },
+        "children": [
+          {
+            "id": "9:171",
+            "name": "Text-block",
+            "type": "FRAME",
+            "properties": {
+              "position": {
+                "x": -740,
+                "y": -3913
+              },
+              "size": {
+                "width": 656,
+                "height": 238
+              },
+              "rotation": 0,
+              "styles": {
+                "fills": [],
+                "strokes": [],
+                "effects": []
+              },
+              "layout": {
+                "direction": "VERTICAL",
+                "itemSpacing": 24,
+                "padding": {
+                  "left": 0,
+                  "top": 0,
+                  "right": 0,
+                  "bottom": 0
+                }
+              }
+            },
+            "children": [
+              {
+                "id": "9:172",
+                "name": "Get More Done with whitepace",
+                "type": "TEXT",
+                "properties": {
+                  "position": {
+                    "x": -738.75,
+                    "y": -3900.20458984375
+                  },
+                  "size": {
+                    "width": 591.4445190429688,
+                    "height": 139.29541015625
+                  },
+                  "rotation": 0,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 255,
+                          "b": 255,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  },
+                  "text": "Get More Done with whitepace",
+                  "font": {
+                    "family": "Inter",
+                    "style": "Bold",
+                    "size": 64
+                  },
+                  "lineHeight": {
+                    "unit": "AUTO"
+                  },
+                  "alignment": "LEFT"
+                },
+                "children": []
+              },
+              {
+                "id": "9:173",
+                "name": "Project management software that enables your teams to collaborate, plan, analyze and manage everyday tasks",
+                "type": "TEXT",
+                "properties": {
+                  "position": {
+                    "x": -739.0795288085938,
+                    "y": -3726.70458984375
+                  },
+                  "size": {
+                    "width": 611.6593627929688,
+                    "height": 47.591064453125
+                  },
+                  "rotation": 0,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 255,
+                          "b": 255,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  },
+                  "text": "Project management software that enables your teams to collaborate, plan, analyze and manage everyday tasks",
+                  "font": {
+                    "family": "Inter",
+                    "style": "Regular",
+                    "size": 18
+                  },
+                  "lineHeight": {
+                    "unit": "PIXELS",
+                    "value": 30
+                  },
+                  "alignment": "LEFT"
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "id": "9:174",
+            "name": "Btn-free-trial",
+            "type": "FRAME",
+            "properties": {
+              "position": {
+                "x": -740,
+                "y": -3615
+              },
+              "size": {
+                "width": 219,
+                "height": 63
+              },
+              "rotation": 0,
+              "styles": {
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": {
+                      "r": 79,
+                      "g": 156,
+                      "b": 249,
+                      "a": 1
+                    },
+                    "opacity": 1
+                  }
+                ],
+                "strokes": [],
+                "effects": []
+              },
+              "layout": {
+                "direction": "HORIZONTAL",
+                "itemSpacing": 10,
+                "padding": {
+                  "left": 20,
+                  "top": 20,
+                  "right": 20,
+                  "bottom": 20
+                }
+              }
+            },
+            "children": [
+              {
+                "id": "9:175",
+                "name": "Try Whitepace free",
+                "type": "TEXT",
+                "properties": {
+                  "position": {
+                    "x": -719.2073974609375,
+                    "y": -3590.70458984375
+                  },
+                  "size": {
+                    "width": 156.41375732421875,
+                    "height": 17.386474609375
+                  },
+                  "rotation": 0,
+                  "styles": {
+                    "fills": [
+                      {
+                        "type": "SOLID",
+                        "color": {
+                          "r": 255,
+                          "g": 255,
+                          "b": 255,
+                          "a": 1
+                        },
+                        "opacity": 1
+                      }
+                    ],
+                    "strokes": [],
+                    "effects": []
+                  },
+                  "text": "Try Whitepace free",
+                  "font": {
+                    "family": "Inter",
+                    "style": "Medium",
+                    "size": 18
+                  },
+                  "lineHeight": {
+                    "unit": "PIXELS",
+                    "value": 23
+                  },
+                  "alignment": "LEFT"
+                },
+                "children": []
+              },
+              {
+                "id": "9:176",
+                "name": "Group 212",
+                "type": "GROUP",
+                "properties": {
+                  "position": {
+                    "x": -551.5,
+                    "y": -3589
+                  },
+                  "size": {
+                    "width": 11,
+                    "height": 11
+                  },
+                  "rotation": 0,
+                  "styles": {
+                    "effects": []
+                  }
+                },
+                "children": [
+                  {
+                    "id": "9:177",
+                    "name": "Vector",
+                    "type": "VECTOR",
+                    "properties": {
+                      "position": {
+                        "x": -551.5,
+                        "y": -3584
+                      },
+                      "size": {
+                        "width": 11,
+                        "height": 1
+                      },
+                      "rotation": 0,
+                      "styles": {
+                        "fills": [],
+                        "strokes": [
+                          {
+                            "type": "SOLID",
+                            "color": {
+                              "r": 255,
+                              "g": 255,
+                              "b": 255,
+                              "a": 1
+                            },
+                            "opacity": 1
+                          }
+                        ],
+                        "effects": []
+                      }
+                    },
+                    "children": []
+                  },
+                  {
+                    "id": "9:178",
+                    "name": "Vector",
+                    "type": "VECTOR",
+                    "properties": {
+                      "position": {
+                        "x": -546.5,
+                        "y": -3589
+                      },
+                      "size": {
+                        "width": 6,
+                        "height": 11
+                      },
+                      "rotation": 0,
+                      "styles": {
+                        "fills": [],
+                        "strokes": [
+                          {
+                            "type": "SOLID",
+                            "color": {
+                              "r": 255,
+                              "g": 255,
+                              "b": 255,
+                              "a": 1
+                            },
+                            "opacity": 1
+                          }
+                        ],
+                        "effects": []
+                      }
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "9:179",
+        "name": "Image-container",
+        "type": "FRAME",
+        "properties": {
+          "position": {
+            "x": -84,
+            "y": -4007
+          },
+          "size": {
+            "width": 824,
+            "height": 549
+          },
+          "rotation": 0,
+          "styles": {
+            "fills": [
+              {
+                "type": "SOLID",
+                "color": {
+                  "r": 196,
+                  "g": 222,
+                  "b": 253,
+                  "a": 1
+                },
+                "opacity": 1
+              }
+            ],
+            "strokes": [],
+            "effects": []
+          },
+          "layout": {
+            "direction": "VERTICAL",
+            "itemSpacing": 4,
+            "padding": {
+              "left": 0,
+              "top": 0,
+              "right": 0,
+              "bottom": 0
+            }
+          }
+        },
+        "children": []
+      }
+    ]
+  }
+]

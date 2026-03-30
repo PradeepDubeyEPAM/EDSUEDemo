@@ -67,7 +67,8 @@
         "external-data-table",
          "tile",
         "language-navigation",
-         "login"
+         "login",
+        "hero-section"
       ]
     }
   ]
