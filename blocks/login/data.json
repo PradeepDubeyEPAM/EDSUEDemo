@@ -15,22 +15,5 @@
       "password": "emma123",
       "country": "aus"
     }
-  ],
-  "offers": {
-    "uk": [
-      " Black Friday Sale – Up to 60% off on all UK orders!",
-      " Free delivery on orders over £30 this weekend only!",
-      " Buy 2 Get 1 Free on selected items – UK Exclusive!"
-    ],
-    "us": [
-      " Black Friday Mega Deal – Save up to 70% sitewide!",
-      " Free shipping on all US orders over $25 today only!",
-      "Cyber Monday Early Access – Extra 15% off with code CYBER15!"
-    ],
-    "aus": [
-      " Black Friday Sale – Up to 50% off across all categories!",
-      "Free express shipping on orders over $40 – Australia wide!",
-      " Summer Sale Special – Buy More Save More this November!"
-    ]
-  }
+  ]
 }
