@@ -5,6 +5,8 @@ const BASE_URL = window.location.hostname.includes('aem.live')
 
 const langSegment = window.location.pathname.split('/')[2] || 'en';
 
+
+
 const OFFER_PATHS = {
   uk:  `/us/${langSegment}/offers/uk`,
   us:  `/us/${langSegment}/offers/us`,
