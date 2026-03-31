@@ -12,8 +12,7 @@
               "model": "hero-section",
               "headingText": "Get More Done with Whitepace",
               "bodyText": "Project management software that enables your teams to collaborate, plan, analyze and manage everyday tasks",
-              "ctaLabel": "Try Whitepace free",
-              "ctaUrl": "",
+              "ctaLink": "",
               "imageSrc": ""
             }
           }
@@ -41,20 +40,12 @@
           "description": "Supporting description text below the heading (18px, white)"
         },
         {
-          "component": "text",
-          "valueType": "string",
-          "name": "ctaLabel",
-          "label": "CTA Button Label",
-          "required": false,
-          "description": "Text label for the call-to-action button"
-        },
-        {
           "component": "aem-content",
           "valueType": "string",
-          "name": "ctaUrl",
-          "label": "CTA Button URL",
+          "name": "ctaLink",
+          "label": "CTA Button (Link + Label)",
           "required": false,
-          "description": "Link destination for the CTA button"
+          "description": "Pick the CTA destination page; the link text becomes the button label"
         },
         {
           "component": "reference",

@@ -81,9 +81,10 @@ export default function decorate(block) {
   textBlock.append(body);
   content.append(textBlock);
 
-  // CTA button (aem-content renders as <a href="…"> inside valEl)
-  const ctaHref = fields.ctaUrl?.querySelector('a')?.href || '#';
-  const ctaText = fields.ctaLabel?.textContent.trim() || '';
+  // CTA button — aem-content renders as <a href="…">Label</a> inside the value cell
+  const ctaAnchor = fields.ctaLink?.querySelector('a');
+  const ctaHref = ctaAnchor?.href || '#';
+  const ctaText = ctaAnchor?.textContent.trim() || '';
 
   const cta = document.createElement('a');
   cta.className = 'hero-section__cta';
@@ -97,7 +98,7 @@ export default function decorate(block) {
   ctaIcon.setAttribute('aria-hidden', 'true');
 
   cta.append(ctaLabelSpan, ctaIcon);
-  if (fields.ctaUrl) moveInstrumentation(fields.ctaUrl, cta);
+  if (fields.ctaLink) moveInstrumentation(fields.ctaLink, cta);
   content.append(cta);
 
   // ── Right: media column ────────────────────────────────────────────────

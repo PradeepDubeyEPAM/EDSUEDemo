@@ -733,8 +733,7 @@
                   "model": "hero-section",
                   "headingText": "Get More Done with Whitepace",
                   "bodyText": "Project management software that enables your teams to collaborate, plan, analyze and manage everyday tasks",
-                  "ctaLabel": "Try Whitepace free",
-                  "ctaUrl": "",
+                  "ctaLink": "",
                   "imageSrc": ""
                 }
               }
