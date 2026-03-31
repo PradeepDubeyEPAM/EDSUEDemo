@@ -1,6 +1,6 @@
 
 
-const BASE_URL = window.location.hostname.includes('adobeaemcloud.com')
+const BASE_URL = (window.location.hostname.includes('adobeaemcloud.com') || window.location.hostname.includes('.aem.live'))
   ? 'https://main--edsuedemo--pradeepdubeyepam.aem.page'
   : '';
 
@@ -240,12 +240,7 @@ async function showOffersOverlay(session) {
     return;
   }
 
-  if (offerHTML) {
-    offersContainer.innerHTML = offerHTML;
-  } else {
-    
-    offersContainer.innerHTML = buildFallbackOffers(session.country);
-  }
+  offersContainer.innerHTML = buildFallbackOffers(session.country);
 }
 
 
