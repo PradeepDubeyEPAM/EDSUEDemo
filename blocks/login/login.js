@@ -189,7 +189,7 @@ async function showOffersOverlay(session) {
   
   const welcome = document.createElement('h2');
   welcome.className = 'login-popup-welcome';
-  welcome.textContent = `Welcome, ${capitalize(session.username)}!`;
+  welcome.textContent = `Logged in, Welcome, ${capitalize(session.username)}!`;
 
   const locale = document.createElement('p');
   locale.className = 'login-popup-locale';
@@ -214,9 +214,9 @@ async function showOffersOverlay(session) {
   viewBtn.className = 'login-btn login-popup-view';
   viewBtn.textContent = 'View All Offers →';
   viewBtn.addEventListener('click', () => {
-    const path = OFFER_PATHS[session.country];
-    if (path) window.location.href = `${BASE_URL}${path}`;
-  });
+  const path = OFFER_PATHS[session.country];
+  if (path) window.location.href = `${window.location.origin}${path}`;
+});
 
   popup.append(welcome, locale, offersContainer, viewBtn, closeBtn);
   overlay.appendChild(popup);
