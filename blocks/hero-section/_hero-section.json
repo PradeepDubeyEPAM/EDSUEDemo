@@ -1,0 +1,72 @@
+{
+  "definitions": [
+    {
+      "title": "Hero Section",
+      "id": "hero-section",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Hero Section",
+              "model": "hero-section",
+              "headingText": "Get More Done with Whitepace",
+              "bodyText": "Project management software that enables your teams to collaborate, plan, analyze and manage everyday tasks",
+              "ctaLabel": "Try Whitepace free",
+              "ctaUrl": "",
+              "imageSrc": ""
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "hero-section",
+      "fields": [
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "headingText",
+          "label": "Heading Text",
+          "required": true,
+          "description": "Main heading displayed in the hero (64px bold, white)"
+        },
+        {
+          "component": "richtext",
+          "name": "bodyText",
+          "label": "Body Description",
+          "required": false,
+          "description": "Supporting description text below the heading (18px, white)"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "ctaLabel",
+          "label": "CTA Button Label",
+          "required": false,
+          "description": "Text label for the call-to-action button"
+        },
+        {
+          "component": "aem-content",
+          "valueType": "string",
+          "name": "ctaUrl",
+          "label": "CTA Button URL",
+          "required": false,
+          "description": "Link destination for the CTA button"
+        },
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "imageSrc",
+          "label": "Hero Image",
+          "multi": false,
+          "required": false,
+          "description": "Image displayed on the right side of the hero (824 x 549 px recommended)"
+        }
+      ]
+    }
+  ],
+  "filters": []
+}
