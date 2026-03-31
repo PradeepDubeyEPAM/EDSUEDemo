@@ -1,13 +1,16 @@
-
 const BASE_URL = window.location.hostname.includes('aem.live')
   ? ''
   : 'https://main--edsuedemo--pradeepdubeyepam.aem.page';
 
 
+const langSegment = window.location.pathname.split('/')[2] || 'en';
+
+
+
 const OFFER_PATHS = {
-  uk:  '/language-masters/en/offers/uk',
-  us:  '/language-masters/en/offers/us',
-  aus: '/language-masters/en/offers/aus',
+  uk:  `/us/${langSegment}/offers/uk`,
+  us:  `/us/${langSegment}/offers/us`,
+  aus: `/us/${langSegment}/offers/aus`,
 };
 
 
