@@ -233,15 +233,10 @@ async function showOffersOverlay(session) {
 
   
  
-  const offerHTML = await fetchOfferPage(session.country);
 
-  if (!document.getElementById('login-overlay')) {
-    
-    return;
-  }
 
   offersContainer.innerHTML = buildFallbackOffers(session.country);
-}
+
 
 
 const FALLBACK_OFFERS = {
