@@ -1,8 +1,6 @@
 
 
-const BASE_URL = (window.location.hostname.includes('adobeaemcloud.com') || window.location.hostname.includes('.aem.live'))
-  ? 'https://main--edsuedemo--pradeepdubeyepam.aem.page'
-  : '';
+const BASE_URL = 'https://main--edsuedemo--pradeepdubeyepam.aem.page';
 
 
 const OFFER_PATHS = {
@@ -236,7 +234,7 @@ async function showOffersOverlay(session) {
 
 
   offersContainer.innerHTML = buildFallbackOffers(session.country);
-
+}
 
 
 const FALLBACK_OFFERS = {
