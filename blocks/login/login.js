@@ -1,6 +1,7 @@
 
-
-const BASE_URL = 'https://main--edsuedemo--pradeepdubeyepam.aem.page';
+const BASE_URL = window.location.hostname.includes('aem.live')
+  ? ''
+  : 'https://main--edsuedemo--pradeepdubeyepam.aem.page';
 
 
 const OFFER_PATHS = {
