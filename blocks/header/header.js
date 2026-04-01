@@ -92,11 +92,16 @@ function getSession() {
   }
 }
 
+function clearSession() {
+  localStorage.removeItem('userSession');
+}
+
 function updateNavLoginStatus(username) {
   const loginBtn = document.getElementById('nav-login-btn-trigger');
   if (loginBtn) {
-    loginBtn.textContent = `Hi, ${username} 👋`;
+    loginBtn.textContent = `Logged in ${username} 👋`;
     loginBtn.style.cursor = 'default';
+    loginBtn.style.background = '#2d9d78'; // green to show logged in
     loginBtn.style.pointerEvents = 'none';
   }
 }
@@ -117,12 +122,13 @@ function loadOffersOnPage(country) {
 
     const main = document.querySelector('main');
     if (main) {
-      // inject after first section (hero) on any page
-      const firstSection = main.querySelector('.section');
-      if (firstSection && firstSection.nextSibling) {
-        main.insertBefore(offersSection, firstSection.nextSibling);
-      } else if (firstSection) {
-        firstSection.after(offersSection);
+      // inject after FIRST section (hero), BEFORE second section (text/image blocks)
+      const sections = main.querySelectorAll('.section');
+      if (sections.length >= 2) {
+        // insert between section[0] (hero) and section[1] (text/image)
+        main.insertBefore(offersSection, sections[1]);
+      } else if (sections.length === 1) {
+        sections[0].after(offersSection);
       } else {
         main.appendChild(offersSection);
       }
@@ -237,6 +243,27 @@ function showLoginPopup() {
   });
 }
 
+// ── HANDLE BACK BUTTON — clear session so offers don't persist ──
+// Use sessionStorage as a "this tab visited" flag.
+// If user navigates back to a page fresh, we treat them as guest.
+window.addEventListener('pageshow', (e) => {
+  // e.persisted = true means page was restored from bfcache (back button)
+  if (e.persisted) {
+    clearSession();
+    // Remove offers section if it exists
+    const offersSection = document.getElementById('offers-section');
+    if (offersSection) offersSection.remove();
+    // Reset login button
+    const loginBtn = document.getElementById('nav-login-btn-trigger');
+    if (loginBtn) {
+      loginBtn.textContent = 'Login';
+      loginBtn.style.cursor = 'pointer';
+      loginBtn.style.background = '#1473e6';
+      loginBtn.style.pointerEvents = 'auto';
+    }
+  }
+});
+
 // ── MAIN DECORATE ──────────────────────────────────────────
 
 export default async function decorate(block) {
@@ -303,12 +330,19 @@ export default async function decorate(block) {
     loginBtn.addEventListener('click', showLoginPopup);
     navTools.appendChild(loginBtn);
   }
-
-  // ── RESTORE SESSION ON PAGE LOAD ──
+  // RESTORE SESSION ON PAGE LOAD ──
+  
+  const isBackNav = sessionStorage.getItem('wasLoggedIn') === 'true' && !getSession();
   const session = getSession();
-  if (session) {
+
+  if (session && !isBackNav) {
+    // Valid session exists — restore login state
+    sessionStorage.setItem('wasLoggedIn', 'true');
     updateNavLoginStatus(session.username);
     loadOffersOnPage(session.country);
+  } else if (!session) {
+    // No session — clear the flag too
+    sessionStorage.removeItem('wasLoggedIn');
   }
 
   const navWrapper = document.createElement('div');
