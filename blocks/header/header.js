@@ -1,7 +1,6 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 
-// media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
 
 function closeOnEscape(e) {
@@ -10,11 +9,9 @@ function closeOnEscape(e) {
     const navSections = nav.querySelector('.nav-sections');
     const navSectionExpanded = navSections.querySelector('[aria-expanded="true"]');
     if (navSectionExpanded && isDesktop.matches) {
-      // eslint-disable-next-line no-use-before-define
       toggleAllNavSections(navSections);
       navSectionExpanded.focus();
     } else if (!isDesktop.matches) {
-      // eslint-disable-next-line no-use-before-define
       toggleMenu(nav, navSections);
       nav.querySelector('button').focus();
     }
@@ -27,10 +24,8 @@ function closeOnFocusLost(e) {
     const navSections = nav.querySelector('.nav-sections');
     const navSectionExpanded = navSections.querySelector('[aria-expanded="true"]');
     if (navSectionExpanded && isDesktop.matches) {
-      // eslint-disable-next-line no-use-before-define
       toggleAllNavSections(navSections, false);
     } else if (!isDesktop.matches) {
-      // eslint-disable-next-line no-use-before-define
       toggleMenu(nav, navSections, false);
     }
   }
@@ -41,7 +36,6 @@ function openOnKeydown(e) {
   const isNavDrop = focused.className === 'nav-drop';
   if (isNavDrop && (e.code === 'Enter' || e.code === 'Space')) {
     const dropExpanded = focused.getAttribute('aria-expanded') === 'true';
-    // eslint-disable-next-line no-use-before-define
     toggleAllNavSections(focused.closest('.nav-sections'));
     focused.setAttribute('aria-expanded', dropExpanded ? 'false' : 'true');
   }
@@ -51,23 +45,12 @@ function focusNavSection() {
   document.activeElement.addEventListener('keydown', openOnKeydown);
 }
 
-/**
- * Toggles all nav sections
- * @param {Element} sections The container element
- * @param {Boolean} expanded Whether the element should be expanded or collapsed
- */
 function toggleAllNavSections(sections, expanded = false) {
   sections.querySelectorAll('.nav-sections .default-content-wrapper > ul > li').forEach((section) => {
     section.setAttribute('aria-expanded', expanded);
   });
 }
 
-/**
- * Toggles the entire nav
- * @param {Element} nav The container element
- * @param {Element} navSections The nav sections within the container element
- * @param {*} forceExpanded Optional param to force nav expand behavior when not null
- */
 function toggleMenu(nav, navSections, forceExpanded = null) {
   const expanded = forceExpanded !== null ? !forceExpanded : nav.getAttribute('aria-expanded') === 'true';
   const button = nav.querySelector('.nav-hamburger button');
@@ -75,7 +58,6 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
   nav.setAttribute('aria-expanded', expanded ? 'false' : 'true');
   toggleAllNavSections(navSections, expanded || isDesktop.matches ? 'false' : 'true');
   button.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
-  // enable nav dropdown keyboard accessibility
   const navDrops = navSections.querySelectorAll('.nav-drop');
   if (isDesktop.matches) {
     navDrops.forEach((drop) => {
@@ -90,12 +72,8 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
       drop.removeEventListener('focus', focusNavSection);
     });
   }
-
-  // enable menu collapse on escape keypress
   if (!expanded || isDesktop.matches) {
-    // collapse menu on escape press
     window.addEventListener('keydown', closeOnEscape);
-    // collapse menu on focus lost
     nav.addEventListener('focusout', closeOnFocusLost);
   } else {
     window.removeEventListener('keydown', closeOnEscape);
@@ -103,18 +81,170 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
   }
 }
 
-/**
- * loads and decorates the header, mainly the nav
- * @param {Element} block The header block element
- */
+// ── LOGIN HELPERS ──────────────────────────────────────────
+
+function getSession() {
+  try {
+    const d = localStorage.getItem('userSession');
+    return d ? JSON.parse(d) : null;
+  } catch {
+    return null;
+  }
+}
+
+function updateNavLoginStatus(username) {
+  const loginBtn = document.getElementById('nav-login-btn-trigger');
+  if (loginBtn) {
+    loginBtn.textContent = `Hi, ${username} 👋`;
+    loginBtn.style.cursor = 'default';
+    loginBtn.style.pointerEvents = 'none';
+  }
+}
+
+function loadOffersOnPage(country) {
+  const langSegment = window.location.pathname.split('/')[2] || 'en';
+  const offerPath = `/us/${langSegment}/offers/${country}`;
+
+  // skip nav and footer pages
+  const path = window.location.pathname;
+  if (path.includes('/nav') || path.includes('/footer')) return;
+
+  let offersSection = document.getElementById('offers-section');
+  if (!offersSection) {
+    offersSection = document.createElement('div');
+    offersSection.id = 'offers-section';
+    offersSection.style.padding = '2rem';
+
+    const main = document.querySelector('main');
+    if (main) {
+      // inject after first section (hero) on any page
+      const firstSection = main.querySelector('.section');
+      if (firstSection && firstSection.nextSibling) {
+        main.insertBefore(offersSection, firstSection.nextSibling);
+      } else if (firstSection) {
+        firstSection.after(offersSection);
+      } else {
+        main.appendChild(offersSection);
+      }
+    }
+  }
+
+  offersSection.style.display = 'block';
+  offersSection.innerHTML = '<p>Loading offers...</p>';
+
+  fetch(`${window.location.origin}${offerPath}.plain.html`)
+    .then((r) => (r.ok ? r.text() : null))
+    .then((html) => {
+      offersSection.innerHTML = html || '<p>Offers coming soon.</p>';
+    })
+    .catch(() => {
+      offersSection.innerHTML = '<p>Offers coming soon.</p>';
+    });
+}
+
+function showLoginPopup() {
+  const existing = document.getElementById('nav-login-overlay');
+  if (existing) existing.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'nav-login-overlay';
+  overlay.style.cssText = `
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex; align-items: center;
+    justify-content: center; z-index: 9999;
+  `;
+
+  const popup = document.createElement('div');
+  popup.style.cssText = `
+    background: white; border-radius: 12px;
+    padding: 2rem; width: 360px;
+  `;
+
+  popup.innerHTML = `
+    <h2 style="margin:0 0 1rem;font-size:1.25rem;font-family:sans-serif;">Welcome Back</h2>
+    <input id="nl-username" type="text" placeholder="Enter username"
+      style="width:100%;padding:10px;margin-bottom:10px;border:1px solid #ddd;
+      border-radius:8px;font-size:14px;box-sizing:border-box;"/>
+    <input id="nl-password" type="password" placeholder="Enter password"
+      style="width:100%;padding:10px;margin-bottom:10px;border:1px solid #ddd;
+      border-radius:8px;font-size:14px;box-sizing:border-box;"/>
+    <p id="nl-error" style="color:red;font-size:13px;margin:0 0 8px;font-family:sans-serif;"></p>
+    <button id="nl-submit"
+      style="width:100%;padding:12px;background:#1473e6;color:white;
+      border:none;border-radius:8px;font-size:15px;cursor:pointer;font-family:sans-serif;">
+      Login
+    </button>
+  `;
+
+  overlay.appendChild(popup);
+  document.body.appendChild(overlay);
+
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) overlay.remove();
+  });
+
+  const submitBtn = document.getElementById('nl-submit');
+
+  submitBtn.addEventListener('click', async () => {
+    const username = document.getElementById('nl-username').value.trim();
+    const password = document.getElementById('nl-password').value.trim();
+    const error = document.getElementById('nl-error');
+    error.textContent = '';
+
+    if (!username || !password) {
+      error.textContent = 'Please enter both fields.';
+      return;
+    }
+
+    submitBtn.textContent = 'Logging in…';
+    submitBtn.disabled = true;
+
+    try {
+      const BASE_URL = window.location.hostname.includes('aem.live')
+        ? '' : 'https://main--edsuedemo--pradeepdubeyepam.aem.page';
+
+      const resp = await fetch(`${BASE_URL}/blocks/login/data.json`);
+      const data = await resp.json();
+      const user = data.users.find(
+        (u) => u.username === username && u.password === password,
+      );
+
+      if (user) {
+        localStorage.setItem('userSession', JSON.stringify({
+          username: user.username,
+          country: user.country,
+        }));
+        overlay.remove();
+        updateNavLoginStatus(user.username);
+        loadOffersOnPage(user.country);
+      } else {
+        error.textContent = 'Invalid username or password.';
+        submitBtn.textContent = 'Login';
+        submitBtn.disabled = false;
+      }
+    } catch {
+      error.textContent = 'Something went wrong. Try again.';
+      submitBtn.textContent = 'Login';
+      submitBtn.disabled = false;
+    }
+  });
+
+  [document.getElementById('nl-username'), document.getElementById('nl-password')].forEach((input) => {
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') submitBtn.click();
+    });
+  });
+}
+
+// ── MAIN DECORATE ──────────────────────────────────────────
+
 export default async function decorate(block) {
-  // load nav as fragment
   const navMeta = getMetadata('nav');
   const locale = window.location.pathname.split('/').slice(0, 3).join('/');
   const navPath = navMeta ? new URL(navMeta, window.location).pathname : `${locale}/nav`;
   const fragment = await loadFragment(navPath);
 
-  // decorate nav DOM
   block.textContent = '';
   const nav = document.createElement('nav');
   nav.id = 'nav';
@@ -147,7 +277,6 @@ export default async function decorate(block) {
     });
   }
 
-  // hamburger for mobile
   const hamburger = document.createElement('div');
   hamburger.classList.add('nav-hamburger');
   hamburger.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open navigation">
@@ -156,9 +285,31 @@ export default async function decorate(block) {
   hamburger.addEventListener('click', () => toggleMenu(nav, navSections));
   nav.prepend(hamburger);
   nav.setAttribute('aria-expanded', 'false');
-  // prevent mobile nav behavior on window resize
   toggleMenu(nav, navSections, isDesktop.matches);
   isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, isDesktop.matches));
+
+  // ── ADD LOGIN BUTTON TO NAV TOOLS ──
+  const navTools = nav.querySelector('.nav-tools');
+  if (navTools) {
+    const loginBtn = document.createElement('button');
+    loginBtn.id = 'nav-login-btn-trigger';
+    loginBtn.textContent = 'Login';
+    loginBtn.style.cssText = `
+      background: #1473e6; color: white;
+      border: none; border-radius: 20px;
+      padding: 8px 20px; font-size: 14px;
+      cursor: pointer; margin-left: 12px;
+    `;
+    loginBtn.addEventListener('click', showLoginPopup);
+    navTools.appendChild(loginBtn);
+  }
+
+  // ── RESTORE SESSION ON PAGE LOAD ──
+  const session = getSession();
+  if (session) {
+    updateNavLoginStatus(session.username);
+    loadOffersOnPage(session.country);
+  }
 
   const navWrapper = document.createElement('div');
   navWrapper.className = 'nav-wrapper';
