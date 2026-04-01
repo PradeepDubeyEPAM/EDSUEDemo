@@ -266,3 +266,28 @@ header nav .nav-sections ul > li > ul > li {
 header nav .nav-tools {
   grid-area: tools;
 }
+/* login button */
+#nav-login-btn-trigger {
+  background: #1473e6;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-left: 12px;
+  font-family: var(--body-font-family);
+}
+
+/* offers section injected after hero */
+#offers-section {
+  padding: 2rem;
+  max-width: 1248px;
+  margin: 0 auto;
+}
+
+@media (width >= 900px) {
+  #offers-section {
+    padding: 2rem 32px;
+  }
+}
