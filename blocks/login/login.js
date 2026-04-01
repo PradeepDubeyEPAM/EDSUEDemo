@@ -216,9 +216,24 @@ async function showOffersOverlay(session) {
   const viewBtn = document.createElement('button');
   viewBtn.className = 'login-btn login-popup-view';
   viewBtn.textContent = 'View All Offers →';
-  viewBtn.addEventListener('click', () => {
+  viewBtn.addEventListener('click', async () => {
   const path = OFFER_PATHS[session.country];
-  if (path) window.location.href = `${window.location.origin}${path}`;
+  if (!path) return;
+
+  try {
+    const resp = await fetch(`${window.location.origin}${path}.plain.html`);
+    if (!resp.ok) return;
+    const html = await resp.text();
+
+    closeOverlay();
+
+    const main = document.querySelector('main');
+    if (main) {
+      main.innerHTML = `<div class="section">${html}</div>`;
+    }
+  } catch (e) {
+    
+  }
 });
 
   popup.append(welcome, locale, offersContainer, viewBtn, closeBtn);
