@@ -2,17 +2,21 @@ import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
 
 /**
- * Parse authored key-value rows produced by the UE model.
- * Each block row: <div><div>fieldName</div><div>fieldValue</div></div>
+ * Parse fields from a UE page-based authored block.
+ * AEM renders each field as a single-child row; the cell is identified by
+ * data-aue-prop (text / aem-content / reference fields) or
+ * data-richtext-prop (richtext fields).
  * @param {Element} block
- * @returns {Object} map of fieldName → value Element
+ * @returns {Object} map of prop name → cell Element
  */
 function parseFields(block) {
   const fields = {};
   [...block.children].forEach((row) => {
-    const [keyEl, valEl] = [...row.children];
-    if (keyEl && valEl) {
-      fields[keyEl.textContent.trim()] = valEl;
+    const cell = row.firstElementChild;
+    if (!cell) return;
+    const prop = cell.getAttribute('data-aue-prop') || cell.getAttribute('data-richtext-prop');
+    if (prop) {
+      fields[prop] = cell;
     }
   });
   return fields;
