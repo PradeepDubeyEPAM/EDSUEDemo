@@ -3,6 +3,8 @@ import { loadFragment } from '../fragment/fragment.js';
 
 const isDesktop = window.matchMedia('(min-width: 900px)');
 
+// ── NAV KEYBOARD / FOCUS HELPERS ──────────────────────────
+
 function closeOnEscape(e) {
   if (e.code === 'Escape') {
     const nav = document.getElementById('nav');
@@ -46,18 +48,31 @@ function focusNavSection() {
 }
 
 function toggleAllNavSections(sections, expanded = false) {
-  sections.querySelectorAll('.nav-sections .default-content-wrapper > ul > li').forEach((section) => {
-    section.setAttribute('aria-expanded', expanded);
-  });
+  sections
+    .querySelectorAll('.nav-sections .default-content-wrapper > ul > li')
+    .forEach((section) => {
+      section.setAttribute('aria-expanded', expanded);
+    });
 }
 
 function toggleMenu(nav, navSections, forceExpanded = null) {
-  const expanded = forceExpanded !== null ? !forceExpanded : nav.getAttribute('aria-expanded') === 'true';
+  const expanded =
+    forceExpanded !== null
+      ? !forceExpanded
+      : nav.getAttribute('aria-expanded') === 'true';
   const button = nav.querySelector('.nav-hamburger button');
-  document.body.style.overflowY = (expanded || isDesktop.matches) ? '' : 'hidden';
+  document.body.style.overflowY =
+    expanded || isDesktop.matches ? '' : 'hidden';
   nav.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-  toggleAllNavSections(navSections, expanded || isDesktop.matches ? 'false' : 'true');
-  button.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
+  toggleAllNavSections(
+    navSections,
+    expanded || isDesktop.matches ? 'false' : 'true',
+  );
+  button.setAttribute(
+    'aria-label',
+    expanded ? 'Open navigation' : 'Close navigation',
+  );
+
   const navDrops = navSections.querySelectorAll('.nav-drop');
   if (isDesktop.matches) {
     navDrops.forEach((drop) => {
@@ -72,6 +87,7 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
       drop.removeEventListener('focus', focusNavSection);
     });
   }
+
   if (!expanded || isDesktop.matches) {
     window.addEventListener('keydown', closeOnEscape);
     nav.addEventListener('focusout', closeOnFocusLost);
@@ -81,7 +97,7 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
   }
 }
 
-// ── LOGIN HELPERS ──────────────────────────────────────────
+// ── SESSION HELPERS ────────────────────────────────────────
 
 function getSession() {
   try {
@@ -96,23 +112,22 @@ function clearSession() {
   localStorage.removeItem('userSession');
 }
 
-function updateNavLoginStatus(username) {
-  const loginBtn = document.getElementById('nav-login-btn-trigger');
-  if (loginBtn) {
-    loginBtn.textContent = `Logged in ${username} 👋`;
-    loginBtn.style.cursor = 'default';
-    loginBtn.style.background = '#2d9d78'; // green to show logged in
-    loginBtn.style.pointerEvents = 'none';
-  }
-}
+// ── OFFERS ─────────────────────────────────────────────────
+
+// Track the country currently displayed so we don't re-fetch unnecessarily
+let _currentOffersCountry = null;
 
 function loadOffersOnPage(country) {
-  const langSegment = window.location.pathname.split('/')[2] || 'en';
-  const offerPath = `/us/${langSegment}/offers/${country}`;
-
-  // skip nav and footer pages
+  // Skip offer injection on nav/footer pages
   const path = window.location.pathname;
   if (path.includes('/nav') || path.includes('/footer')) return;
+
+  // If same country is already loaded, do nothing
+  if (_currentOffersCountry === country) return;
+  _currentOffersCountry = country;
+
+  const langSegment = window.location.pathname.split('/')[2] || 'en';
+  const offerPath = `/us/${langSegment}/offers/${country}`;
 
   let offersSection = document.getElementById('offers-section');
   if (!offersSection) {
@@ -122,10 +137,8 @@ function loadOffersOnPage(country) {
 
     const main = document.querySelector('main');
     if (main) {
-      // inject after FIRST section (hero), BEFORE second section (text/image blocks)
       const sections = main.querySelectorAll('.section');
       if (sections.length >= 2) {
-        // insert between section[0] (hero) and section[1] (text/image)
         main.insertBefore(offersSection, sections[1]);
       } else if (sections.length === 1) {
         sections[0].after(offersSection);
@@ -148,6 +161,159 @@ function loadOffersOnPage(country) {
     });
 }
 
+function removeOffers() {
+  _currentOffersCountry = null;
+  const offersSection = document.getElementById('offers-section');
+  if (offersSection) offersSection.remove();
+}
+
+// ── NAV UI ─────────────────────────────────────────────────
+
+/**
+ * Shows the logged-in state: replaces Login button with
+ * "Logged in as {username}" text + a Logout button.
+ */
+function showLoggedInUI(username) {
+  // Remove any existing wrapper to avoid duplicates
+  const existing = document.getElementById('nav-user-wrapper');
+  if (existing) existing.remove();
+
+  const loginBtn = document.getElementById('nav-login-btn-trigger');
+  const navTools = loginBtn
+    ? loginBtn.parentElement
+    : document.querySelector('.nav-tools');
+
+  if (loginBtn) loginBtn.remove();
+
+  const wrapper = document.createElement('div');
+  wrapper.id = 'nav-user-wrapper';
+  wrapper.style.cssText =
+    'display:flex;align-items:center;gap:10px;margin-left:12px;';
+
+  const text = document.createElement('span');
+  text.style.cssText = 'font-size:14px;font-family:sans-serif;';
+  text.textContent = `Logged in as ${username} 👋`;
+
+  const logoutBtn = document.createElement('button');
+  logoutBtn.textContent = 'Logout';
+  logoutBtn.style.cssText = `
+    background:#e34850;color:white;border:none;
+    border-radius:20px;padding:6px 14px;cursor:pointer;
+    font-size:14px;
+  `;
+  logoutBtn.addEventListener('click', handleLogout);
+
+  wrapper.appendChild(text);
+  wrapper.appendChild(logoutBtn);
+  if (navTools) navTools.appendChild(wrapper);
+}
+
+/**
+ * Shows the logged-out state: removes the user wrapper and
+ * (re-)creates the Login button.
+ */
+function showLoggedOutUI() {
+  const wrapper = document.getElementById('nav-user-wrapper');
+  if (wrapper) wrapper.remove();
+
+  // Only add login button if it isn't already there
+  if (!document.getElementById('nav-login-btn-trigger')) {
+    const navTools = document.querySelector('.nav-tools');
+    if (navTools) {
+      const btn = createLoginButton();
+      navTools.appendChild(btn);
+    }
+  }
+}
+
+function createLoginButton() {
+  const btn = document.createElement('button');
+  btn.id = 'nav-login-btn-trigger';
+  btn.textContent = 'Login';
+  btn.style.cssText = `
+    background:#1473e6;color:white;
+    border:none;border-radius:20px;
+    padding:8px 20px;font-size:14px;
+    cursor:pointer;margin-left:12px;
+  `;
+  btn.addEventListener('click', showLoginPopup);
+  return btn;
+}
+
+// ── LOGOUT ─────────────────────────────────────────────────
+
+function handleLogout() {
+  clearSession();
+  removeOffers();
+  showLoggedOutUI();
+}
+
+// ── REACTIVE UI (localStorage changes) ────────────────────
+
+/**
+ * Single function that reads localStorage and syncs the entire UI.
+ * Guarded so rapid/duplicate calls don't cause flicker.
+ */
+let _refreshScheduled = false;
+function refreshUIFromSession() {
+  if (_refreshScheduled) return;
+  _refreshScheduled = true;
+
+  // Defer to next tick so multiple synchronous triggers collapse into one
+  setTimeout(() => {
+    _refreshScheduled = false;
+    const session = getSession();
+
+    if (session) {
+      showLoggedInUI(session.username);
+      loadOffersOnPage(session.country);
+    } else {
+      removeOffers();
+      showLoggedOutUI();
+    }
+  }, 0);
+}
+
+// Tracks the raw string value so the DevTools poller can detect changes
+let _lastKnownSession = localStorage.getItem('userSession');
+
+// Cross-tab sync (storage event only fires for OTHER tabs, not the current one)
+window.addEventListener('storage', (e) => {
+  if (e.key === 'userSession') refreshUIFromSession();
+});
+
+// Same-tab sync via JS — only intercept our own key to avoid global noise
+const _originalSetItem = localStorage.setItem.bind(localStorage);
+localStorage.setItem = function setItem(key, value) {
+  _originalSetItem(key, value);
+  if (key === 'userSession') {
+    _lastKnownSession = value; // keep poller in sync so it doesn't double-fire
+    refreshUIFromSession();
+  }
+};
+
+const _originalRemoveItem = localStorage.removeItem.bind(localStorage);
+localStorage.removeItem = function removeItem(key) {
+  _originalRemoveItem(key);
+  if (key === 'userSession') {
+    _lastKnownSession = null; // keep poller in sync
+    refreshUIFromSession();
+  }
+};
+
+// DevTools fallback — DevTools GUI edits bypass both the storage event (cross-tab only)
+// and our setItem patch (DevTools writes directly to storage). Poll every second
+// to catch those direct edits so country changes in DevTools work instantly.
+setInterval(() => {
+  const current = localStorage.getItem('userSession');
+  if (current !== _lastKnownSession) {
+    _lastKnownSession = current;
+    refreshUIFromSession();
+  }
+}, 1000);
+
+// ── LOGIN POPUP ────────────────────────────────────────────
+
 function showLoginPopup() {
   const existing = document.getElementById('nav-login-overlay');
   if (existing) existing.remove();
@@ -155,18 +321,17 @@ function showLoginPopup() {
   const overlay = document.createElement('div');
   overlay.id = 'nav-login-overlay';
   overlay.style.cssText = `
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.5);
-    display: flex; align-items: center;
-    justify-content: center; z-index: 9999;
+    position:fixed;inset:0;
+    background:rgba(0,0,0,0.5);
+    display:flex;align-items:center;
+    justify-content:center;z-index:9999;
   `;
 
   const popup = document.createElement('div');
   popup.style.cssText = `
-    background: white; border-radius: 12px;
-    padding: 2rem; width: 360px;
+    background:white;border-radius:12px;
+    padding:2rem;width:360px;
   `;
-
   popup.innerHTML = `
     <h2 style="margin:0 0 1rem;font-size:1.25rem;font-family:sans-serif;">Welcome Back</h2>
     <input id="nl-username" type="text" placeholder="Enter username"
@@ -175,7 +340,7 @@ function showLoginPopup() {
     <input id="nl-password" type="password" placeholder="Enter password"
       style="width:100%;padding:10px;margin-bottom:10px;border:1px solid #ddd;
       border-radius:8px;font-size:14px;box-sizing:border-box;"/>
-    <p id="nl-error" style="color:red;font-size:13px;margin:0 0 8px;font-family:sans-serif;"></p>
+    <p id="nl-error" style="color:red;font-size:13px;margin:0 0 8px;font-family:sans-serif;min-height:18px;"></p>
     <button id="nl-submit"
       style="width:100%;padding:12px;background:#1473e6;color:white;
       border:none;border-radius:8px;font-size:15px;cursor:pointer;font-family:sans-serif;">
@@ -186,20 +351,21 @@ function showLoginPopup() {
   overlay.appendChild(popup);
   document.body.appendChild(overlay);
 
+  // Close on backdrop click
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) overlay.remove();
   });
 
-  const submitBtn = document.getElementById('nl-submit');
+  const submitBtn = popup.querySelector('#nl-submit');
 
-  submitBtn.addEventListener('click', async () => {
-    const username = document.getElementById('nl-username').value.trim();
-    const password = document.getElementById('nl-password').value.trim();
-    const error = document.getElementById('nl-error');
-    error.textContent = '';
+  const doLogin = async () => {
+    const username = popup.querySelector('#nl-username').value.trim();
+    const password = popup.querySelector('#nl-password').value.trim();
+    const errorEl = popup.querySelector('#nl-error');
+    errorEl.textContent = '';
 
     if (!username || !password) {
-      error.textContent = 'Please enter both fields.';
+      errorEl.textContent = 'Please enter both fields.';
       return;
     }
 
@@ -208,7 +374,8 @@ function showLoginPopup() {
 
     try {
       const BASE_URL = window.location.hostname.includes('aem.live')
-        ? '' : 'https://main--edsuedemo--pradeepdubeyepam.aem.page';
+        ? ''
+        : 'https://main--edsuedemo--pradeepdubeyepam.aem.page';
 
       const resp = await fetch(`${BASE_URL}/blocks/login/data.json`);
       const data = await resp.json();
@@ -217,93 +384,87 @@ function showLoginPopup() {
       );
 
       if (user) {
-        localStorage.setItem('userSession', JSON.stringify({
-          username: user.username,
-          country: user.country,
-        }));
+        // This triggers refreshUIFromSession via our patched setItem
+        localStorage.setItem(
+          'userSession',
+          JSON.stringify({ username: user.username, country: user.country }),
+        );
         overlay.remove();
-        updateNavLoginStatus(user.username);
-        loadOffersOnPage(user.country);
       } else {
-        error.textContent = 'Invalid username or password.';
+        errorEl.textContent = 'Invalid username or password.';
         submitBtn.textContent = 'Login';
         submitBtn.disabled = false;
       }
     } catch {
-      error.textContent = 'Something went wrong. Try again.';
+      errorEl.textContent = 'Something went wrong. Try again.';
       submitBtn.textContent = 'Login';
       submitBtn.disabled = false;
     }
-  });
+  };
 
-  [document.getElementById('nl-username'), document.getElementById('nl-password')].forEach((input) => {
+  submitBtn.addEventListener('click', doLogin);
+  popup.querySelectorAll('input').forEach((input) => {
     input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') submitBtn.click();
+      if (e.key === 'Enter') doLogin();
     });
   });
 }
-
-// ── HANDLE BACK BUTTON — clear session so offers don't persist ──
-// Use sessionStorage as a "this tab visited" flag.
-// If user navigates back to a page fresh, we treat them as guest.
-window.addEventListener('pageshow', (e) => {
-  // e.persisted = true means page was restored from bfcache (back button)
-  if (e.persisted) {
-    clearSession();
-    // Remove offers section if it exists
-    const offersSection = document.getElementById('offers-section');
-    if (offersSection) offersSection.remove();
-    // Reset login button
-    const loginBtn = document.getElementById('nav-login-btn-trigger');
-    if (loginBtn) {
-      loginBtn.textContent = 'Login';
-      loginBtn.style.cursor = 'pointer';
-      loginBtn.style.background = '#1473e6';
-      loginBtn.style.pointerEvents = 'auto';
-    }
-  }
-});
 
 // ── MAIN DECORATE ──────────────────────────────────────────
 
 export default async function decorate(block) {
   const navMeta = getMetadata('nav');
   const locale = window.location.pathname.split('/').slice(0, 3).join('/');
-  const navPath = navMeta ? new URL(navMeta, window.location).pathname : `${locale}/nav`;
+  const navPath = navMeta
+    ? new URL(navMeta, window.location).pathname
+    : `${locale}/nav`;
   const fragment = await loadFragment(navPath);
 
   block.textContent = '';
   const nav = document.createElement('nav');
   nav.id = 'nav';
+
   while (fragment.firstElementChild) nav.append(fragment.firstElementChild);
 
+  // Assign standard AEM nav section classes
   const classes = ['brand', 'sections', 'tools'];
   classes.forEach((c, i) => {
     const section = nav.children[i];
     if (section) section.classList.add(`nav-${c}`);
   });
 
+  // Clean up brand link classes
   const navBrand = nav.querySelector('.nav-brand');
-  const brandLink = navBrand.querySelector('.button');
-  if (brandLink) {
-    brandLink.className = '';
-    brandLink.closest('.button-container').className = '';
+  if (navBrand) {
+    const brandLink = navBrand.querySelector('.button');
+    if (brandLink) {
+      brandLink.className = '';
+      brandLink.closest('.button-container').className = '';
+    }
   }
 
+  // Wire up dropdown sections
   const navSections = nav.querySelector('.nav-sections');
   if (navSections) {
-    navSections.querySelectorAll(':scope .default-content-wrapper > ul > li').forEach((navSection) => {
-      if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
-      navSection.addEventListener('click', () => {
-        if (isDesktop.matches) {
-          const expanded = navSection.getAttribute('aria-expanded') === 'true';
-          toggleAllNavSections(navSections);
-          navSection.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-        }
+    navSections
+      .querySelectorAll(':scope .default-content-wrapper > ul > li')
+      .forEach((navSection) => {
+        if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
+        navSection.addEventListener('click', () => {
+          if (isDesktop.matches) {
+            const expanded =
+              navSection.getAttribute('aria-expanded') === 'true';
+            toggleAllNavSections(navSections);
+            navSection.setAttribute(
+              'aria-expanded',
+              expanded ? 'false' : 'true',
+            );
+          }
+        });
       });
-    });
   }
 
+  // Hamburger for mobile
   const hamburger = document.createElement('div');
   hamburger.classList.add('nav-hamburger');
   hamburger.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open navigation">
@@ -313,40 +474,26 @@ export default async function decorate(block) {
   nav.prepend(hamburger);
   nav.setAttribute('aria-expanded', 'false');
   toggleMenu(nav, navSections, isDesktop.matches);
-  isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, isDesktop.matches));
+  isDesktop.addEventListener('change', () =>
+    toggleMenu(nav, navSections, isDesktop.matches),
+  );
 
-  // ── ADD LOGIN BUTTON TO NAV TOOLS ──
+  // Add Login button to nav tools
   const navTools = nav.querySelector('.nav-tools');
   if (navTools) {
-    const loginBtn = document.createElement('button');
-    loginBtn.id = 'nav-login-btn-trigger';
-    loginBtn.textContent = 'Login';
-    loginBtn.style.cssText = `
-      background: #1473e6; color: white;
-      border: none; border-radius: 20px;
-      padding: 8px 20px; font-size: 14px;
-      cursor: pointer; margin-left: 12px;
-    `;
-    loginBtn.addEventListener('click', showLoginPopup);
-    navTools.appendChild(loginBtn);
-  }
-  // RESTORE SESSION ON PAGE LOAD ──
-  
-  const isBackNav = sessionStorage.getItem('wasLoggedIn') === 'true' && !getSession();
-  const session = getSession();
-
-  if (session && !isBackNav) {
-    // Valid session exists — restore login state
-    sessionStorage.setItem('wasLoggedIn', 'true');
-    updateNavLoginStatus(session.username);
-    loadOffersOnPage(session.country);
-  } else if (!session) {
-    // No session — clear the flag too
-    sessionStorage.removeItem('wasLoggedIn');
+    navTools.appendChild(createLoginButton());
   }
 
+  // Wrap and mount
   const navWrapper = document.createElement('div');
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   block.append(navWrapper);
+
+  // Restore session state on initial load (page load / reload)
+  const session = getSession();
+  if (session) {
+    showLoggedInUI(session.username);
+    loadOffersOnPage(session.country);
+  }
 }
