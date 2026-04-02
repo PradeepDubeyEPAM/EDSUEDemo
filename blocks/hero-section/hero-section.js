@@ -11,12 +11,32 @@ import { moveInstrumentation } from '../../scripts/scripts.js';
  */
 function parseFields(block) {
   const fields = {};
-  [...block.children].forEach((row) => {
-    const cell = row.firstElementChild;
-    if (!cell) return;
-    const prop = cell.getAttribute('data-aue-prop') || cell.getAttribute('data-richtext-prop');
-    if (prop) {
-      fields[prop] = cell;
+  const rows = [...block.children];
+  const modelOrder = ['headingText', 'bodyText', 'ctaLabel', 'ctaUrl', 'imageSrc'];
+
+  rows.forEach((row, index) => {
+    // UE/authoring markup: prop attributes can appear anywhere inside the row.
+    const attributedCell = row.querySelector('[data-aue-prop], [data-richtext-prop]');
+    if (attributedCell) {
+      const prop = attributedCell.getAttribute('data-aue-prop')
+        || attributedCell.getAttribute('data-richtext-prop');
+      if (prop) fields[prop] = attributedCell;
+      return;
+    }
+
+    // Legacy key/value authored tables.
+    const [keyCell, valueCell] = [...row.children];
+    const key = keyCell?.textContent?.trim();
+    if (key && valueCell && modelOrder.includes(key)) {
+      fields[key] = valueCell;
+      return;
+    }
+
+    // CDN publish fallback: row order follows model field order.
+    const fallbackProp = modelOrder[index];
+    const fallbackCell = row.firstElementChild || row;
+    if (fallbackProp && fallbackCell && !fields[fallbackProp]) {
+      fields[fallbackProp] = fallbackCell;
     }
   });
   return fields;
@@ -86,7 +106,9 @@ export default function decorate(block) {
   content.append(textBlock);
 
   // CTA button (aem-content renders as <a href="…"> inside valEl)
-  const ctaHref = fields.ctaUrl?.querySelector('a')?.href || '#';
+  const ctaHref = fields.ctaUrl?.querySelector('a')?.href
+    || fields.ctaUrl?.textContent?.trim()
+    || '#';
   const ctaText = fields.ctaLabel?.textContent.trim() || '';
 
   const cta = document.createElement('a');
@@ -111,6 +133,8 @@ export default function decorate(block) {
   if (fields.imageSrc) {
     const picture = fields.imageSrc.querySelector('picture');
     const existingImg = fields.imageSrc.querySelector('img');
+    const linkedImageUrl = fields.imageSrc.querySelector('a')?.href
+      || fields.imageSrc.textContent.trim();
 
     if (picture) {
       // Already an optimized picture element from AEM
@@ -123,6 +147,18 @@ export default function decorate(block) {
       const optimized = createOptimizedPicture(
         existingImg.src,
         existingImg.alt || '',
+        false,
+        [{ width: '824' }],
+      );
+      const optimizedImg = optimized.querySelector('img');
+      if (optimizedImg) optimizedImg.className = 'hero-section__image';
+      moveInstrumentation(fields.imageSrc, optimized);
+      media.append(optimized);
+    } else if (linkedImageUrl) {
+      // CDN publish may render reference fields as plain link text.
+      const optimized = createOptimizedPicture(
+        linkedImageUrl,
+        fields.headingText?.textContent?.trim() || '',
         false,
         [{ width: '824' }],
       );
