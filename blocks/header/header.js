@@ -145,9 +145,7 @@ function loadOffersOnPage(country) {
   offersSection.style.display = 'block';
   offersSection.innerHTML = '<p>Loading offers...</p>';
 
-  // STEP 1 — fetch placeholder title from store-placeholders
-  // FIX: changed from /placeholders.json to /us/en/store-placeholders.json
-  fetch(`${window.location.origin}/us/${langSegment}/store-placeholders.json`)
+  fetch(`${BASE_URL}/us/${langSegment}/store-placeholders.json`)
     .then((r) => (r.ok ? r.json() : null))
     .then((json) => {
       if (!json) return;
@@ -162,8 +160,8 @@ function loadOffersOnPage(country) {
     })
     .catch(() => {});
 
-  // STEP 2 — fetch actual offer page content
-  // FIX: this fetch was missing in previous version
+  //  fetch actual offer page content
+  /
   fetch(`${window.location.origin}${offerPath}.plain.html`)
     .then((r) => (r.ok ? r.text() : null))
     .then((html) => {
