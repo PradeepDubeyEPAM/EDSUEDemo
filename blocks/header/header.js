@@ -145,7 +145,7 @@ function loadOffersOnPage(country) {
   offersSection.style.display = 'block';
   offersSection.innerHTML = '<p>Loading offers...</p>';
 
-  fetch(`${BASE_URL}/us/${langSegment}/store-placeholders.json`)
+fetch(`${window.location.origin}/us/${langSegment}/store-placeholders.json`)
     .then((r) => (r.ok ? r.json() : null))
     .then((json) => {
       if (!json) return;
