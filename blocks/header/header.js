@@ -61,17 +61,10 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
       ? !forceExpanded
       : nav.getAttribute('aria-expanded') === 'true';
   const button = nav.querySelector('.nav-hamburger button');
-  document.body.style.overflowY =
-    expanded || isDesktop.matches ? '' : 'hidden';
+  document.body.style.overflowY = expanded || isDesktop.matches ? '' : 'hidden';
   nav.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-  toggleAllNavSections(
-    navSections,
-    expanded || isDesktop.matches ? 'false' : 'true',
-  );
-  button.setAttribute(
-    'aria-label',
-    expanded ? 'Open navigation' : 'Close navigation',
-  );
+  toggleAllNavSections(navSections, expanded || isDesktop.matches ? 'false' : 'true');
+  button.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
 
   const navDrops = navSections.querySelectorAll('.nav-drop');
   if (isDesktop.matches) {
@@ -114,20 +107,21 @@ function clearSession() {
 
 // ── OFFERS ─────────────────────────────────────────────────
 
-// Track the country currently displayed so we don't re-fetch unnecessarily
 let _currentOffersCountry = null;
 
 function loadOffersOnPage(country) {
-  // Skip offer injection on nav/footer pages
   const path = window.location.pathname;
   if (path.includes('/nav') || path.includes('/footer')) return;
 
-  // If same country is already loaded, do nothing
   if (_currentOffersCountry === country) return;
   _currentOffersCountry = country;
 
-  const langSegment = window.location.pathname.split('/')[2] || 'en';
+  const langSegment = path.split('/')[2] || 'en';
   const offerPath = `/us/${langSegment}/offers/${country}`;
+
+  // remove existing title if any
+  const existingTitle = document.getElementById('offers-title');
+  if (existingTitle) existingTitle.remove();
 
   let offersSection = document.getElementById('offers-section');
   if (!offersSection) {
@@ -151,6 +145,25 @@ function loadOffersOnPage(country) {
   offersSection.style.display = 'block';
   offersSection.innerHTML = '<p>Loading offers...</p>';
 
+  // STEP 1 — fetch placeholder title from store-placeholders
+  // FIX: changed from /placeholders.json to /us/en/store-placeholders.json
+  fetch(`${window.location.origin}/us/${langSegment}/store-placeholders.json`)
+    .then((r) => (r.ok ? r.json() : null))
+    .then((json) => {
+      if (!json) return;
+      const row = json.data.find((d) => d.key === `offer-title-${country}`);
+      if (row && row.value) {
+        const titleEl = document.createElement('h2');
+        titleEl.id = 'offers-title';
+        titleEl.style.cssText = 'font-family:sans-serif;padding:0 2rem 1rem;';
+        titleEl.textContent = row.value;
+        offersSection.before(titleEl);
+      }
+    })
+    .catch(() => {});
+
+  // STEP 2 — fetch actual offer page content
+  // FIX: this fetch was missing in previous version
   fetch(`${window.location.origin}${offerPath}.plain.html`)
     .then((r) => (r.ok ? r.text() : null))
     .then((html) => {
@@ -165,16 +178,13 @@ function removeOffers() {
   _currentOffersCountry = null;
   const offersSection = document.getElementById('offers-section');
   if (offersSection) offersSection.remove();
+  const offersTitle = document.getElementById('offers-title');
+  if (offersTitle) offersTitle.remove();
 }
 
 // ── NAV UI ─────────────────────────────────────────────────
 
-/**
- * Shows the logged-in state: replaces Login button with
- * "Logged in as {username}" text + a Logout button.
- */
 function showLoggedInUI(username) {
-  // Remove any existing wrapper to avoid duplicates
   const existing = document.getElementById('nav-user-wrapper');
   if (existing) existing.remove();
 
@@ -187,12 +197,11 @@ function showLoggedInUI(username) {
 
   const wrapper = document.createElement('div');
   wrapper.id = 'nav-user-wrapper';
-  wrapper.style.cssText =
-    'display:flex;align-items:center;gap:10px;margin-left:12px;';
+  wrapper.style.cssText = 'display:flex;align-items:center;gap:10px;margin-left:12px;';
 
   const text = document.createElement('span');
   text.style.cssText = 'font-size:14px;font-family:sans-serif;';
-  text.textContent = `Logged in as ${username} 👋`;
+  text.textContent = `Logged in as ${username} `;
 
   const logoutBtn = document.createElement('button');
   logoutBtn.textContent = 'Logout';
@@ -208,21 +217,13 @@ function showLoggedInUI(username) {
   if (navTools) navTools.appendChild(wrapper);
 }
 
-/**
- * Shows the logged-out state: removes the user wrapper and
- * (re-)creates the Login button.
- */
 function showLoggedOutUI() {
   const wrapper = document.getElementById('nav-user-wrapper');
   if (wrapper) wrapper.remove();
 
-  // Only add login button if it isn't already there
   if (!document.getElementById('nav-login-btn-trigger')) {
     const navTools = document.querySelector('.nav-tools');
-    if (navTools) {
-      const btn = createLoginButton();
-      navTools.appendChild(btn);
-    }
+    if (navTools) navTools.appendChild(createLoginButton());
   }
 }
 
@@ -248,22 +249,16 @@ function handleLogout() {
   showLoggedOutUI();
 }
 
-// ── REACTIVE UI (localStorage changes) ────────────────────
+// ── REACTIVE UI ────────────────────────────────────────────
 
-/**
- * Single function that reads localStorage and syncs the entire UI.
- * Guarded so rapid/duplicate calls don't cause flicker.
- */
 let _refreshScheduled = false;
 function refreshUIFromSession() {
   if (_refreshScheduled) return;
   _refreshScheduled = true;
 
-  // Defer to next tick so multiple synchronous triggers collapse into one
   setTimeout(() => {
     _refreshScheduled = false;
     const session = getSession();
-
     if (session) {
       showLoggedInUI(session.username);
       loadOffersOnPage(session.country);
@@ -274,20 +269,17 @@ function refreshUIFromSession() {
   }, 0);
 }
 
-// Tracks the raw string value so the DevTools poller can detect changes
 let _lastKnownSession = localStorage.getItem('userSession');
 
-// Cross-tab sync (storage event only fires for OTHER tabs, not the current one)
 window.addEventListener('storage', (e) => {
   if (e.key === 'userSession') refreshUIFromSession();
 });
 
-// Same-tab sync via JS — only intercept our own key to avoid global noise
 const _originalSetItem = localStorage.setItem.bind(localStorage);
 localStorage.setItem = function setItem(key, value) {
   _originalSetItem(key, value);
   if (key === 'userSession') {
-    _lastKnownSession = value; // keep poller in sync so it doesn't double-fire
+    _lastKnownSession = value;
     refreshUIFromSession();
   }
 };
@@ -296,14 +288,12 @@ const _originalRemoveItem = localStorage.removeItem.bind(localStorage);
 localStorage.removeItem = function removeItem(key) {
   _originalRemoveItem(key);
   if (key === 'userSession') {
-    _lastKnownSession = null; // keep poller in sync
+    _lastKnownSession = null;
     refreshUIFromSession();
   }
 };
 
-// DevTools fallback — DevTools GUI edits bypass both the storage event (cross-tab only)
-// and our setItem patch (DevTools writes directly to storage). Poll every second
-// to catch those direct edits so country changes in DevTools work instantly.
+// DevTools fallback poller
 setInterval(() => {
   const current = localStorage.getItem('userSession');
   if (current !== _lastKnownSession) {
@@ -351,7 +341,6 @@ function showLoginPopup() {
   overlay.appendChild(popup);
   document.body.appendChild(overlay);
 
-  // Close on backdrop click
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) overlay.remove();
   });
@@ -384,7 +373,6 @@ function showLoginPopup() {
       );
 
       if (user) {
-        // This triggers refreshUIFromSession via our patched setItem
         localStorage.setItem(
           'userSession',
           JSON.stringify({ username: user.username, country: user.country }),
@@ -426,14 +414,12 @@ export default async function decorate(block) {
 
   while (fragment.firstElementChild) nav.append(fragment.firstElementChild);
 
-  // Assign standard AEM nav section classes
   const classes = ['brand', 'sections', 'tools'];
   classes.forEach((c, i) => {
     const section = nav.children[i];
     if (section) section.classList.add(`nav-${c}`);
   });
 
-  // Clean up brand link classes
   const navBrand = nav.querySelector('.nav-brand');
   if (navBrand) {
     const brandLink = navBrand.querySelector('.button');
@@ -443,7 +429,6 @@ export default async function decorate(block) {
     }
   }
 
-  // Wire up dropdown sections
   const navSections = nav.querySelector('.nav-sections');
   if (navSections) {
     navSections
@@ -452,19 +437,14 @@ export default async function decorate(block) {
         if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
         navSection.addEventListener('click', () => {
           if (isDesktop.matches) {
-            const expanded =
-              navSection.getAttribute('aria-expanded') === 'true';
+            const expanded = navSection.getAttribute('aria-expanded') === 'true';
             toggleAllNavSections(navSections);
-            navSection.setAttribute(
-              'aria-expanded',
-              expanded ? 'false' : 'true',
-            );
+            navSection.setAttribute('aria-expanded', expanded ? 'false' : 'true');
           }
         });
       });
   }
 
-  // Hamburger for mobile
   const hamburger = document.createElement('div');
   hamburger.classList.add('nav-hamburger');
   hamburger.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open navigation">
@@ -478,19 +458,15 @@ export default async function decorate(block) {
     toggleMenu(nav, navSections, isDesktop.matches),
   );
 
-  // Add Login button to nav tools
   const navTools = nav.querySelector('.nav-tools');
-  if (navTools) {
-    navTools.appendChild(createLoginButton());
-  }
+  if (navTools) navTools.appendChild(createLoginButton());
 
-  // Wrap and mount
   const navWrapper = document.createElement('div');
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   block.append(navWrapper);
 
-  // Restore session state on initial load (page load / reload)
+  // Restore session on page load
   const session = getSession();
   if (session) {
     showLoggedInUI(session.username);
