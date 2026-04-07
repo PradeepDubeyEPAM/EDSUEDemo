@@ -161,7 +161,7 @@ fetch(`${window.location.origin}/us/${langSegment}/store-placeholders.json`)
     .catch(() => {});
 
   //  fetch actual offer page content
-  /
+
   fetch(`${window.location.origin}${offerPath}.plain.html`)
     .then((r) => (r.ok ? r.text() : null))
     .then((html) => {
