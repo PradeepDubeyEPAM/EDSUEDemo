@@ -107,17 +107,17 @@ function clearSession() {
 
 // ── OFFERS ─────────────────────────────────────────────────
 
-let _currentOffersCountry = null;
+let _currentOffersCity = null;
 
-function loadOffersOnPage(country) {
+function loadOffersOnPage(city) {
   const path = window.location.pathname;
   if (path.includes('/nav') || path.includes('/footer')) return;
 
-  if (_currentOffersCountry === country) return;
-  _currentOffersCountry = country;
+  if (_currentOffersCity === city) return;
+  _currentOffersCity = city;
 
   const langSegment = path.split('/')[2] || 'en';
-  const offerPath = `/us/${langSegment}/offers/${country}`;
+  const offerPath = `/us/${langSegment}/offers/${city}`;
 
   // remove existing title if any
   const existingTitle = document.getElementById('offers-title');
@@ -145,18 +145,21 @@ function loadOffersOnPage(country) {
   offersSection.style.display = 'block';
   offersSection.innerHTML = '<p>Loading offers...</p>';
 
-fetch(`${window.location.origin}/us/${langSegment}/store-placeholders.json`)
+   fetch(`${window.location.origin}/store-placeholders.json`)
     .then((r) => (r.ok ? r.json() : null))
     .then((json) => {
       if (!json) return;
-      const row = json.data.find((d) => d.key === `offer-title-${country}`);
-      if (row && row.value) {
-        const titleEl = document.createElement('h2');
-        titleEl.id = 'offers-title';
-        titleEl.style.cssText = 'font-family:sans-serif;padding:0 2rem 1rem;';
-        titleEl.textContent = row.value;
-        offersSection.before(titleEl);
-      }
+      const row = json.data.find((d) => d.key === `offer-title-${city}`);
+     const title = row
+      ? (row[langSegment] || row['en'] || row.value || '')
+      : '';
+     if (title) {
+     const titleEl = document.createElement('h2');
+      titleEl.id = 'offers-title';
+  titleEl.style.cssText = 'font-family:sans-serif;padding:0 2rem 1rem;';
+  titleEl.textContent = title;
+  offersSection.before(titleEl);
+}
     })
     .catch(() => {});
 
@@ -173,7 +176,7 @@ fetch(`${window.location.origin}/us/${langSegment}/store-placeholders.json`)
 }
 
 function removeOffers() {
-  _currentOffersCountry = null;
+  _currentOffersCity = null;
   const offersSection = document.getElementById('offers-section');
   if (offersSection) offersSection.remove();
   const offersTitle = document.getElementById('offers-title');
@@ -259,7 +262,7 @@ function refreshUIFromSession() {
     const session = getSession();
     if (session) {
       showLoggedInUI(session.username);
-      loadOffersOnPage(session.country);
+      loadOffersOnPage(session.city);
     } else {
       removeOffers();
       showLoggedOutUI();
@@ -373,7 +376,7 @@ function showLoginPopup() {
       if (user) {
         localStorage.setItem(
           'userSession',
-          JSON.stringify({ username: user.username, country: user.country }),
+          JSON.stringify({ username: user.username, city: user.city }),
         );
         overlay.remove();
       } else {
@@ -468,6 +471,6 @@ export default async function decorate(block) {
   const session = getSession();
   if (session) {
     showLoggedInUI(session.username);
-    loadOffersOnPage(session.country);
+    loadOffersOnPage(session.city);
   }
 }
