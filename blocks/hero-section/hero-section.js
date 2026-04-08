@@ -2,17 +2,41 @@ import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
 
 /**
- * Parse authored key-value rows produced by the UE model.
- * Each block row: <div><div>fieldName</div><div>fieldValue</div></div>
+ * Parse fields from a UE page-based authored block.
+ * AEM renders each field as a single-child row; the cell is identified by
+ * data-aue-prop (text / aem-content / reference fields) or
+ * data-richtext-prop (richtext fields).
  * @param {Element} block
- * @returns {Object} map of fieldName → value Element
+ * @returns {Object} map of prop name → cell Element
  */
 function parseFields(block) {
   const fields = {};
-  [...block.children].forEach((row) => {
-    const [keyEl, valEl] = [...row.children];
-    if (keyEl && valEl) {
-      fields[keyEl.textContent.trim()] = valEl;
+  const rows = [...block.children];
+  const modelOrder = ['headingText', 'bodyText', 'ctaLabel', 'ctaUrl', 'imageSrc'];
+
+  rows.forEach((row, index) => {
+    // UE/authoring markup: prop attributes can appear anywhere inside the row.
+    const attributedCell = row.querySelector('[data-aue-prop], [data-richtext-prop]');
+    if (attributedCell) {
+      const prop = attributedCell.getAttribute('data-aue-prop')
+        || attributedCell.getAttribute('data-richtext-prop');
+      if (prop) fields[prop] = attributedCell;
+      return;
+    }
+
+    // Legacy key/value authored tables.
+    const [keyCell, valueCell] = [...row.children];
+    const key = keyCell?.textContent?.trim();
+    if (key && valueCell && modelOrder.includes(key)) {
+      fields[key] = valueCell;
+      return;
+    }
+
+    // CDN publish fallback: row order follows model field order.
+    const fallbackProp = modelOrder[index];
+    const fallbackCell = row.firstElementChild || row;
+    if (fallbackProp && fallbackCell && !fields[fallbackProp]) {
+      fields[fallbackProp] = fallbackCell;
     }
   });
   return fields;
@@ -81,10 +105,11 @@ export default function decorate(block) {
   textBlock.append(body);
   content.append(textBlock);
 
-  // CTA button — aem-content renders as <a href="…">Label</a> inside the value cell
-  const ctaAnchor = fields.ctaLink?.querySelector('a');
-  const ctaHref = ctaAnchor?.href || '#';
-  const ctaText = ctaAnchor?.textContent.trim() || '';
+  // CTA button (aem-content renders as <a href="…"> inside valEl)
+  const ctaHref = fields.ctaUrl?.querySelector('a')?.href
+    || fields.ctaUrl?.textContent?.trim()
+    || '#';
+  const ctaText = fields.ctaLabel?.textContent.trim() || '';
 
   const cta = document.createElement('a');
   cta.className = 'hero-section__cta';
@@ -98,7 +123,7 @@ export default function decorate(block) {
   ctaIcon.setAttribute('aria-hidden', 'true');
 
   cta.append(ctaLabelSpan, ctaIcon);
-  if (fields.ctaLink) moveInstrumentation(fields.ctaLink, cta);
+  if (fields.ctaUrl) moveInstrumentation(fields.ctaUrl, cta);
   content.append(cta);
 
   // ── Right: media column ────────────────────────────────────────────────
@@ -108,6 +133,8 @@ export default function decorate(block) {
   if (fields.imageSrc) {
     const picture = fields.imageSrc.querySelector('picture');
     const existingImg = fields.imageSrc.querySelector('img');
+    const linkedImageUrl = fields.imageSrc.querySelector('a')?.href
+      || fields.imageSrc.textContent.trim();
 
     if (picture) {
       // Already an optimized picture element from AEM
@@ -120,6 +147,18 @@ export default function decorate(block) {
       const optimized = createOptimizedPicture(
         existingImg.src,
         existingImg.alt || '',
+        false,
+        [{ width: '824' }],
+      );
+      const optimizedImg = optimized.querySelector('img');
+      if (optimizedImg) optimizedImg.className = 'hero-section__image';
+      moveInstrumentation(fields.imageSrc, optimized);
+      media.append(optimized);
+    } else if (linkedImageUrl) {
+      // CDN publish may render reference fields as plain link text.
+      const optimized = createOptimizedPicture(
+        linkedImageUrl,
+        fields.headingText?.textContent?.trim() || '',
         false,
         [{ width: '824' }],
       );
