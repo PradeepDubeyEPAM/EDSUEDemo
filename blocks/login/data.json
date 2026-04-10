@@ -3,17 +3,20 @@
     {
       "username": "ron",
       "password": "ron123",
-      "city": "boston"
+      "city": "boston",
+      "gender": "men"
     },
     {
       "username": "harry",
       "password": "harry123",
-      "city": "texas"
+      "city": "texas",
+      "gender": "men"
     },
     {
       "username": "emma",
       "password": "emma123",
-      "city":  "nyc"
+      "city":  "nyc",
+      "gender": "women"
     }
   ]
 }

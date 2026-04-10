@@ -90,7 +90,7 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
   }
 }
 
-// ── SESSION HELPERS ────────────────────────────────────────
+// ── SESSION HELPERS 
 
 function getSession() {
   try {
@@ -107,80 +107,145 @@ function clearSession() {
 
 // ── OFFERS ─────────────────────────────────────────────────
 
-let _currentOffersCity = null;
+let _offersLoaded = false;
 
-function loadOffersOnPage(city) {
-  const path = window.location.pathname;
-  if (path.includes('/nav') || path.includes('/footer')) return;
+/**
+ * Fetches a single offer and its placeholder title,
+ * then injects into the given container element.
+ *
+ * @param {object} opts
+ * @param {HTMLElement} opts.container  -
+ * @param {string}      opts.offerPath  
+ * @param {string}      opts.titleKey   
+ * @param {string}      opts.BASE_URL  
+ * @param {string}      opts.lang       
+ */
+async function loadSingleOffer({ container, offerPath, titleKey, BASE_URL, lang }) {
+  const [placeholderJson, offerHtml] = await Promise.all([
+    fetch(`${BASE_URL}/placeholders.json`)
+      .then((r) => (r.ok ? r.json() : null))
+      .catch(() => null),
+    fetch(`${window.location.origin}${offerPath}.plain.html`)
+      .then((r) => (r.ok ? r.text() : null))
+      .catch(() => null),
+  ]);
 
-  if (_currentOffersCity === city) return;
-  _currentOffersCity = city;
-
-  const langSegment = path.split('/')[2] || 'en';
-  const offerPath = `/us/${langSegment}/offers/${city}`;
-
-  // remove existing title if any
-  const existingTitle = document.getElementById('offers-title');
-  if (existingTitle) existingTitle.remove();
-
-  let offersSection = document.getElementById('offers-section');
-  if (!offersSection) {
-    offersSection = document.createElement('div');
-    offersSection.id = 'offers-section';
-    offersSection.style.padding = '2rem';
-
-    const main = document.querySelector('main');
-    if (main) {
-      const sections = main.querySelectorAll('.section');
-      if (sections.length >= 2) {
-        main.insertBefore(offersSection, sections[1]);
-      } else if (sections.length === 1) {
-        sections[0].after(offersSection);
-      } else {
-        main.appendChild(offersSection);
-      }
+  // Inject placeholder title above container
+  if (placeholderJson) {
+    const rows = placeholderJson.data || placeholderJson;
+    const row = rows.find((d) => d.key === titleKey);
+    if (row && (row[lang] || row.en)) {
+      const titleEl = document.createElement('h2');
+      titleEl.classList.add('offers-title');
+      titleEl.style.cssText = `
+        font-family: var(--body-font-family, sans-serif);
+        padding: 0 2rem 0.5rem;
+        font-size: 1.5rem;
+        color: #0D3B8C;
+      `;
+      titleEl.textContent = row[lang] || row.en;
+      container.before(titleEl);
     }
   }
 
-  offersSection.style.display = 'block';
-  offersSection.innerHTML = '<p>Loading offers...</p>';
-
-   fetch(`${window.location.origin}/store-placeholders.json`)
-    .then((r) => (r.ok ? r.json() : null))
-    .then((json) => {
-      if (!json) return;
-      const row = json.data.find((d) => d.key === `offer-title-${city}`);
-     const title = row
-      ? (row[langSegment] || row['en'] || row.value || '')
-      : '';
-     if (title) {
-     const titleEl = document.createElement('h2');
-      titleEl.id = 'offers-title';
-  titleEl.style.cssText = 'font-family:sans-serif;padding:0 2rem 1rem;';
-  titleEl.textContent = title;
-  offersSection.before(titleEl);
+  // Inject offer content into container
+  container.innerHTML = offerHtml
+    || '<p style="font-family:sans-serif;padding:1rem;">Offers coming soon.</p>';
 }
-    })
-    .catch(() => {});
 
-  //  fetch actual offer page content
+/**
 
-  fetch(`${window.location.origin}${offerPath}.plain.html`)
-    .then((r) => (r.ok ? r.text() : null))
-    .then((html) => {
-      offersSection.innerHTML = html || '<p>Offers coming soon.</p>';
-    })
-    .catch(() => {
-      offersSection.innerHTML = '<p>Offers coming soon.</p>';
+ * @param {string} city   - from session e.g. "boston"
+ * @param {string} gender - from session e.g. "male"
+ */
+async function loadOffersOnPage(city, gender) {
+  const path = window.location.pathname;
+  if (path.includes('/nav') || path.includes('/footer')) return;
+  if (_offersLoaded) return;
+  _offersLoaded = true;
+
+  const lang = path.split('/')[2] || 'en';
+  const BASE_URL = window.location.hostname.includes('aem.live')
+    ? ''
+    : 'https://main--edsuedemo--pradeepdubeyepam.aem.page';
+
+  const fragmentBlocks = [...document.querySelectorAll('[data-offer-base]')];
+
+  if (fragmentBlocks.length === 0) {
+    // ── CASE 2: No fragments — fallback for demo page ──
+    // Create offer div and inject after first section
+    let fallbackDiv = document.getElementById('offers-section');
+    if (!fallbackDiv) {
+      fallbackDiv = document.createElement('div');
+      fallbackDiv.id = 'offers-section';
+      fallbackDiv.style.padding = '2rem';
+      const main = document.querySelector('main');
+      if (main) {
+        const sections = main.querySelectorAll(':scope > .section');
+        if (sections.length >= 2) {
+          main.insertBefore(fallbackDiv, sections[1]);
+        } else if (sections.length === 1) {
+          sections[0].after(fallbackDiv);
+        } else {
+          main.appendChild(fallbackDiv);
+        }
+      }
+    }
+    fallbackDiv.innerHTML = '<p style="font-family:sans-serif;padding:1rem;">Loading offers...</p>';
+    await loadSingleOffer({
+      container: fallbackDiv,
+      offerPath: `/us/${lang}/offers/${city}`,
+      titleKey: `offer-title-${city}`,
+      BASE_URL,
+      lang,
     });
+    return;
+  }
+
+
+  for (const block of fragmentBlocks) {
+    const base = block.getAttribute('data-offer-base');
+   
+
+    const isGenderBlock = base.endsWith('/gender');
+    const attribute = isGenderBlock ? gender : city;
+    const titleKey = isGenderBlock
+      ? `offer-title-${gender}`
+      : `offer-title-${city}`;
+
+    const offerPath = `${base}/${attribute}`;
+
+    // Reveal the block and use it as the offer container
+    block.style.display = 'block';
+    block.innerHTML = '<p style="font-family:sans-serif;padding:1rem;">Loading offers...</p>';
+
+    // eslint-disable-next-line no-await-in-loop
+    await loadSingleOffer({
+      container: block,
+      offerPath,
+      titleKey,
+      BASE_URL,
+      lang,
+    });
+  }
 }
+
 
 function removeOffers() {
-  _currentOffersCity = null;
-  const offersSection = document.getElementById('offers-section');
-  if (offersSection) offersSection.remove();
-  const offersTitle = document.getElementById('offers-title');
-  if (offersTitle) offersTitle.remove();
+  _offersLoaded = false;
+
+  // Remove all offer titles
+  document.querySelectorAll('.offers-title').forEach((t) => t.remove());
+
+  // Hide and clear ALL offer fragment blocks
+  document.querySelectorAll('[data-offer-base]').forEach((block) => {
+    block.style.display = 'none';
+    block.innerHTML = '';
+  });
+
+  // Remove fallback div on demo page
+  const fallback = document.getElementById('offers-section');
+  if (fallback) fallback.remove();
 }
 
 // ── NAV UI ─────────────────────────────────────────────────
@@ -193,7 +258,6 @@ function showLoggedInUI(username) {
   const navTools = loginBtn
     ? loginBtn.parentElement
     : document.querySelector('.nav-tools');
-
   if (loginBtn) loginBtn.remove();
 
   const wrapper = document.createElement('div');
@@ -202,7 +266,7 @@ function showLoggedInUI(username) {
 
   const text = document.createElement('span');
   text.style.cssText = 'font-size:14px;font-family:sans-serif;';
-  text.textContent = `Logged in as ${username} `;
+  text.textContent = `Logged in as ${username} 👋`;
 
   const logoutBtn = document.createElement('button');
   logoutBtn.textContent = 'Logout';
@@ -221,7 +285,6 @@ function showLoggedInUI(username) {
 function showLoggedOutUI() {
   const wrapper = document.getElementById('nav-user-wrapper');
   if (wrapper) wrapper.remove();
-
   if (!document.getElementById('nav-login-btn-trigger')) {
     const navTools = document.querySelector('.nav-tools');
     if (navTools) navTools.appendChild(createLoginButton());
@@ -243,26 +306,23 @@ function createLoginButton() {
 }
 
 // ── LOGOUT ─────────────────────────────────────────────────
-
 function handleLogout() {
   clearSession();
   removeOffers();
   showLoggedOutUI();
 }
-
 // ── REACTIVE UI ────────────────────────────────────────────
 
 let _refreshScheduled = false;
 function refreshUIFromSession() {
   if (_refreshScheduled) return;
   _refreshScheduled = true;
-
   setTimeout(() => {
     _refreshScheduled = false;
     const session = getSession();
     if (session) {
       showLoggedInUI(session.username);
-      loadOffersOnPage(session.city);
+      loadOffersOnPage(session.city, session.gender);
     } else {
       removeOffers();
       showLoggedOutUI();
@@ -294,7 +354,6 @@ localStorage.removeItem = function removeItem(key) {
   }
 };
 
-// DevTools fallback poller
 setInterval(() => {
   const current = localStorage.getItem('userSession');
   if (current !== _lastKnownSession) {
@@ -322,6 +381,7 @@ function showLoginPopup() {
   popup.style.cssText = `
     background:white;border-radius:12px;
     padding:2rem;width:360px;
+    box-shadow:0 4px 24px rgba(0,0,0,0.18);
   `;
   popup.innerHTML = `
     <h2 style="margin:0 0 1rem;font-size:1.25rem;font-family:sans-serif;">Welcome Back</h2>
@@ -331,10 +391,12 @@ function showLoginPopup() {
     <input id="nl-password" type="password" placeholder="Enter password"
       style="width:100%;padding:10px;margin-bottom:10px;border:1px solid #ddd;
       border-radius:8px;font-size:14px;box-sizing:border-box;"/>
-    <p id="nl-error" style="color:red;font-size:13px;margin:0 0 8px;font-family:sans-serif;min-height:18px;"></p>
+    <p id="nl-error" style="color:red;font-size:13px;margin:0 0 8px;
+      font-family:sans-serif;min-height:18px;"></p>
     <button id="nl-submit"
       style="width:100%;padding:12px;background:#1473e6;color:white;
-      border:none;border-radius:8px;font-size:15px;cursor:pointer;font-family:sans-serif;">
+      border:none;border-radius:8px;font-size:15px;cursor:pointer;
+      font-family:sans-serif;">
       Login
     </button>
   `;
@@ -374,9 +436,14 @@ function showLoginPopup() {
       );
 
       if (user) {
+        // Save username + city + gender to session
         localStorage.setItem(
           'userSession',
-          JSON.stringify({ username: user.username, city: user.city }),
+          JSON.stringify({
+            username: user.username,
+            city: user.city,
+            gender: user.gender,
+          }),
         );
         overlay.remove();
       } else {
@@ -467,10 +534,21 @@ export default async function decorate(block) {
   navWrapper.append(nav);
   block.append(navWrapper);
 
-  // Restore session on page load
+ 
   const session = getSession();
   if (session) {
     showLoggedInUI(session.username);
-    loadOffersOnPage(session.city);
+
+    let attempts = 0;
+    const tryLoad = setInterval(() => {
+      attempts++;
+      const hasFragment = document.querySelector('[data-offer-base]');
+      const timeout = attempts > 20; // 20 × 100ms = 2s
+
+      if (hasFragment || timeout) {
+        clearInterval(tryLoad);
+        loadOffersOnPage(session.city, session.gender);
+      }
+    }, 100);
   }
 }
