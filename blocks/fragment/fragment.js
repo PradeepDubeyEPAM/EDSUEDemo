@@ -10,7 +10,7 @@ import { loadSections } from '../../scripts/aem.js';
 
 export async function loadFragment(path) {
   if (path && path.startsWith('/')) {
-    let finalPath = path.replace(/(\\.plain)?\\.html/, '');
+    let finalPath = path.replace(/(\.plain)?\.html/, '');
     const isXF = finalPath.startsWith('/content/experience-fragments');
 
     const supported = ['en', 'fr', 'hi'];
@@ -51,7 +51,7 @@ export default async function decorate(block) {
   const path = link ? link.getAttribute('href') : block.textContent.trim();
 
 
-  const cleanPath = path.replace(/(\\.plain)?\\.html$/, '');
+  const cleanPath = path.replace(/(\.plain)?\.html$/, '');
   const isOfferBlock = cleanPath.includes('/offers/');
 
   if (isOfferBlock) {
