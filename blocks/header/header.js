@@ -122,7 +122,7 @@ let _offersLoaded = false;
  */
 async function loadSingleOffer({ container, offerPath, titleKey, BASE_URL, lang }) {
   const [placeholderJson, offerHtml] = await Promise.all([
-    fetch(`${BASE_URL}/placeholders.json`)
+    fetch(`${window.location.origin}/placeholders.json`)
       .then((r) => (r.ok ? r.json() : null))
       .catch(() => null),
     fetch(`${window.location.origin}${offerPath}.plain.html`)
@@ -133,8 +133,8 @@ async function loadSingleOffer({ container, offerPath, titleKey, BASE_URL, lang 
   // Inject placeholder title above container
   if (placeholderJson) {
     const rows = placeholderJson.data || placeholderJson;
-    const row = rows.find((d) => d.key === titleKey);
-    if (row && (row[lang] || row.en)) {
+    const row = rows.find((d) => (d.key || d.Key) === titleKey);
+if (row && (row[lang] || row.en || row.En)) {
       const titleEl = document.createElement('h2');
       titleEl.classList.add('offers-title');
       titleEl.style.cssText = `
@@ -164,7 +164,8 @@ async function loadOffersOnPage(city, gender) {
   if (_offersLoaded) return;
   _offersLoaded = true;
 
-  const lang = path.split('/')[2] || 'en';
+  const urlLang = path.split('/')[2] || 'en';
+const lang = ['en', 'fr', 'de'].includes(urlLang) ? urlLang : 'en';
   const BASE_URL = window.location.hostname.includes('aem.live')
     ? ''
     : 'https://main--edsuedemo--pradeepdubeyepam.aem.page';
@@ -196,7 +197,6 @@ async function loadOffersOnPage(city, gender) {
       container: fallbackDiv,
       offerPath: `/us/${lang}/offers/${city}`,
       titleKey: `offer-title-${city}`,
-      BASE_URL,
       lang,
     });
     return;
