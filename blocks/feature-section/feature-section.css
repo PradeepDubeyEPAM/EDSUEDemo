@@ -1,0 +1,216 @@
+/* This file was written by Claude Code. */
+
+/*
+ * Block: Feature Section
+ * Variants: (default) text-left/media-right | image-left media-left/text-right
+ *
+ * Design token reference:
+ *   Background:           #ffffff
+ *   Heading:              2.5rem / 700 / #131313
+ *   Body:                 1.125rem / 400 / #505050 / lh 1.75rem
+ *   Heading → Body gap:   1.25rem  (20px)
+ *   Text-block → CTA gap: 2.5rem   (40px)
+ *   Section padding V:    5rem     (80px)
+ *   Section padding H:    13.75rem (220px)
+ *   Column gap:           4rem     (64px)
+ *   CTA primary bg:       #4f9cf9
+ *   CTA primary hover:    #2e7de0
+ *   CTA secondary border: #4f9cf9
+ *   Image placeholder:    #c4defd
+ *   Image max-width:      33.75rem (540px)
+ *   Image aspect-ratio:   4 / 3
+ */
+
+/* ── Full-width wrapper ─────────────────────────────────────────────────── */
+.feature-section-wrapper {
+  width: 100%;
+  padding: 0;
+}
+
+/* ── Block root ─────────────────────────────────────────────────────────── */
+.feature-section.block {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4rem;
+  padding: 5rem 13.75rem;
+  background-color: #fff;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* ── Decorative topographic pattern (default variant only) ──────────────── */
+.feature-section__decor {
+  position: absolute;
+  inset: 0 50% 0 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(ellipse 80% 60% at 10% 50%, rgb(200 220 255 / 15%) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 80% at 40% 80%, rgb(200 220 255 / 10%) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 20% 20%, rgb(200 220 255 / 8%) 0%, transparent 50%);
+  z-index: 0;
+}
+
+/* ── Text column ────────────────────────────────────────────────────────── */
+.feature-section__content {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem; /* 40px – text-block ↔ CTA */
+  flex: 1;
+  z-index: 1;
+}
+
+/* Text block (heading + body) */
+.feature-section__text-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem; /* 20px – heading ↔ body */
+}
+
+/* Heading */
+.feature-section__heading {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #131313;
+}
+
+/* Body */
+.feature-section__body {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1.75rem;
+  color: #505050;
+}
+
+.feature-section__body p {
+  margin: 0;
+}
+
+/* ── CTA button – primary (filled blue) ─────────────────────────────────── */
+.feature-section__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem; /* 10px – label ↔ arrow icon */
+  padding: 1.125rem 1.875rem;
+  background-color: #4f9cf9;
+  color: #fff;
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.4375rem;
+  text-decoration: none;
+  border-radius: 4px;
+  border: 2px solid #4f9cf9;
+  box-sizing: border-box;
+  align-self: flex-start;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease,
+    transform 0.1s ease;
+  white-space: nowrap;
+}
+
+.feature-section__cta:hover {
+  background-color: #2e7de0;
+  border-color: #2e7de0;
+}
+
+.feature-section__cta:active {
+  transform: translateY(1px);
+}
+
+/* CTA – secondary (outlined / ghost) */
+.feature-section__cta--secondary {
+  background-color: transparent;
+  color: #4f9cf9;
+}
+
+.feature-section__cta--secondary:hover {
+  background-color: #4f9cf9;
+  border-color: #4f9cf9;
+  color: #fff;
+}
+
+/* Arrow icon – CSS-drawn right-pointing chevron (currentcolor adapts to CTA variant) */
+.feature-section__cta-icon {
+  display: inline-block;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-right: 2px solid currentcolor;
+  border-top: 2px solid currentcolor;
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+/* ── Media column ───────────────────────────────────────────────────────── */
+.feature-section__media {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.feature-section__media picture {
+  display: block;
+  line-height: 0;
+  width: 100%;
+}
+
+.feature-section__image,
+.feature-section__media img {
+  width: 100%;
+  max-width: 33.75rem; /* 540px */
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background-color: #c4defd; /* image placeholder */
+  display: block;
+  border-radius: 4px;
+}
+
+/* ── Tablet (768px – 1023px) ────────────────────────────────────────────── */
+@media (width <= 1023px) {
+  .feature-section.block {
+    padding: 4rem 3rem;
+    gap: 3rem;
+  }
+}
+
+/* ── Mobile (≤ 767px) ───────────────────────────────────────────────────── */
+@media (width <= 767px) {
+  .feature-section.block {
+    flex-direction: column;
+    padding: 2.5rem 1.5rem;
+    gap: 2rem;
+  }
+
+  .feature-section__decor {
+    inset: 0;
+    opacity: 0.4;
+  }
+
+  .feature-section__heading {
+    font-size: 2rem;
+  }
+
+  .feature-section__cta {
+    width: 100%;
+    align-self: stretch;
+    justify-content: center;
+  }
+
+  /* Media always stacks above text on mobile for both variants */
+  .feature-section__media {
+    width: 100%;
+    justify-content: center;
+    order: -1;
+  }
+
+  .feature-section__image,
+  .feature-section__media img {
+    max-width: 100%;
+  }
+}
