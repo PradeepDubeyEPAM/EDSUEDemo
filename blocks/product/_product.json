@@ -14,10 +14,6 @@
                 {
                   "name": "productId",
                   "type": "text"
-                },
-                {
-                  "name": "productImage",
-                  "type": "image"
                 }
               ]
             }
@@ -36,12 +32,6 @@
           "name": "productId",
           "label": "Product ID",
           "required": true
-        },
-        {
-          "component": "reference",
-          "valueType": "string",
-          "name": "productImage",
-          "label": "Product Image"
         }
       ]
     }

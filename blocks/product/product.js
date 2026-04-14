@@ -4,9 +4,6 @@ export default async function decorate(block) {
     const productIdEl = block.querySelector('[data-aue-prop="productId"]');
     const productId = productIdEl?.textContent?.trim() || '1';
 
-    // Image from AEM (if authored)
-    const productImage = block.querySelector('[data-aue-prop="productImage"] img')?.src;
-
     // ✅ Step 2: Show loading state
     block.innerHTML = `<p>Loading product...</p>`;
 
@@ -25,7 +22,7 @@ export default async function decorate(block) {
     // ✅ Step 4: Render UI
     block.innerHTML = `
       <div class="product-card">
-        ${productImage ? `<img src="${productImage}" alt="${data.title}" class="product-image"/>` : ''}
+        ${productImage ? `<img src="${data.productimg}" alt="${data.title}" class="product-image"/>` : ''}
 
         <h2>${data.title}</h2>
         <p><strong>Price:</strong> ₹${data.price}</p>
