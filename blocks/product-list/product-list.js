@@ -32,7 +32,7 @@ export default async function decorate(block) {
         const productId = card.getAttribute('data-id');
 
         //Redirect to PDP page
-        window.location.href = `/product?productId=${productId}`;
+        window.location.href = `/us/en/product?productId=${productId}`;
       });
     });
 
