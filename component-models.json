@@ -5135,14 +5135,12 @@
         "name": "productId",
         "label": "Product ID",
         "required": true
-      },
-      {
-        "component": "reference",
-        "valueType": "string",
-        "name": "productImage",
-        "label": "Product Image"
       }
     ]
+  },
+  {
+    "id": "productlist",
+    "fields": []
   },
   {
     "id": "hero",
