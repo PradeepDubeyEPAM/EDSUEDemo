@@ -33,6 +33,9 @@
       "components": [
         {
           "...": "../blocks/*/_*.json#/definitions"
+        },
+        {
+          "...": "../blocks/product/_product.json#/definitions"
         }
       ]
     }
