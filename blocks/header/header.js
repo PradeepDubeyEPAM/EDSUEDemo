@@ -90,7 +90,7 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
   }
 }
 
-// ── SESSION HELPERS 
+// ── SESSION HELPERS ────────────────────────────────────────
 
 function getSession() {
   try {
@@ -109,18 +109,8 @@ function clearSession() {
 
 let _offersLoaded = false;
 
-/**
- * Fetches a single offer and its placeholder title,
- * then injects into the given container element.
- *
- * @param {object} opts
- * @param {HTMLElement} opts.container  -
- * @param {string}      opts.offerPath  
- * @param {string}      opts.titleKey   
- * @param {string}      opts.BASE_URL  
- * @param {string}      opts.lang       
- */
-async function loadSingleOffer({ container, offerPath, titleKey, BASE_URL, lang }) {
+
+async function loadSingleOffer({ container, offerPath, titleKey, lang }) {
   const [placeholderJson, offerHtml] = await Promise.all([
     fetch(`${window.location.origin}/placeholders.json`)
       .then((r) => (r.ok ? r.json() : null))
@@ -130,11 +120,13 @@ async function loadSingleOffer({ container, offerPath, titleKey, BASE_URL, lang 
       .catch(() => null),
   ]);
 
-  // Inject placeholder title above container
   if (placeholderJson) {
-    const rows = placeholderJson.data || placeholderJson;
+    const rows = Array.isArray(placeholderJson?.data)
+      ? placeholderJson.data
+      : Array.isArray(placeholderJson) ? placeholderJson : [];
+
     const row = rows.find((d) => (d.key || d.Key) === titleKey);
-if (row && (row[lang] || row.en || row.En)) {
+    if (row && (row[lang] || row.en)) {
       const titleEl = document.createElement('h2');
       titleEl.classList.add('offers-title');
       titleEl.style.cssText = `
@@ -148,33 +140,23 @@ if (row && (row[lang] || row.en || row.En)) {
     }
   }
 
-  // Inject offer content into container
   container.innerHTML = offerHtml
     || '<p style="font-family:sans-serif;padding:1rem;">Offers coming soon.</p>';
 }
 
-/**
-
- * @param {string} city   - from session e.g. "boston"
- * @param {string} gender - from session e.g. "male"
- */
-async function loadOffersOnPage(city, gender) {
+async function loadOffersOnPage(attributes = {}) {
   const path = window.location.pathname;
   if (path.includes('/nav') || path.includes('/footer')) return;
   if (_offersLoaded) return;
   _offersLoaded = true;
 
   const urlLang = path.split('/')[2] || 'en';
-const lang = ['en', 'fr', 'de'].includes(urlLang) ? urlLang : 'en';
-  const BASE_URL = window.location.hostname.includes('aem.live')
-    ? ''
-    : 'https://main--edsuedemo--pradeepdubeyepam.aem.page';
+  const lang = ['en', 'fr', 'de'].includes(urlLang) ? urlLang : 'en';
 
   const fragmentBlocks = [...document.querySelectorAll('[data-offer-base]')];
 
   if (fragmentBlocks.length === 0) {
-    // ── CASE 2: No fragments — fallback for demo page ──
-    // Create offer div and inject after first section
+    // Fallback: no fragment block on page (demo/home page)
     let fallbackDiv = document.getElementById('offers-section');
     if (!fallbackDiv) {
       fallbackDiv = document.createElement('div');
@@ -183,67 +165,54 @@ const lang = ['en', 'fr', 'de'].includes(urlLang) ? urlLang : 'en';
       const main = document.querySelector('main');
       if (main) {
         const sections = main.querySelectorAll(':scope > .section');
-        if (sections.length >= 2) {
-          main.insertBefore(fallbackDiv, sections[1]);
-        } else if (sections.length === 1) {
-          sections[0].after(fallbackDiv);
-        } else {
-          main.appendChild(fallbackDiv);
-        }
+        if (sections.length >= 2) main.insertBefore(fallbackDiv, sections[1]);
+        else if (sections.length === 1) sections[0].after(fallbackDiv);
+        else main.appendChild(fallbackDiv);
       }
     }
     fallbackDiv.innerHTML = '<p style="font-family:sans-serif;padding:1rem;">Loading offers...</p>';
+    const firstValue = Object.values(attributes)[0] || '';
     await loadSingleOffer({
       container: fallbackDiv,
-      offerPath: `/us/${lang}/offers/${city}`,
-      titleKey: `offer-title-${city}`,
+      offerPath: `/us/${lang}/offers/${firstValue}`,
+      titleKey: `offer-title-${firstValue}`,
       lang,
     });
     return;
   }
 
-
   for (const block of fragmentBlocks) {
     const base = block.getAttribute('data-offer-base');
-   
 
-    const isGenderBlock = base.endsWith('/gender');
-    const attribute = isGenderBlock ? gender : city;
-    const titleKey = isGenderBlock
-      ? `offer-title-${gender}`
-      : `offer-title-${city}`;
+    const folderType = base.split('/').pop();
+    const attributeValue = attributes[folderType];
 
-    const offerPath = `${base}/${attribute}`;
+    if (!attributeValue) continue; 
 
-    // Reveal the block and use it as the offer container
+    const offerPath = `${base}/${attributeValue}`;
+    const titleKey = `offer-title-${attributeValue}`;
+
     block.style.display = 'block';
     block.innerHTML = '<p style="font-family:sans-serif;padding:1rem;">Loading offers...</p>';
 
-    // eslint-disable-next-line no-await-in-loop
-    await loadSingleOffer({
-      container: block,
-      offerPath,
-      titleKey,
-      BASE_URL,
-      lang,
-    });
+    const prevEl = block.previousElementSibling;
+    if (prevEl && prevEl.classList.contains('offers-title')) prevEl.remove();
+
+   
+    await loadSingleOffer({ container: block, offerPath, titleKey, lang });
   }
 }
-
 
 function removeOffers() {
   _offersLoaded = false;
 
-  // Remove all offer titles
   document.querySelectorAll('.offers-title').forEach((t) => t.remove());
 
-  // Hide and clear ALL offer fragment blocks
   document.querySelectorAll('[data-offer-base]').forEach((block) => {
     block.style.display = 'none';
     block.innerHTML = '';
   });
 
-  // Remove fallback div on demo page
   const fallback = document.getElementById('offers-section');
   if (fallback) fallback.remove();
 }
@@ -266,7 +235,7 @@ function showLoggedInUI(username) {
 
   const text = document.createElement('span');
   text.style.cssText = 'font-size:14px;font-family:sans-serif;';
-  text.textContent = `Logged in as ${username} 👋`;
+  text.textContent = `Logged in as ${username} `;
 
   const logoutBtn = document.createElement('button');
   logoutBtn.textContent = 'Logout';
@@ -306,11 +275,13 @@ function createLoginButton() {
 }
 
 // ── LOGOUT ─────────────────────────────────────────────────
+
 function handleLogout() {
   clearSession();
   removeOffers();
   showLoggedOutUI();
 }
+
 // ── REACTIVE UI ────────────────────────────────────────────
 
 let _refreshScheduled = false;
@@ -322,7 +293,8 @@ function refreshUIFromSession() {
     const session = getSession();
     if (session) {
       showLoggedInUI(session.username);
-      loadOffersOnPage(session.city, session.gender);
+
+      loadOffersOnPage(session.attributes);
     } else {
       removeOffers();
       showLoggedOutUI();
@@ -436,13 +408,12 @@ function showLoginPopup() {
       );
 
       if (user) {
-        // Save username + city + gender to session
+        
         localStorage.setItem(
           'userSession',
           JSON.stringify({
             username: user.username,
-            city: user.city,
-            gender: user.gender,
+            attributes: user.attributes,
           }),
         );
         overlay.remove();
@@ -534,7 +505,7 @@ export default async function decorate(block) {
   navWrapper.append(nav);
   block.append(navWrapper);
 
- 
+  // ── RESTORE SESSION ON PAGE LOAD ──
   const session = getSession();
   if (session) {
     showLoggedInUI(session.username);
@@ -543,11 +514,12 @@ export default async function decorate(block) {
     const tryLoad = setInterval(() => {
       attempts++;
       const hasFragment = document.querySelector('[data-offer-base]');
-      const timeout = attempts > 20; // 20 × 100ms = 2s
+      const timeout = attempts > 20; 
 
       if (hasFragment || timeout) {
         clearInterval(tryLoad);
-        loadOffersOnPage(session.city, session.gender);
+        
+        loadOffersOnPage(session.attributes);
       }
     }, 100);
   }
