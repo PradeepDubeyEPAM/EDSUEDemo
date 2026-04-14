@@ -5128,15 +5128,7 @@
   },
   {
     "id": "product",
-    "fields": [
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "productId",
-        "label": "Product ID",
-        "required": true
-      }
-    ]
+    "fields": []
   },
   {
     "id": "productlist",
