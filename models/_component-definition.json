@@ -36,6 +36,9 @@
         },
         {
           "...": "../blocks/product/_product.json#/definitions"
+        },
+        {
+          "...": "../blocks/productlist/_productlist.json#/definitions"
         }
       ]
     }
