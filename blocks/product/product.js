@@ -5,8 +5,7 @@ export default async function decorate(block) {
     const productId = productIdEl?.textContent?.trim() || '1';
 
     // Image from AEM (if authored)
-    const imageEl = block.querySelector('img');
-    const productImage = imageEl?.src || '';
+    const productImage = block.querySelector('[data-aue-prop="productImage"] img')?.src;
 
     // ✅ Step 2: Show loading state
     block.innerHTML = `<p>Loading product...</p>`;
@@ -21,7 +20,7 @@ export default async function decorate(block) {
     }
 
     const result = await response.json();
-    const data = result.body || result; // depending on response structure
+    const data = result; // depending on response structure
 
     // ✅ Step 4: Render UI
     block.innerHTML = `

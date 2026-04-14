@@ -5140,8 +5140,7 @@
         "component": "reference",
         "valueType": "string",
         "name": "productImage",
-        "label": "Product Image",
-        "required": false
+        "label": "Product Image"
       }
     ]
   },
