@@ -820,8 +820,16 @@
                 "template": {
                   "name": "Product",
                   "model": "product",
-                  "productId": "Enter Product ID",
-                  "productImage": ""
+                  "elements": [
+                    {
+                      "name": "productId",
+                      "type": "text"
+                    },
+                    {
+                      "name": "productImage",
+                      "type": "image"
+                    }
+                  ]
                 }
               }
             }
@@ -869,8 +877,16 @@
                 "template": {
                   "name": "Product",
                   "model": "product",
-                  "productId": "Enter Product ID",
-                  "productImage": ""
+                  "elements": [
+                    {
+                      "name": "productId",
+                      "type": "text"
+                    },
+                    {
+                      "name": "productImage",
+                      "type": "image"
+                    }
+                  ]
                 }
               }
             }
