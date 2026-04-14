@@ -2,7 +2,7 @@
   "definitions": [
     {
       "title": "Product Listing",
-      "id": "productlist",
+      "id": "product-list",
       "plugins": {
         "xwalk": {
           "page": {
@@ -18,7 +18,7 @@
   ],
   "models": [
     {
-      "id": "productlist",
+      "id": "product-list",
       "fields": []
     }
   ],

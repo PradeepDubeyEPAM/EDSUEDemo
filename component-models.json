@@ -5127,11 +5127,11 @@
     ]
   },
   {
-    "id": "product",
+    "id": "product-list",
     "fields": []
   },
   {
-    "id": "productlist",
+    "id": "product",
     "fields": []
   },
   {
