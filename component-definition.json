@@ -811,6 +811,21 @@
           }
         },
         {
+          "title": "Product Listing",
+          "id": "product-list",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Product List",
+                  "model": "productlist"
+                }
+              }
+            }
+          }
+        },
+        {
           "title": "Product",
           "id": "product",
           "plugins": {
@@ -820,21 +835,6 @@
                 "template": {
                   "name": "Product",
                   "model": "product"
-                }
-              }
-            }
-          }
-        },
-        {
-          "title": "Product Listing",
-          "id": "productlist",
-          "plugins": {
-            "xwalk": {
-              "page": {
-                "resourceType": "core/franklin/components/block/v1/block",
-                "template": {
-                  "name": "Product List",
-                  "model": "productlist"
                 }
               }
             }
@@ -889,7 +889,7 @@
         },
         {
           "title": "Product Listing",
-          "id": "productlist",
+          "id": "product-list",
           "plugins": {
             "xwalk": {
               "page": {
