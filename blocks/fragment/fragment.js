@@ -5,39 +5,31 @@
  */
 
 // eslint-disable-next-line import/no-cycle
-import {
-  decorateMain,
-} from '../../scripts/scripts.js';
+import { decorateMain } from '../../scripts/scripts.js';
+import { loadSections } from '../../scripts/aem.js';
 
-import {
-  loadSections,
-} from '../../scripts/aem.js';
-
-/**
- * Loads a fragment.
- * @param {string} path The path to the fragment
- * @returns {HTMLElement} The root element of the fragment
- */
 export async function loadFragment(path) {
   if (path && path.startsWith('/')) {
-    // eslint-disable-next-line no-param-reassign
     let finalPath = path.replace(/(\.plain)?\.html/, '');
     const isXF = finalPath.startsWith('/content/experience-fragments');
+
     const supported = ['en', 'fr', 'hi'];
     const userLang = navigator?.language?.toLowerCase?.() || 'en';
     const lang = userLang.slice(0, 2);
     const promoLang = supported.includes(lang) ? lang : 'default';
+
     const isMobile = window.matchMedia('(max-width: 899px)').matches;
     const device = isMobile ? 'mobile' : 'desktop';
+
     if (finalPath.endsWith('/banners') && !isXF) {
       finalPath += `/promo-${promoLang}/${device}`;
     }
+
     const resp = await fetch(`${finalPath}.plain.html`);
     if (resp.ok) {
       const main = document.createElement('main');
       main.innerHTML = await resp.text();
 
-      // reset base path for media to fragment base
       const resetAttributeBase = (tag, attr) => {
         main.querySelectorAll(`${tag}[${attr}^="./media_"]`).forEach((elem) => {
           elem[attr] = new URL(elem.getAttribute(attr), new URL(finalPath, window.location)).href;
@@ -57,6 +49,24 @@ export async function loadFragment(path) {
 export default async function decorate(block) {
   const link = block.querySelector('a');
   const path = link ? link.getAttribute('href') : block.textContent.trim();
+
+
+  const cleanPath = path.replace(/(\.plain)?\.html$/, '');
+  const isOfferBlock = cleanPath.includes('/offers/');
+
+  if (isOfferBlock) {
+    
+    const edsPath = cleanPath.replace(/^\/content\/[^/]+/, '');
+    block.setAttribute('data-offer-base', edsPath);
+
+    
+    block.style.display = 'none';
+
+    
+    return;
+  }
+
+
   const fragment = await loadFragment(path);
   if (fragment) {
     const fragmentSection = fragment.querySelector(':scope .section');

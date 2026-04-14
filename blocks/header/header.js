@@ -107,77 +107,114 @@ function clearSession() {
 
 // ── OFFERS ─────────────────────────────────────────────────
 
-let _currentOffersCountry = null;
+let _offersLoaded = false;
 
-function loadOffersOnPage(country) {
-  const path = window.location.pathname;
-  if (path.includes('/nav') || path.includes('/footer')) return;
 
-  if (_currentOffersCountry === country) return;
-  _currentOffersCountry = country;
+async function loadSingleOffer({ container, offerPath, titleKey, lang }) {
+  const [placeholderJson, offerHtml] = await Promise.all([
+    fetch(`${window.location.origin}/placeholders.json`)
+      .then((r) => (r.ok ? r.json() : null))
+      .catch(() => null),
+    fetch(`${window.location.origin}${offerPath}.plain.html`)
+      .then((r) => (r.ok ? r.text() : null))
+      .catch(() => null),
+  ]);
 
-  const langSegment = path.split('/')[2] || 'en';
-  const offerPath = `/us/${langSegment}/offers/${country}`;
+  if (placeholderJson) {
+    const rows = Array.isArray(placeholderJson?.data)
+      ? placeholderJson.data
+      : Array.isArray(placeholderJson) ? placeholderJson : [];
 
-  // remove existing title if any
-  const existingTitle = document.getElementById('offers-title');
-  if (existingTitle) existingTitle.remove();
-
-  let offersSection = document.getElementById('offers-section');
-  if (!offersSection) {
-    offersSection = document.createElement('div');
-    offersSection.id = 'offers-section';
-    offersSection.style.padding = '2rem';
-
-    const main = document.querySelector('main');
-    if (main) {
-      const sections = main.querySelectorAll('.section');
-      if (sections.length >= 2) {
-        main.insertBefore(offersSection, sections[1]);
-      } else if (sections.length === 1) {
-        sections[0].after(offersSection);
-      } else {
-        main.appendChild(offersSection);
-      }
+    const row = rows.find((d) => (d.key || d.Key) === titleKey);
+    if (row && (row[lang] || row.en)) {
+      const titleEl = document.createElement('h2');
+      titleEl.classList.add('offers-title');
+      titleEl.style.cssText = `
+        font-family: var(--body-font-family, sans-serif);
+        padding: 0 2rem 0.5rem;
+        font-size: 1.5rem;
+        color: #0D3B8C;
+      `;
+      titleEl.textContent = row[lang] || row.en;
+      container.before(titleEl);
     }
   }
 
-  offersSection.style.display = 'block';
-  offersSection.innerHTML = '<p>Loading offers...</p>';
+  container.innerHTML = offerHtml
+    || '<p style="font-family:sans-serif;padding:1rem;">Offers coming soon.</p>';
+}
 
-fetch(`${window.location.origin}/us/${langSegment}/store-placeholders.json`)
-    .then((r) => (r.ok ? r.json() : null))
-    .then((json) => {
-      if (!json) return;
-      const row = json.data.find((d) => d.key === `offer-title-${country}`);
-      if (row && row.value) {
-        const titleEl = document.createElement('h2');
-        titleEl.id = 'offers-title';
-        titleEl.style.cssText = 'font-family:sans-serif;padding:0 2rem 1rem;';
-        titleEl.textContent = row.value;
-        offersSection.before(titleEl);
+async function loadOffersOnPage(attributes = {}) {
+  const path = window.location.pathname;
+  if (path.includes('/nav') || path.includes('/footer')) return;
+  if (_offersLoaded) return;
+  _offersLoaded = true;
+
+  const urlLang = path.split('/')[2] || 'en';
+  const lang = ['en', 'fr', 'de'].includes(urlLang) ? urlLang : 'en';
+
+  const fragmentBlocks = [...document.querySelectorAll('[data-offer-base]')];
+
+  if (fragmentBlocks.length === 0) {
+    // Fallback: no fragment block on page (demo/home page)
+    let fallbackDiv = document.getElementById('offers-section');
+    if (!fallbackDiv) {
+      fallbackDiv = document.createElement('div');
+      fallbackDiv.id = 'offers-section';
+      fallbackDiv.style.padding = '2rem';
+      const main = document.querySelector('main');
+      if (main) {
+        const sections = main.querySelectorAll(':scope > .section');
+        if (sections.length >= 2) main.insertBefore(fallbackDiv, sections[1]);
+        else if (sections.length === 1) sections[0].after(fallbackDiv);
+        else main.appendChild(fallbackDiv);
       }
-    })
-    .catch(() => {});
-
-  //  fetch actual offer page content
-
-  fetch(`${window.location.origin}${offerPath}.plain.html`)
-    .then((r) => (r.ok ? r.text() : null))
-    .then((html) => {
-      offersSection.innerHTML = html || '<p>Offers coming soon.</p>';
-    })
-    .catch(() => {
-      offersSection.innerHTML = '<p>Offers coming soon.</p>';
+    }
+    fallbackDiv.innerHTML = '<p style="font-family:sans-serif;padding:1rem;">Loading offers...</p>';
+    const firstValue = Object.values(attributes)[0] || '';
+    await loadSingleOffer({
+      container: fallbackDiv,
+      offerPath: `/us/${lang}/offers/${firstValue}`,
+      titleKey: `offer-title-${firstValue}`,
+      lang,
     });
+    return;
+  }
+
+  for (const block of fragmentBlocks) {
+    const base = block.getAttribute('data-offer-base');
+
+    const folderType = base.split('/').pop();
+    const attributeValue = attributes[folderType];
+
+    if (!attributeValue) continue; 
+
+    const offerPath = `${base}/${attributeValue}`;
+    const titleKey = `offer-title-${attributeValue}`;
+
+    block.style.display = 'block';
+    block.innerHTML = '<p style="font-family:sans-serif;padding:1rem;">Loading offers...</p>';
+
+    const prevEl = block.previousElementSibling;
+    if (prevEl && prevEl.classList.contains('offers-title')) prevEl.remove();
+
+   
+    await loadSingleOffer({ container: block, offerPath, titleKey, lang });
+  }
 }
 
 function removeOffers() {
-  _currentOffersCountry = null;
-  const offersSection = document.getElementById('offers-section');
-  if (offersSection) offersSection.remove();
-  const offersTitle = document.getElementById('offers-title');
-  if (offersTitle) offersTitle.remove();
+  _offersLoaded = false;
+
+  document.querySelectorAll('.offers-title').forEach((t) => t.remove());
+
+  document.querySelectorAll('[data-offer-base]').forEach((block) => {
+    block.style.display = 'none';
+    block.innerHTML = '';
+  });
+
+  const fallback = document.getElementById('offers-section');
+  if (fallback) fallback.remove();
 }
 
 // ── NAV UI ─────────────────────────────────────────────────
@@ -190,7 +227,6 @@ function showLoggedInUI(username) {
   const navTools = loginBtn
     ? loginBtn.parentElement
     : document.querySelector('.nav-tools');
-
   if (loginBtn) loginBtn.remove();
 
   const wrapper = document.createElement('div');
@@ -218,7 +254,6 @@ function showLoggedInUI(username) {
 function showLoggedOutUI() {
   const wrapper = document.getElementById('nav-user-wrapper');
   if (wrapper) wrapper.remove();
-
   if (!document.getElementById('nav-login-btn-trigger')) {
     const navTools = document.querySelector('.nav-tools');
     if (navTools) navTools.appendChild(createLoginButton());
@@ -253,13 +288,13 @@ let _refreshScheduled = false;
 function refreshUIFromSession() {
   if (_refreshScheduled) return;
   _refreshScheduled = true;
-
   setTimeout(() => {
     _refreshScheduled = false;
     const session = getSession();
     if (session) {
       showLoggedInUI(session.username);
-      loadOffersOnPage(session.country);
+
+      loadOffersOnPage(session.attributes);
     } else {
       removeOffers();
       showLoggedOutUI();
@@ -291,7 +326,6 @@ localStorage.removeItem = function removeItem(key) {
   }
 };
 
-// DevTools fallback poller
 setInterval(() => {
   const current = localStorage.getItem('userSession');
   if (current !== _lastKnownSession) {
@@ -319,6 +353,7 @@ function showLoginPopup() {
   popup.style.cssText = `
     background:white;border-radius:12px;
     padding:2rem;width:360px;
+    box-shadow:0 4px 24px rgba(0,0,0,0.18);
   `;
   popup.innerHTML = `
     <h2 style="margin:0 0 1rem;font-size:1.25rem;font-family:sans-serif;">Welcome Back</h2>
@@ -328,10 +363,12 @@ function showLoginPopup() {
     <input id="nl-password" type="password" placeholder="Enter password"
       style="width:100%;padding:10px;margin-bottom:10px;border:1px solid #ddd;
       border-radius:8px;font-size:14px;box-sizing:border-box;"/>
-    <p id="nl-error" style="color:red;font-size:13px;margin:0 0 8px;font-family:sans-serif;min-height:18px;"></p>
+    <p id="nl-error" style="color:red;font-size:13px;margin:0 0 8px;
+      font-family:sans-serif;min-height:18px;"></p>
     <button id="nl-submit"
       style="width:100%;padding:12px;background:#1473e6;color:white;
-      border:none;border-radius:8px;font-size:15px;cursor:pointer;font-family:sans-serif;">
+      border:none;border-radius:8px;font-size:15px;cursor:pointer;
+      font-family:sans-serif;">
       Login
     </button>
   `;
@@ -371,9 +408,13 @@ function showLoginPopup() {
       );
 
       if (user) {
+        
         localStorage.setItem(
           'userSession',
-          JSON.stringify({ username: user.username, country: user.country }),
+          JSON.stringify({
+            username: user.username,
+            attributes: user.attributes,
+          }),
         );
         overlay.remove();
       } else {
@@ -464,10 +505,22 @@ export default async function decorate(block) {
   navWrapper.append(nav);
   block.append(navWrapper);
 
-  // Restore session on page load
+  // ── RESTORE SESSION ON PAGE LOAD ──
   const session = getSession();
   if (session) {
     showLoggedInUI(session.username);
-    loadOffersOnPage(session.country);
+
+    let attempts = 0;
+    const tryLoad = setInterval(() => {
+      attempts++;
+      const hasFragment = document.querySelector('[data-offer-base]');
+      const timeout = attempts > 20; 
+
+      if (hasFragment || timeout) {
+        clearInterval(tryLoad);
+        
+        loadOffersOnPage(session.attributes);
+      }
+    }, 100);
   }
 }

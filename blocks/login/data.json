@@ -3,17 +3,26 @@
     {
       "username": "ron",
       "password": "ron123",
-      "country": "boston"
+      "attributes": {
+        "cities": "boston",
+        "gender": "men"
+      }
     },
     {
       "username": "harry",
       "password": "harry123",
-      "country": "texas"
+      "attributes": {
+        "cities": "texas",
+        "gender": "men"
+      }
     },
     {
       "username": "emma",
       "password": "emma123",
-      "country":  "nyc"
+      "attributes": {
+        "cities": "nyc",
+        "gender": "women"
+      }
     }
   ]
 }
