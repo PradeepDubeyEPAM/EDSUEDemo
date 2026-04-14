@@ -1,0 +1,16 @@
+.product-card {
+  border: 1px solid #ddd;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.product-image {
+  max-width: 200px;
+  margin-bottom: 10px;
+}
+
+.ai-description {
+  margin-top: 15px;
+  background: #f9f9f9;
+  padding: 10px;
+}
