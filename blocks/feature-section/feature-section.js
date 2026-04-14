@@ -53,9 +53,10 @@ function parseFields(block) {
  *   ctaUrl      – aem-content → renders as <a href="…"> in the block
  *   mediaSrc    – reference   → renders as <picture> / <img> in the block
  *
- * Variants:
- *   (default)   – text left / media right, filled CTA, topographic decor
- *   image-left  – media left / text right, outlined CTA, no decor
+ * Variants (activated via the "Layout" classes field in Universal Editor,
+ *   or by appending the class name in document-based authoring):
+ *   (default)   – text left / image right, filled CTA, topographic decor
+ *   image-left  – image left / text right, outlined CTA, no decor
  *
  * DOM output:
  *   .feature-section[.image-left]
