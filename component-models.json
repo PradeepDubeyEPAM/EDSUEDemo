@@ -5139,23 +5139,12 @@
     ]
   },
   {
+    "id": "product-list",
+    "fields": []
+  },
+  {
     "id": "product",
-    "fields": [
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "productId",
-        "label": "Product ID",
-        "required": true
-      },
-      {
-        "component": "reference",
-        "valueType": "string",
-        "name": "productImage",
-        "label": "Product Image",
-        "required": false
-      }
-    ]
+    "fields": []
   },
   {
     "id": "hero",
