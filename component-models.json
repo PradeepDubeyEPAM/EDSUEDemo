@@ -314,6 +314,18 @@
         "multi": false,
         "required": false,
         "description": "Image or graphic displayed in the media column (~540x380px recommended)"
+      },
+      {
+        "component": "multiselect",
+        "name": "classes",
+        "label": "Layout",
+        "description": "Select 'Image Left' to reverse the column order (image left, text right)",
+        "options": [
+          {
+            "name": "Image Left",
+            "value": "image-left"
+          }
+        ]
       }
     ]
   },
