@@ -41,10 +41,10 @@ export default async function decorate(block) {
 
     //Load config
     const config = await getProductConfig();
-    const productApi = config.productApiUrl;
+    const productApi = config.appBuilderUrl;
 
     if (!productApi) {
-      throw new Error('productApiUrl missing in product-config.json');
+      throw new Error('appbuilder api missing in productconfig.json');
     }
 
     //Show loading state
