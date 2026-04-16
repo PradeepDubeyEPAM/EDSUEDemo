@@ -10,7 +10,25 @@
 }
 
 .ai-description {
-  margin-top: 15px;
+  margin-top: 20px;
   background: #f9f9f9;
   padding: 10px;
+}
+
+.typing {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Blinking cursor */
+.cursor {
+  display: inline-block;
+  margin-left: 2px;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
 }

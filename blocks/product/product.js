@@ -1,25 +1,67 @@
+// Cache config globally (avoid multiple fetch calls)
+let productConfigCache;
+
+async function getProductConfig() {
+  if (productConfigCache) return productConfigCache;
+
+  try {
+    const res = await fetch('/productconfig.json');
+
+    if (!res.ok) {
+      throw new Error('Failed to load product-config.json');
+    }
+
+    productConfigCache = await res.json();
+    return productConfigCache;
+  } catch (e) {
+    console.error('Config load error:', e);
+    return {};
+  }
+}
+
+// Extract productId from URL (supports both patterns)
+function getProductId() {
+  const path = window.location.pathname;
+
+  // Pattern 1: /pdp/123  (recommended)
+  const pathParts = path.split('/');
+  const lastPart = pathParts.pop() || pathParts.pop(); // handles trailing slash
+
+  if (lastPart && !isNaN(lastPart)) {
+    return lastPart;
+  }
+
+  return '1'; // fallback
+}
+
 export default async function decorate(block) {
   try {
-    //Step 1: Read authored values from AEM
-	 const urlParams = new URLSearchParams(window.location.search);
-    const productId = urlParams.get('productId') || 1;
+    //Get productId from URL
+    const productId = getProductId();
 
-    //Step 2: Show loading state
+    //Load config
+    const config = await getProductConfig();
+    const productApi = config.appBuilderUrl;
+
+    if (!productApi) {
+      throw new Error('appbuilder api missing in productconfig.json');
+    }
+
+    //Show loading state
     block.innerHTML = `<p>Loading product...</p>`;
 
-    //Step 3: Call your App Builder API
+    //Call API
     const response = await fetch(
-      `https://26272-pricinginventory-stage.adobeio-static.net/api/v1/web/pricing-inventory-app/get-product-pricing?productId=${productId}`
+      `${productApi}?productId=${productId}`
     );
 
     if (!response.ok) {
       throw new Error(`API failed with status ${response.status}`);
     }
 
-    const result = await response.json();
-    const data = result; // depending on response structure
+    const data = await response.json();
 
-    //Step 4: Render UI
+    //Render UI
     block.innerHTML = `
       <div class="product-card">
         ${data.productimg ? `<img src="${data.productimg}" alt="${data.title}" class="product-image"/>` : ''}
@@ -32,10 +74,34 @@ export default async function decorate(block) {
 
         <div class="ai-description">
           <h3>AI Description</h3>
-          <p>${data.AIdescription || 'No description available'}</p>
+          <p id="ai-desc" class="typing">Generating AI description<span class="cursor">|</span></p>
         </div>
       </div>
     `;
+
+    //Typing effect for AI description
+    const fullText = data.AIdescription || 'No description available';
+    const descEl = block.querySelector('#ai-desc');
+
+    let index = 0;
+
+    function typeEffect() {
+      if (index <= fullText.length) {
+        descEl.innerHTML =
+          fullText.substring(0, index) +
+          `<span class="cursor">|</span>`;
+
+        index++;
+
+        const speed = Math.random() * 30 + 20;
+        setTimeout(typeEffect, speed);
+      } else {
+        descEl.innerHTML = fullText;
+      }
+    }
+
+    setTimeout(typeEffect, 400);
+
   } catch (error) {
     console.error('Product block error:', error);
 
