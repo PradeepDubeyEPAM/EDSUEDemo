@@ -1,11 +1,39 @@
+//Cache config globally
+let productConfigCache;
+
+async function getProductConfig() {
+  if (productConfigCache) return productConfigCache;
+
+  try {
+    const res = await fetch('/productconfig.json');
+
+    if (!res.ok) {
+      throw new Error('Failed to load product config.json');
+    }
+
+    productConfigCache = await res.json();
+    return productConfigCache;
+  } catch (e) {
+    console.error('Config load error:', e);
+    return {};
+  }
+}
+
 export default async function decorate(block) {
   try {
     block.innerHTML = `<p>Loading products...</p>`;
 
+    //Load config
+    const config = await getProductConfig();
+    const productListApi = config.productListApiUrl;
+    const pdpBasePath = config.pdpBasePath || '/pdp'; // fallback
+
+    if (!productListApi) {
+      throw new Error('productListApiUrl missing in product-config.json');
+    }
+
     //Fetch product list
-    const response = await fetch(
-      'https://sandbox.mockerito.com/ecommerce/api/products'
-    );
+    const response = await fetch(productListApi);
 
     if (!response.ok) {
       throw new Error('Failed to fetch products');
@@ -26,13 +54,13 @@ export default async function decorate(block) {
       </div>
     `;
 
-    //Add click event for navigation
+    //Redirect using path-based URL (BEST for EDS caching)
     block.querySelectorAll('.product-card').forEach(card => {
       card.addEventListener('click', () => {
         const productId = card.getAttribute('data-id');
 
-        //Redirect to PDP page
-        window.location.href = `/us/en/product?productId=${productId}`;
+        //Final URL: /pdp/123
+        window.location.href = `${pdpBasePath}/${productId}`;
       });
     });
 
