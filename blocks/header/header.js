@@ -109,7 +109,6 @@ function clearSession() {
 
 let _offersLoaded = false;
 
-
 async function loadSingleOffer({ container, offerPath, titleKey, lang }) {
   const [placeholderJson, offerHtml] = await Promise.all([
     fetch(`${window.location.origin}/placeholders.json`)
@@ -156,7 +155,6 @@ async function loadOffersOnPage(attributes = {}) {
   const fragmentBlocks = [...document.querySelectorAll('[data-offer-base]')];
 
   if (fragmentBlocks.length === 0) {
-    // Fallback: no fragment block on page (demo/home page)
     let fallbackDiv = document.getElementById('offers-section');
     if (!fallbackDiv) {
       fallbackDiv = document.createElement('div');
@@ -183,14 +181,30 @@ async function loadOffersOnPage(attributes = {}) {
 
   for (const block of fragmentBlocks) {
     const base = block.getAttribute('data-offer-base');
-
     const folderType = base.split('/').pop();
     const attributeValue = attributes[folderType];
 
-    if (!attributeValue) continue; 
+    if (!attributeValue) continue;
 
-    const offerPath = `${base}/${attributeValue}`;
-    const titleKey = `offer-title-${attributeValue}`;
+    // detect current category from URL
+const category = window.location.pathname.split('/').filter(Boolean).pop();
+// try category-specific page first
+let offerPath = `${base}/${attributeValue}/${category}`;
+// fallback if category page does not exist
+// example: /offers/gender/men
+try {
+  const check = await fetch(`${window.location.origin}${offerPath}.plain.html`, {
+    method: 'HEAD',
+  });
+
+  if (!check.ok) {
+    offerPath = `${base}/${attributeValue}`;
+  }
+} catch (e) {
+  offerPath = `${base}/${attributeValue}`;
+}
+
+const titleKey = `offer-title-${attributeValue}`;
 
     block.style.display = 'block';
     block.innerHTML = '<p style="font-family:sans-serif;padding:1rem;">Loading offers...</p>';
@@ -198,21 +212,18 @@ async function loadOffersOnPage(attributes = {}) {
     const prevEl = block.previousElementSibling;
     if (prevEl && prevEl.classList.contains('offers-title')) prevEl.remove();
 
-   
+    // eslint-disable-next-line no-await-in-loop
     await loadSingleOffer({ container: block, offerPath, titleKey, lang });
   }
 }
 
 function removeOffers() {
   _offersLoaded = false;
-
   document.querySelectorAll('.offers-title').forEach((t) => t.remove());
-
   document.querySelectorAll('[data-offer-base]').forEach((block) => {
     block.style.display = 'none';
     block.innerHTML = '';
   });
-
   const fallback = document.getElementById('offers-section');
   if (fallback) fallback.remove();
 }
@@ -227,7 +238,9 @@ function showLoggedInUI(username) {
   const navTools = loginBtn
     ? loginBtn.parentElement
     : document.querySelector('.nav-tools');
-  if (loginBtn) loginBtn.remove();
+
+  // HIDE the login button (not remove) so logout can show it again
+  if (loginBtn) loginBtn.style.display = 'none';
 
   const wrapper = document.createElement('div');
   wrapper.id = 'nav-user-wrapper';
@@ -252,26 +265,13 @@ function showLoggedInUI(username) {
 }
 
 function showLoggedOutUI() {
+  // Remove logged-in wrapper
   const wrapper = document.getElementById('nav-user-wrapper');
   if (wrapper) wrapper.remove();
-  if (!document.getElementById('nav-login-btn-trigger')) {
-    const navTools = document.querySelector('.nav-tools');
-    if (navTools) navTools.appendChild(createLoginButton());
-  }
-}
 
-function createLoginButton() {
-  const btn = document.createElement('button');
-  btn.id = 'nav-login-btn-trigger';
-  btn.textContent = 'Login';
-  btn.style.cssText = `
-    background:#1473e6;color:white;
-    border:none;border-radius:20px;
-    padding:8px 20px;font-size:14px;
-    cursor:pointer;margin-left:12px;
-  `;
-  btn.addEventListener('click', showLoginPopup);
-  return btn;
+  // Show the login button again (authored block button, just hidden not removed)
+  const loginBtn = document.getElementById('nav-login-btn-trigger');
+  if (loginBtn) loginBtn.style.display = '';
 }
 
 // ── LOGOUT ─────────────────────────────────────────────────
@@ -293,7 +293,6 @@ function refreshUIFromSession() {
     const session = getSession();
     if (session) {
       showLoggedInUI(session.username);
-
       loadOffersOnPage(session.attributes);
     } else {
       removeOffers();
@@ -408,7 +407,6 @@ function showLoginPopup() {
       );
 
       if (user) {
-        
         localStorage.setItem(
           'userSession',
           JSON.stringify({
@@ -497,8 +495,13 @@ export default async function decorate(block) {
     toggleMenu(nav, navSections, isDesktop.matches),
   );
 
-  const navTools = nav.querySelector('.nav-tools');
-  if (navTools) navTools.appendChild(createLoginButton());
+ 
+  // login.js block (authored in nav page) creates the button with id="nav-login-btn-trigger"
+  
+  const loginBtn = document.getElementById('nav-login-btn-trigger');
+  if (loginBtn) {
+    loginBtn.addEventListener('click', showLoginPopup);
+  } 
 
   const navWrapper = document.createElement('div');
   navWrapper.className = 'nav-wrapper';
@@ -514,11 +517,10 @@ export default async function decorate(block) {
     const tryLoad = setInterval(() => {
       attempts++;
       const hasFragment = document.querySelector('[data-offer-base]');
-      const timeout = attempts > 20; 
+      const timeout = attempts > 20;
 
       if (hasFragment || timeout) {
         clearInterval(tryLoad);
-        
         loadOffersOnPage(session.attributes);
       }
     }, 100);
