@@ -49,7 +49,7 @@ export default async function decorate(block) {
       <div class="plp-grid">
         ${productMap.map(product => `
           <div class="product-card" data-id="${product.id}">
-            <img src="${product.image}" alt="${product.title}" />
+            <img src="${product.images[0]}" alt="${product.title}" />
             <h3>${product.title}</h3>
             <p>₹${product.price}</p>
           </div>
@@ -63,7 +63,7 @@ export default async function decorate(block) {
         const productId = card.getAttribute('data-id');
 
         //Final URL: /pdp/123
-        window.location.href = `${pdpBasePath}/${productId}`;
+        window.location.href = `${pdpBasePath}.${productId}`;
       });
     });
 
