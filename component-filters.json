@@ -29,12 +29,6 @@
     ]
   },
   {
-    "id": "section",
-    "components": [
-      "api-mesh-data"
-    ]
-  },
-  {
     "id": "blog",
     "components": [
       "blog-post"
