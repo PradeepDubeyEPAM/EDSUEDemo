@@ -31,5 +31,12 @@
       ]
     }
   ],
-  "filters": []
+  "filters": [
+    {
+      "id": "section",
+      "components": [
+        "api-mesh-data"
+      ]
+    }
+  ]
 }
