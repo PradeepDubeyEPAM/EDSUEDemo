@@ -26,6 +26,9 @@
       "language-navigation",
       "login",
       "hero-section",
+      "product",
+      "product-list",
+      "feature-section",
       "api-mesh-data"
     ]
   },
