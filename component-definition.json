@@ -92,7 +92,7 @@
                 "template": {
                   "name": "API Mesh Data",
                   "model": "api-mesh-data",
-                  "api_mesh_data_endpoint": "Enter the API Mesh Endpoint here"
+                  "endpoint": "Enter the API Mesh Endpoint here"
                 }
               }
             }

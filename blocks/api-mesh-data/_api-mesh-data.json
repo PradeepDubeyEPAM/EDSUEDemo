@@ -10,7 +10,7 @@
             "template": {
               "name": "API Mesh Data",
               "model": "api-mesh-data",
-              "api_mesh_data_endpoint": "Enter the API Mesh Endpoint here"
+              "endpoint": "Enter the API Mesh Endpoint here"
             }
           }
         }
@@ -24,9 +24,10 @@
         {
           "component": "text",
           "valueType": "string",
-          "name": "api-mesh-data-endpoint",
+          "name": "endpoint",
           "label": "API Mesh Data Endpoint",
-          "required": true
+          "required": true,
+          "htmlAttribute": "data-endpoint"
         }
       ]
     }
