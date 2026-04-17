@@ -23,15 +23,8 @@ async function getProductConfig() {
 function getProductId() {
   const path = window.location.pathname;
 
-  // Pattern 1: /pdp/123  (recommended)
-  const pathParts = path.split('/');
-  const lastPart = pathParts.pop() || pathParts.pop(); // handles trailing slash
-
-  if (lastPart && !isNaN(lastPart)) {
-    return lastPart;
-  }
-
-  return '1'; // fallback
+  const productId = path.match(/product\.(\d+)/);
+  return productId ? productId[1] : 1;
 }
 
 export default async function decorate(block) {
