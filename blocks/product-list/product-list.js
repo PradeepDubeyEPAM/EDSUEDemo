@@ -44,9 +44,10 @@ export default async function decorate(block) {
     const products = await response.json();
 
     //Render product grid
+	const productMap = products.products;
     block.innerHTML = `
       <div class="plp-grid">
-        ${products.map(product => `
+        ${productMap.map(product => `
           <div class="product-card" data-id="${product.id}">
             <img src="${product.image}" alt="${product.title}" />
             <h3>${product.title}</h3>
