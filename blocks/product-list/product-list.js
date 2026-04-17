@@ -25,8 +25,10 @@ export default async function decorate(block) {
 
     //Load config
     const config = await getProductConfig();
-    const productListApi = config.productListApiUrl;
-    const pdpBasePath = config.pdpBasePath; // fallback
+    const productListApi = config.data.find(
+  item => item["API Key"] === "productListApiUrl")?.["API Url"];
+    const pdpBasePath = config.data.find(
+  item => item["API Key"] === "pdpBasePath")?.["API Url"];
 
     if (!productListApi) {
       throw new Error('productListApiUrl missing in product-config.json');
