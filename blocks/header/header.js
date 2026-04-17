@@ -498,15 +498,16 @@ export default async function decorate(block) {
  
   // login.js block (authored in nav page) creates the button with id="nav-login-btn-trigger"
   
-  const loginBtn = document.getElementById('nav-login-btn-trigger');
-  if (loginBtn) {
-    loginBtn.addEventListener('click', showLoginPopup);
-  } 
-
   const navWrapper = document.createElement('div');
-  navWrapper.className = 'nav-wrapper';
-  navWrapper.append(nav);
-  block.append(navWrapper);
+navWrapper.className = 'nav-wrapper';
+navWrapper.append(nav);
+block.append(navWrapper);
+
+// bind after nav is rendered
+const loginBtn = block.querySelector('#nav-login-btn-trigger');
+if (loginBtn) {
+  loginBtn.addEventListener('click', showLoginPopup);
+}
 
   // ── RESTORE SESSION ON PAGE LOAD ──
   const session = getSession();
