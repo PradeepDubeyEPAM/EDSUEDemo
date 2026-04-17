@@ -63,7 +63,7 @@ export default async function decorate(block) {
         const productId = card.getAttribute('data-id');
 
         //Final URL: /pdp/123
-        window.location.href = `${pdpBasePath}.${productId}`;
+        window.location.href = `${pdpBasePath}/${productId}`;
       });
     });
 
