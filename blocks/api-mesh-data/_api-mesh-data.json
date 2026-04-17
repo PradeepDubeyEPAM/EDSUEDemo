@@ -10,7 +10,7 @@
             "template": {
               "name": "API Mesh Data",
               "model": "api-mesh-data",
-              "api_mesh_endpoint": "Enter the API Mesh Endpoint here"
+              "api_mesh_data_endpoint": "Enter the API Mesh Endpoint here"
             }
           }
         }
@@ -19,20 +19,14 @@
   ],
   "models": [
     {
-      "id": "tile",
+      "id": "api-mesh-data",
       "fields": [
         {
           "component": "text",
           "valueType": "string",
-          "name": "tile_title",
-          "label": "Title",
+          "name": "api-mesh-data-endpoint",
+          "label": "API Mesh Data Endpoint",
           "required": true
-        },
-        {
-          "component": "richtext",
-          "valueType": "string",
-          "name": "tile_description",
-          "label": "Enter Description"
         }
       ]
     }
