@@ -41,7 +41,7 @@ export default async function decorate(block) {
 
     //Load config
     const config = await getProductConfig();
-    const productApi = config.appBuilderUrl;
+    const productApi = config.data.find(item => item["API Key"] === "appBuilderUrl")?.["API Url"];
 
     if (!productApi) {
       throw new Error('appbuilder api missing in productconfig.json');

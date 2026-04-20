@@ -25,8 +25,10 @@ export default async function decorate(block) {
 
     //Load config
     const config = await getProductConfig();
-    const productListApi = config.productListApiUrl;
-    const pdpBasePath = config.pdpBasePath; // fallback
+    const productListApi = config.data.find(
+  item => item["API Key"] === "productListApiUrl")?.["API Url"];
+    const pdpBasePath = config.data.find(
+  item => item["API Key"] === "pdpBasePath")?.["API Url"];
 
     if (!productListApi) {
       throw new Error('productListApiUrl missing in product-config.json');
@@ -42,11 +44,12 @@ export default async function decorate(block) {
     const products = await response.json();
 
     //Render product grid
+	const productMap = products.products;
     block.innerHTML = `
       <div class="plp-grid">
-        ${products.map(product => `
+        ${productMap.map(product => `
           <div class="product-card" data-id="${product.id}">
-            <img src="${product.image}" alt="${product.title}" />
+            <img src="${product.images[0]}" alt="${product.title}" />
             <h3>${product.title}</h3>
             <p>₹${product.price}</p>
           </div>
