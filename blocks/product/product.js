@@ -109,7 +109,6 @@ export default async function decorate(block) {
         </div>
       </div>
     `;
-    setTimeout(typeEffect, 400);
 
   } catch (error) {
     console.error('Product block error:', error);
