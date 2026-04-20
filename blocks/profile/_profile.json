@@ -1,0 +1,82 @@
+{
+  "definitions": [
+    {
+      "title": "Profile",
+      "id": "profile",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Profile",
+              "model": "profile",
+              "name": "",
+              "jobTitle": "",
+              "downloadLabel": "Download CV",
+              "downloadUrl": "",
+              "photo": "",
+              "biography": ""
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "profile",
+      "fields": [
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "photo",
+          "label": "Headshot Photo",
+          "multi": false,
+          "required": false,
+          "description": "Profile headshot image displayed on the left of the header row"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "name",
+          "label": "Name",
+          "required": true,
+          "description": "Person's full name displayed as an h2 heading"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "jobTitle",
+          "label": "Job Title",
+          "required": false,
+          "description": "Person's job title or role displayed as an h3 below the name"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "downloadLabel",
+          "label": "Download Link Label",
+          "required": false,
+          "description": "Text label for the downloadable PDF link (e.g. 'Download CV')"
+        },
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "downloadUrl",
+          "label": "Download URL (PDF)",
+          "multi": false,
+          "required": false,
+          "description": "Link to a downloadable PDF file (e.g. CV or resume)"
+        },
+        {
+          "component": "richtext",
+          "name": "biography",
+          "label": "Biography",
+          "required": false,
+          "description": "Biography text displayed below the header row"
+        }
+      ]
+    }
+  ],
+  "filters": []
+}
