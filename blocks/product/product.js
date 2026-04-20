@@ -18,7 +18,6 @@ async function getProductConfig() {
   }
 }
 
-// Extract productId from URL
 function getProductId() {
   const urlParams = new URLSearchParams(window.location.search);
   const queryId = urlParams.get('productId');
@@ -58,12 +57,25 @@ function renderReviews(reviews) {
   `).join('');
 }
 
+function renderRelatedProducts(products) {
+  if (!products || products.length === 0) {
+    return `<p>No related products found</p>`;
+  }
+
+  return products.map(product => `
+    <div class="related-card">
+      <img src="${product.thumbnail}" alt="${product.title}" />
+      <h4>${product.title}</h4>
+      <p>₹${product.price}</p>
+      <a href="/us/en/product?productId=${product.id}">View</a>
+    </div>
+  `).join('');
+}
+
 export default async function decorate(block) {
   try {
-    //Get productId from URL
     const productId = getProductId();
 
-    //Load config
     const config = await getProductConfig();
     const productApi = config.data.find(
       item => item["API Key"] === "appBuilderUrl"
@@ -73,10 +85,8 @@ export default async function decorate(block) {
       throw new Error('appbuilder api missing in productconfig.json');
     }
 
-    //Show loading state
     block.innerHTML = `<p>Loading product...</p>`;
 
-    //Call API
     const response = await fetch(
       `${productApi}?productId=${productId}`
     );
@@ -87,7 +97,6 @@ export default async function decorate(block) {
 
     const data = await response.json();
 
-    //Render UI
     block.innerHTML = `
       <div class="product-card">
         ${data.productimg ? `<img src="${data.productimg}" alt="${data.title}" class="product-image"/>` : ''}
@@ -100,13 +109,21 @@ export default async function decorate(block) {
 
         <div class="ai-description">
           <h3>Product Description</h3>
-          <p id="ai-desc" class="typing">data.description</p>
+          <p id="ai-desc" class="typing">${data.description}</p>
         </div>
 
         <div class="reviews">
           <h3>Customer Reviews</h3>
           ${renderReviews(data.reviews)}
         </div>
+
+        <div class="related-products">
+          <h3>Related Products</h3>
+          <div class="related-grid">
+            ${renderRelatedProducts(data.relatedProducts)}
+          </div>
+        </div>
+
       </div>
     `;
 
