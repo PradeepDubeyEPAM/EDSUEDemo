@@ -15,20 +15,27 @@
   padding: 10px;
 }
 
-.typing {
-  font-size: 14px;
-  line-height: 1.5;
+.review-card {
+  border-bottom: 1px solid #eee;
+  padding: 12px 0;
 }
 
-/* Blinking cursor */
-.cursor {
-  display: inline-block;
-  margin-left: 2px;
-  animation: blink 1s infinite;
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-@keyframes blink {
-  0% { opacity: 1; }
-  50% { opacity: 0; }
-  100% { opacity: 1; }
+.stars {
+  color: #f5a623;
+  font-size: 16px;
+  letter-spacing: 2px;
+}
+
+.review-comment {
+  margin: 6px 0;
+}
+
+.review-card small {
+  color: #888;
 }
