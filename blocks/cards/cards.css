@@ -2,14 +2,17 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
   gap: 24px;
+  width: 100% !important;
+  box-sizing: border-box;
 }
 
 .cards > ul > li {
   border: 1px solid #dadada;
   background-color: var(--background-color);
+  min-width: 0;
 }
 
 .cards .cards-card-body {
@@ -28,6 +31,6 @@
 
 @media (max-width: 768px) {
   .cards > ul {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
   }
 }
