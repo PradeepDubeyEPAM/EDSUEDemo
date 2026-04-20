@@ -139,16 +139,22 @@ async function loadSingleOffer({ container, offerPath, titleKey, lang }) {
     }
   }
 
- if (offerHtml) {
-    container.innerHTML = offerHtml;
-    const cardsBlocks = container.querySelectorAll('.cards');
-    if (cardsBlocks.length) {
-      const { default: decorateCards } = await import('../cards/cards.js');
-      cardsBlocks.forEach((card) => decorateCards(card));
+if (offerHtml) {
+  container.innerHTML = offerHtml;
+  const cardsBlocks = container.querySelectorAll('.cards');
+  if (cardsBlocks.length) {
+    if (!document.querySelector('link[href*="cards.css"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/blocks/cards/cards.css';
+      document.head.appendChild(link);
     }
-  } else {
-    container.innerHTML = '<p style="font-family:sans-serif;padding:1rem;">Offers coming soon.</p>';
+    const { default: decorateCards } = await import('../cards/cards.js');
+    cardsBlocks.forEach((card) => decorateCards(card));
   }
+} else {
+  container.innerHTML = '<p style="font-family:sans-serif;padding:1rem;">Offers coming soon.</p>';
+}
 }
 async function loadOffersOnPage(attributes = {}) {
   const path = window.location.pathname;
