@@ -34,3 +34,14 @@
     grid-template-columns: 1fr !important;
   }
 }
+.cards-card-description {
+  font-size: 0.85rem;
+  color: #444;
+  margin-top: 8px;
+  line-height: 1.4;
+}
+.cards-card-description.loading {
+  color: #999;
+  font-style: italic;
+}
+
