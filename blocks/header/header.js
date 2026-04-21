@@ -139,10 +139,23 @@ async function loadSingleOffer({ container, offerPath, titleKey, lang }) {
     }
   }
 
-  container.innerHTML = offerHtml
-    || '<p style="font-family:sans-serif;padding:1rem;">Offers coming soon.</p>';
+if (offerHtml) {
+  container.innerHTML = offerHtml;
+  const cardsBlocks = container.querySelectorAll('.cards');
+  if (cardsBlocks.length) {
+    if (!document.querySelector('link[href*="cards.css"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = '/blocks/cards/cards.css';
+      document.head.appendChild(link);
+    }
+    const { default: decorateCards } = await import('../cards/cards.js');
+    cardsBlocks.forEach((card) => decorateCards(card));
+  }
+} else {
+  container.innerHTML = '<p style="font-family:sans-serif;padding:1rem;">Offers coming soon.</p>';
 }
-
+}
 async function loadOffersOnPage(attributes = {}) {
   const path = window.location.pathname;
   if (path.includes('/nav') || path.includes('/footer')) return;
@@ -206,7 +219,7 @@ try {
 
 const titleKey = `offer-title-${attributeValue}`;
 
-    block.style.display = 'block';
+    block.style.display = '';
     block.innerHTML = '<p style="font-family:sans-serif;padding:1rem;">Loading offers...</p>';
 
     const prevEl = block.previousElementSibling;
