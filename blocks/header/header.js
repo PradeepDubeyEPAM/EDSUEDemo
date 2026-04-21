@@ -1,5 +1,6 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
+import { GEMINI_API_KEY } from '../../scripts/config.js';
 
 const isDesktop = window.matchMedia('(min-width: 900px)');
 
@@ -103,17 +104,26 @@ function clearSession() {
   localStorage.removeItem('userSession');
 }
 
-// ── OFFERS ─────────────────────────────────────────────────
-
-const GEMINI_API_KEY = 'AIzaSyCWpqT_t1dwuWDs4ZvgeRCUjR79d5k7K7c';
+// ── AI DESCRIPTIONS ────────────────────────────────────────
 
 async function addAIDescriptions(container) {
   const cards = container.querySelectorAll('.cards-card-body');
   await Promise.all([...cards].map(async (body) => {
+
+    //  check heading first, then any <p>, then image alt
     const heading = body.querySelector('h1,h2,h3,h4,h5,h6');
+    const anyPara = body.querySelector('p');
     const img = body.closest('li')?.querySelector('picture img');
-    const title = heading?.textContent?.trim() || img?.alt?.trim();
+    const title = heading?.textContent?.trim()
+      || anyPara?.textContent?.trim()
+      || img?.alt?.trim();
+
+    console.log('Card title detected:', title);
+
     if (!title) return;
+
+    // avoid duplicate description if already added
+    if (body.querySelector('.cards-card-description')) return;
 
     const cacheKey = `card-desc-${title}`;
     const cached = sessionStorage.getItem(cacheKey);
@@ -129,23 +139,38 @@ async function addAIDescriptions(container) {
       return;
     }
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: `Write a short 1-2 sentence promotional product description for "${title}". No quotes.` }] }],
-        }),
-      }
-    );
-    const data = await response.json();
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
-    if (text) sessionStorage.setItem(cacheKey, text);
-    p.textContent = text || '';
-    p.classList.remove('loading');
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: `Write a short 1-2 sentence promotional product description for "${title}". No quotes.`,
+              }],
+            }],
+            generationConfig: { maxOutputTokens: 80, temperature: 0.7 },
+          }),
+        },
+      );
+
+      const data = await response.json();
+      console.log('Gemini raw response:', data);
+
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
+      if (text) sessionStorage.setItem(cacheKey, text);
+      p.textContent = text || '';
+      p.classList.remove('loading');
+    } catch (e) {
+      console.error('Gemini call failed:', e);
+      p.remove();
+    }
   }));
 }
+
+// ── OFFERS ─────────────────────────────────────────────────
 
 let _offersLoaded = false;
 
@@ -163,7 +188,6 @@ async function loadSingleOffer({ container, offerPath, titleKey, lang }) {
     const rows = Array.isArray(placeholderJson?.data)
       ? placeholderJson.data
       : Array.isArray(placeholderJson) ? placeholderJson : [];
-
     const row = rows.find((d) => (d.key || d.Key) === titleKey);
     if (row && (row[lang] || row.en)) {
       const titleEl = document.createElement('h2');
@@ -191,6 +215,8 @@ async function loadSingleOffer({ container, offerPath, titleKey, lang }) {
       }
       const { default: decorateCards } = await import('../cards/cards.js');
       cardsBlocks.forEach((card) => decorateCards(card));
+
+      //  wait for cards to decorate then add AI descriptions
       await addAIDescriptions(container);
     }
   } else {
@@ -238,7 +264,6 @@ async function loadOffersOnPage(attributes = {}) {
     const base = block.getAttribute('data-offer-base');
     const folderType = base.split('/').pop();
     const attributeValue = attributes[folderType];
-
     if (!attributeValue) continue;
 
     const category = window.location.pathname.split('/').filter(Boolean).pop();
@@ -248,15 +273,12 @@ async function loadOffersOnPage(attributes = {}) {
       const check = await fetch(`${window.location.origin}${offerPath}.plain.html`, {
         method: 'HEAD',
       });
-      if (!check.ok) {
-        offerPath = `${base}/${attributeValue}`;
-      }
-    } catch (e) {
+      if (!check.ok) offerPath = `${base}/${attributeValue}`;
+    } catch {
       offerPath = `${base}/${attributeValue}`;
     }
 
     const titleKey = `offer-title-${attributeValue}`;
-
     block.style.display = '';
     block.innerHTML = '<p style="font-family:sans-serif;padding:1rem;">Loading offers...</p>';
 
@@ -317,7 +339,6 @@ function showLoggedInUI(username) {
 function showLoggedOutUI() {
   const wrapper = document.getElementById('nav-user-wrapper');
   if (wrapper) wrapper.remove();
-
   const loginBtn = document.getElementById('nav-login-btn-trigger');
   if (loginBtn) loginBtn.style.display = '';
 }
@@ -563,7 +584,6 @@ export default async function decorate(block) {
       attempts++;
       const hasFragment = document.querySelector('[data-offer-base]');
       const timeout = attempts > 20;
-
       if (hasFragment || timeout) {
         clearInterval(tryLoad);
         loadOffersOnPage(session.attributes);
