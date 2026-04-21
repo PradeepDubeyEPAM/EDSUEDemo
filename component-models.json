@@ -153,12 +153,21 @@
     "id": "api-mesh-data",
     "fields": [
       {
-        "component": "text",
+        "component": "select",
+        "name": "category",
+        "label": "Select Category",
         "valueType": "string",
-        "name": "endpoint",
-        "label": "API Mesh Data Endpoint",
-        "required": true,
-        "htmlAttribute": "data-endpoint"
+        "options": [
+          {
+            "name": "Tops",
+            "value": "tops"
+          },
+          {
+            "name": "Jewelry",
+            "value": "jewelry"
+          }
+        ],
+        "required": true
       }
     ]
   },
