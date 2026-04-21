@@ -9,7 +9,7 @@ export default async function decorate(block) {
   const category = getFieldValue(block, 'category', 'Tops');
 
   const query = `
-  {
+  query GetProducts($category: String!) {
     GraphQL_categories(
       filters: {
         name: { match: $category }
@@ -28,8 +28,10 @@ export default async function decorate(block) {
   }
   `;
 
+  const variables = { category };
+
   try {
-    const response = await fetchAPI(query, {});
+    const response = await fetchAPI(query, variables);
 
     //  Validate response properly
     if (!response || !response.data) {

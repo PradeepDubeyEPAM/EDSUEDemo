@@ -156,15 +156,14 @@
         "component": "select",
         "name": "category",
         "label": "Select Category",
-        "valueType": "string",
         "options": [
           {
             "name": "Tops",
-            "value": "tops"
+            "value": "Tops"
           },
           {
             "name": "Jewelry",
-            "value": "jewelry"
+            "value": "Jewelry"
           }
         ],
         "required": true
