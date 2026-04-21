@@ -3,8 +3,6 @@ import { loadFragment } from '../fragment/fragment.js';
 
 const isDesktop = window.matchMedia('(min-width: 900px)');
 
-// ── NAV KEYBOARD / FOCUS HELPERS ──────────────────────────
-
 function closeOnEscape(e) {
   if (e.code === 'Escape') {
     const nav = document.getElementById('nav');
@@ -107,6 +105,48 @@ function clearSession() {
 
 // ── OFFERS ─────────────────────────────────────────────────
 
+const GEMINI_API_KEY = 'AIzaSyCWpqT_t1dwuWDs4ZvgeRCUjR79d5k7K7c';
+
+async function addAIDescriptions(container) {
+  const cards = container.querySelectorAll('.cards-card-body');
+  await Promise.all([...cards].map(async (body) => {
+    const heading = body.querySelector('h1,h2,h3,h4,h5,h6');
+    const img = body.closest('li')?.querySelector('picture img');
+    const title = heading?.textContent?.trim() || img?.alt?.trim();
+    if (!title) return;
+
+    const cacheKey = `card-desc-${title}`;
+    const cached = sessionStorage.getItem(cacheKey);
+
+    const p = document.createElement('p');
+    p.className = 'cards-card-description loading';
+    p.textContent = 'Loading...';
+    body.appendChild(p);
+
+    if (cached) {
+      p.textContent = cached;
+      p.classList.remove('loading');
+      return;
+    }
+
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: `Write a short 1-2 sentence promotional product description for "${title}". No quotes.` }] }],
+        }),
+      }
+    );
+    const data = await response.json();
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
+    if (text) sessionStorage.setItem(cacheKey, text);
+    p.textContent = text || '';
+    p.classList.remove('loading');
+  }));
+}
+
 let _offersLoaded = false;
 
 async function loadSingleOffer({ container, offerPath, titleKey, lang }) {
@@ -139,23 +179,25 @@ async function loadSingleOffer({ container, offerPath, titleKey, lang }) {
     }
   }
 
-if (offerHtml) {
-  container.innerHTML = offerHtml;
-  const cardsBlocks = container.querySelectorAll('.cards');
-  if (cardsBlocks.length) {
-    if (!document.querySelector('link[href*="cards.css"]')) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = '/blocks/cards/cards.css';
-      document.head.appendChild(link);
+  if (offerHtml) {
+    container.innerHTML = offerHtml;
+    const cardsBlocks = container.querySelectorAll('.cards');
+    if (cardsBlocks.length) {
+      if (!document.querySelector('link[href*="cards.css"]')) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = '/blocks/cards/cards.css';
+        document.head.appendChild(link);
+      }
+      const { default: decorateCards } = await import('../cards/cards.js');
+      cardsBlocks.forEach((card) => decorateCards(card));
+      await addAIDescriptions(container);
     }
-    const { default: decorateCards } = await import('../cards/cards.js');
-    cardsBlocks.forEach((card) => decorateCards(card));
+  } else {
+    container.innerHTML = '<p style="font-family:sans-serif;padding:1rem;">Offers coming soon.</p>';
   }
-} else {
-  container.innerHTML = '<p style="font-family:sans-serif;padding:1rem;">Offers coming soon.</p>';
 }
-}
+
 async function loadOffersOnPage(attributes = {}) {
   const path = window.location.pathname;
   if (path.includes('/nav') || path.includes('/footer')) return;
@@ -199,25 +241,21 @@ async function loadOffersOnPage(attributes = {}) {
 
     if (!attributeValue) continue;
 
-    // detect current category from URL
-const category = window.location.pathname.split('/').filter(Boolean).pop();
-// try category-specific page first
-let offerPath = `${base}/${attributeValue}/${category}`;
-// fallback if category page does not exist
-// example: /offers/gender/men
-try {
-  const check = await fetch(`${window.location.origin}${offerPath}.plain.html`, {
-    method: 'HEAD',
-  });
+    const category = window.location.pathname.split('/').filter(Boolean).pop();
+    let offerPath = `${base}/${attributeValue}/${category}`;
 
-  if (!check.ok) {
-    offerPath = `${base}/${attributeValue}`;
-  }
-} catch (e) {
-  offerPath = `${base}/${attributeValue}`;
-}
+    try {
+      const check = await fetch(`${window.location.origin}${offerPath}.plain.html`, {
+        method: 'HEAD',
+      });
+      if (!check.ok) {
+        offerPath = `${base}/${attributeValue}`;
+      }
+    } catch (e) {
+      offerPath = `${base}/${attributeValue}`;
+    }
 
-const titleKey = `offer-title-${attributeValue}`;
+    const titleKey = `offer-title-${attributeValue}`;
 
     block.style.display = '';
     block.innerHTML = '<p style="font-family:sans-serif;padding:1rem;">Loading offers...</p>';
@@ -252,7 +290,6 @@ function showLoggedInUI(username) {
     ? loginBtn.parentElement
     : document.querySelector('.nav-tools');
 
-  // HIDE the login button (not remove) so logout can show it again
   if (loginBtn) loginBtn.style.display = 'none';
 
   const wrapper = document.createElement('div');
@@ -278,11 +315,9 @@ function showLoggedInUI(username) {
 }
 
 function showLoggedOutUI() {
-  // Remove logged-in wrapper
   const wrapper = document.getElementById('nav-user-wrapper');
   if (wrapper) wrapper.remove();
 
-  // Show the login button again (authored block button, just hidden not removed)
   const loginBtn = document.getElementById('nav-login-btn-trigger');
   if (loginBtn) loginBtn.style.display = '';
 }
@@ -508,19 +543,15 @@ export default async function decorate(block) {
     toggleMenu(nav, navSections, isDesktop.matches),
   );
 
- 
-  // login.js block (authored in nav page) creates the button with id="nav-login-btn-trigger"
-  
   const navWrapper = document.createElement('div');
-navWrapper.className = 'nav-wrapper';
-navWrapper.append(nav);
-block.append(navWrapper);
+  navWrapper.className = 'nav-wrapper';
+  navWrapper.append(nav);
+  block.append(navWrapper);
 
-// bind after nav is rendered
-const loginBtn = block.querySelector('#nav-login-btn-trigger');
-if (loginBtn) {
-  loginBtn.addEventListener('click', showLoginPopup);
-}
+  const loginBtn = block.querySelector('#nav-login-btn-trigger');
+  if (loginBtn) {
+    loginBtn.addEventListener('click', showLoginPopup);
+  }
 
   // ── RESTORE SESSION ON PAGE LOAD ──
   const session = getSession();
