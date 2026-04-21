@@ -2,11 +2,11 @@ import { fetchAPI } from '../../scripts/api.js';
 
 export default async function decorate(block) {
 
+  // Get dropdown value from authored content
+  const category = getFieldValue(block);
+
   // Loading state
   block.innerHTML = '<div class="api-data-loading">Loading...</div>';
-
-  // Get dropdown value from authored content
-  const category = getFieldValue(block, 'category', 'Tops');
 
   const query = `
   query GetProducts($category: String!) {
@@ -71,15 +71,7 @@ export default async function decorate(block) {
 }
 
 // helper function
-function getFieldValue(block, fieldName, defaultValue = '') {
-  const rows = [...block.children];
-
-  for (const row of rows) {
-    const cols = [...row.children];
-    if (cols[0]?.textContent.trim().toLowerCase() === fieldName.toLowerCase()) {
-      return cols[1]?.textContent.trim();
-    }
-  }
-
-  return defaultValue;
+function getFieldValue(block) {
+  const p = block.querySelector('p');
+    return p ? p.textContent.trim() : 'Tops';
 }

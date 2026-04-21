@@ -156,6 +156,7 @@
         "component": "select",
         "name": "category",
         "label": "Select Category",
+        "valueType": "string",
         "options": [
           {
             "name": "Tops",
