@@ -25,7 +25,11 @@
       "tile",
       "language-navigation",
       "login",
-      "hero-section"
+      "hero-section",
+      "product",
+      "product-list",
+      "feature-section",
+      "api-mesh-data"
     ]
   },
   {
