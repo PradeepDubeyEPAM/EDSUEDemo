@@ -5,6 +5,7 @@
       "password": "ron123",
       "attributes": {
         "cities": "boston",
+        "ethinicity": "hispanic",
         "gender": "men"
       }
     },
@@ -13,6 +14,7 @@
       "password": "harry123",
       "attributes": {
         "cities": "texas",
+        "ethinicity": "caucasian",
         "gender": "men"
       }
     },
@@ -21,6 +23,7 @@
       "password": "emma123",
       "attributes": {
         "cities": "nyc",
+        "ethinicity": "asian",
         "gender": "women"
       }
     }
