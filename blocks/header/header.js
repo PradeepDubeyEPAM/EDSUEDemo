@@ -108,25 +108,29 @@ function clearSession() {
 
 // ── AI DESCRIPTIONS ────────────────────────────────────────
 
-async function getAIDescription(title) {
+async function getAIDescription(title, imgSrc) {
   const cacheKey = `card-desc-${title}`;
   const cached = sessionStorage.getItem(cacheKey);
   if (cached && cached.length > 0) return cached;
 
   try {
+    const prompt = imgSrc
+      ? `Look at this product image (${imgSrc}) and this product name "${title}". Write a short 1-2 sentence promotional description. No quotes.`
+      : `Write a short 1-2 sentence promotional product description for "${title}". No quotes.`;
+
     const response = await fetch(GEMINI_PROXY_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        prompt: `Write a short 1-2 sentence promotional product description for "${title}". No quotes.`,
-      }),
+      body: JSON.stringify({ prompt }),
     });
     if (!response.ok) return '';
     const data = await response.json();
+    console.log('[AI] Gemini response:', data);
     const text = data?.text?.trim() || '';
     if (text) sessionStorage.setItem(cacheKey, text);
     return text;
-  } catch {
+  } catch (e) {
+    console.error('[AI] fetch error:', e);
     return '';
   }
 }
@@ -135,21 +139,26 @@ async function addAIDescriptions(container) {
   await new Promise((resolve) => setTimeout(resolve, 0));
 
   const cards = container.querySelectorAll('.cards-card-body');
-  if (!cards.length) return;
+  if (!cards.length) {
+    console.warn('[AI] No cards found');
+    return;
+  }
 
   await Promise.all(
     [...cards].map(async (body) => {
-      // Get image alt text first — most reliable product name
       const img = body.closest('li')?.querySelector('picture img');
       const imgAlt = img?.alt?.trim();
+      const imgSrc = img?.src;
 
-      // Get first non-empty, non-price line of text
-      const allText = [...body.querySelectorAll('p, h1, h2, h3, h4, h5, h6')]
+      // grab ALL text elements, pick first non-price one
+      const allText = [
+        ...body.querySelectorAll('p, h1, h2, h3, h4, h5, h6, strong, b, span, a'),
+      ]
         .map((el) => el.textContent.trim())
-        .filter((t) => t && !/^\$|%/.test(t)); // skip price lines
+        .filter((t) => t.length > 1 && !/^\$/.test(t) && !/^\d/.test(t) && !/^%/.test(t));
 
-      const title = imgAlt || allText[0];
-      console.log('[AI] using title:', title);
+      const title = allText[0] || imgAlt;
+      console.log('[AI] using title:', title, '| imgSrc:', imgSrc);
       if (!title) return;
 
       const p = document.createElement('p');
@@ -157,7 +166,7 @@ async function addAIDescriptions(container) {
       p.textContent = 'Loading description…';
       body.appendChild(p);
 
-      const text = await getAIDescription(title);
+      const text = await getAIDescription(title, imgSrc);
       if (text) {
         p.textContent = text;
         p.classList.remove('loading');
