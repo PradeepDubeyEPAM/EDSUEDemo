@@ -139,23 +139,34 @@ async function addAIDescriptions(container) {
 
   await Promise.all(
     [...cards].map(async (body) => {
-      const title = body.textContent?.trim().slice(0, 80);
+      // Get image alt text first — most reliable product name
+      const img = body.closest('li')?.querySelector('picture img');
+      const imgAlt = img?.alt?.trim();
+
+      // Get first non-empty, non-price line of text
+      const allText = [...body.querySelectorAll('p, h1, h2, h3, h4, h5, h6')]
+        .map((el) => el.textContent.trim())
+        .filter((t) => t && !/^\$|%/.test(t)); // skip price lines
+
+      const title = imgAlt || allText[0];
+      console.log('[AI] using title:', title);
       if (!title) return;
 
       const p = document.createElement('p');
       p.className = 'cards-card-description loading';
-      p.style.cssText = 'font-size:13px;color:#666;font-style:italic;margin-top:6px;';
       p.textContent = 'Loading description…';
       body.appendChild(p);
 
       const text = await getAIDescription(title);
-      p.textContent = text || '';
-      p.classList.remove('loading');
-      p.style.fontStyle = 'normal';
+      if (text) {
+        p.textContent = text;
+        p.classList.remove('loading');
+      } else {
+        p.remove();
+      }
     }),
   );
 }
-
 // ── OFFERS ─────────────────────────────────────────────────
 
 async function loadSingleOffer({ container, offerPath, titleKey, lang }) {
