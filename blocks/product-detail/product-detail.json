@@ -18,7 +18,8 @@
   ],
   "models": [
     {
-      "id": "product-detail"
+      "id": "product-detail",
+      "fields": []
     }
   ],
   "filters": []
