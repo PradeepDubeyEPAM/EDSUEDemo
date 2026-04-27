@@ -4,6 +4,7 @@ export default async function decorate(block) {
 
   // Get dropdown value from authored content
   const category = getFieldValue(block);
+  const pdpUrl = getFieldValue(block);
 
   // Loading state
   block.innerHTML = '<div class="api-data-loading">Loading...</div>';
@@ -101,7 +102,7 @@ export default async function decorate(block) {
     card.addEventListener('click', () => {
       const sku = card.dataset.sku;
       localStorage.setItem('selectedProduct', sku);
-      window.location.href = '/product-detail';
+      window.location.href = pdpUrl;
     });
   });
 

@@ -168,6 +168,13 @@
           }
         ],
         "required": true
+      },
+      {
+        "component": "text",
+        "name": "pdpUrl",
+        "label": "Product Detail Page URL",
+        "valueType": "string",
+        "required": true
       }
     ]
   },
