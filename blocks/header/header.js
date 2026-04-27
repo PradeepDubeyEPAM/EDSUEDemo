@@ -139,34 +139,30 @@ async function addAIDescriptions(container) {
   await new Promise((resolve) => setTimeout(resolve, 0));
 
   const cards = container.querySelectorAll('.cards-card-body');
-  if (!cards.length) {
-    console.warn('[AI] No cards found');
-    return;
-  }
+  if (!cards.length) return;
 
   await Promise.all(
     [...cards].map(async (body) => {
       const img = body.closest('li')?.querySelector('picture img');
       const imgAlt = img?.alt?.trim();
-      const imgSrc = img?.src;
 
-      // grab ALL text elements, pick first non-price one
-      const allText = [
-        ...body.querySelectorAll('p, h1, h2, h3, h4, h5, h6, strong, b, span, a'),
-      ]
-        .map((el) => el.textContent.trim())
-        .filter((t) => t.length > 1 && !/^\$/.test(t) && !/^\d/.test(t) && !/^%/.test(t));
+      // Get ONLY the first <p> or heading — nothing else
+      const firstEl = body.querySelector('p, h1, h2, h3, h4, h5, h6');
+      const rawText = firstEl?.textContent?.trim() || '';
 
-      const title = allText[0] || imgAlt;
-      console.log('[AI] using title:', title, '| imgSrc:', imgSrc);
-      if (!title) return;
+      // Strip price patterns like $45, $67 from the text
+      const title = rawText.replace(/\$\d+(\s*\$\d+)?/g, '').replace(/\d+%?\s*off/gi, '').trim();
+      const finalTitle = title || imgAlt;
+
+      console.log('[AI] final title:', finalTitle);
+      if (!finalTitle) return;
 
       const p = document.createElement('p');
       p.className = 'cards-card-description loading';
       p.textContent = 'Loading description…';
       body.appendChild(p);
 
-      const text = await getAIDescription(title, imgSrc);
+      const text = await getAIDescription(finalTitle);
       if (text) {
         p.textContent = text;
         p.classList.remove('loading');
