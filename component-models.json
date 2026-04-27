@@ -5161,6 +5161,10 @@
     ]
   },
   {
+    "id": "product-detail",
+    "fields": []
+  },
+  {
     "id": "product-list",
     "fields": []
   },
