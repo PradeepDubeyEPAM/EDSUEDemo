@@ -111,7 +111,7 @@ function clearSession() {
 async function getAIDescription(title) {
   const cacheKey = `card-desc-${title}`;
   const cached = sessionStorage.getItem(cacheKey);
-  if (cached) return cached;
+  if (cached && cached.length > 0) return cached;
 
   try {
     const response = await fetch(GEMINI_PROXY_URL, {
@@ -139,10 +139,7 @@ async function addAIDescriptions(container) {
 
   await Promise.all(
     [...cards].map(async (body) => {
-      // Use heading if present, otherwise fall back to first <p> (card title)
-      const heading = body.querySelector('h1,h2,h3,h4,h5,h6,p');
-      const img = body.closest('li')?.querySelector('picture img');
-      const title = heading?.textContent?.trim() || img?.alt?.trim();
+      const title = body.textContent?.trim().slice(0, 80);
       if (!title) return;
 
       const p = document.createElement('p');
