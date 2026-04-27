@@ -16,3 +16,13 @@
   padding: 16px;
   text-align: center;
 }
+
+.api-data-container a.card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.card {
+  cursor: pointer;
+}

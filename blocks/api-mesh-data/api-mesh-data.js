@@ -21,6 +21,14 @@ export default async function decorate(block) {
           items {
             name
             sku
+            price_range {
+                maximum_price {
+                  final_price {
+                    value
+                    currency
+                  }
+                }
+            }
           }
         }
       }
@@ -52,14 +60,34 @@ export default async function decorate(block) {
       return;
     }
 
+    const userCurrency = await getUserCurrency();
+
+    const baseCurrency = products[0]?.price_range?.maximum_price?.final_price?.currency || 'USD';
+
+    const rate = await getExchangeRate(baseCurrency, userCurrency);
+
+    const formattedProducts = products.map(p => {
+      const price = p.price_range?.maximum_price?.final_price?.value || 0;
+
+      const convertedPrice = price * rate;
+
+      return {
+        ...p,
+        displayPrice: formatCurrency(convertedPrice, userCurrency)
+      };
+    });
+
     //  Render
     block.innerHTML = `
       <div class="api-data-container">
-        ${products.map(p => `
-          <div class="card">
+        ${formattedProducts.map(p => `
+        <a class="card-link">
+          <div class="card" data-sku="${p.sku}">
             <h3>${p.name}</h3>
             <p>SKU: ${p.sku}</p>
+            <p>Price: ${p.displayPrice}</p>
           </div>
+        </a>
         `).join('')}
       </div>
     `;
@@ -68,10 +96,56 @@ export default async function decorate(block) {
     console.error('API Mesh Block Error:', error);
     block.innerHTML = `<div class="api-data-error">Failed to load data</div>`;
   }
+
+  block.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', () => {
+      const sku = card.dataset.sku;
+      localStorage.setItem('selectedProduct', sku);
+      window.location.href = '/product-detail';
+    });
+  });
+
 }
 
 // helper function
 function getFieldValue(block) {
   const p = block.querySelector('p');
     return p ? p.textContent.trim() : 'Tops';
+}
+
+async function getUserCurrency() {
+  try {
+    const res = await fetch('https://ipapi.co/json/');
+    const data = await res.json();
+    return data.currency; // INR, USD, etc
+  } catch {
+    return 'USD';
+  }
+}
+
+async function getExchangeRate(from, to) {
+  if (from === to) return 1;
+
+  try {
+    const res = await fetch(`https://open.er-api.com/v6/latest/${from}`);
+    const data = await res.json();
+
+    if (!data || !data.rates || !data.rates[to]) {
+      console.error('Invalid exchange API response:', data);
+      return 1;
+    }
+
+    return data.rates[to];
+
+  } catch (error) {
+    console.error('Exchange rate fetch failed:', error);
+    return 1;
+  }
+}
+
+function formatCurrency(amount, currency) {
+  return new Intl.NumberFormat(undefined, {
+    style: 'currency',
+    currency
+  }).format(amount);
 }
