@@ -3,6 +3,11 @@ import { loadFragment } from '../fragment/fragment.js';
 
 const isDesktop = window.matchMedia('(min-width: 900px)');
 
+// Gemini proxy — key lives in Cloudflare, never in GitHub
+const GEMINI_PROXY_URL = 'https://gemini-proxy.jayabhishikthapuredla.workers.dev';
+
+// ── NAV HELPERS ────────────────────────────────────────────
+
 function closeOnEscape(e) {
   if (e.code === 'Escape') {
     const nav = document.getElementById('nav');
@@ -48,9 +53,7 @@ function focusNavSection() {
 function toggleAllNavSections(sections, expanded = false) {
   sections
     .querySelectorAll('.nav-sections .default-content-wrapper > ul > li')
-    .forEach((section) => {
-      section.setAttribute('aria-expanded', expanded);
-    });
+    .forEach((section) => section.setAttribute('aria-expanded', expanded));
 }
 
 function toggleMenu(nav, navSections, forceExpanded = null) {
@@ -88,7 +91,7 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
   }
 }
 
-// ── SESSION HELPERS ────────────────────────────────────────
+// ── SESSION ────────────────────────────────────────────────
 
 function getSession() {
   try {
@@ -103,51 +106,73 @@ function clearSession() {
   localStorage.removeItem('userSession');
 }
 
-// ── OFFERS ─────────────────────────────────────────────────
+// ── AI DESCRIPTIONS ────────────────────────────────────────
 
-const GEMINI_API_KEY = 'AIzaSyCWpqT_t1dwuWDs4ZvgeRCUjR79d5k7K7c';
+async function getAIDescription(title, imgSrc) {
+  const cacheKey = `card-desc-${title}`;
+  const cached = sessionStorage.getItem(cacheKey);
+  if (cached && cached.length > 0) return cached;
 
-async function addAIDescriptions(container) {
-  const cards = container.querySelectorAll('.cards-card-body');
-  await Promise.all([...cards].map(async (body) => {
-    const heading = body.querySelector('h1,h2,h3,h4,h5,h6');
-    const img = body.closest('li')?.querySelector('picture img');
-    const title = heading?.textContent?.trim() || img?.alt?.trim();
-    if (!title) return;
+  try {
+    const prompt = imgSrc
+      ? `Look at this product image (${imgSrc}) and this product name "${title}". Write a short 1-2 sentence promotional description. No quotes.`
+      : `Write a short 1-2 sentence promotional product description for "${title}". No quotes.`;
 
-    const cacheKey = `card-desc-${title}`;
-    const cached = sessionStorage.getItem(cacheKey);
-
-    const p = document.createElement('p');
-    p.className = 'cards-card-description loading';
-    p.textContent = 'Loading...';
-    body.appendChild(p);
-
-    if (cached) {
-      p.textContent = cached;
-      p.classList.remove('loading');
-      return;
-    }
-
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: `Write a short 1-2 sentence promotional product description for "${title}". No quotes.` }] }],
-        }),
-      }
-    );
+    const response = await fetch(GEMINI_PROXY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt }),
+    });
+    if (!response.ok) return '';
     const data = await response.json();
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
+    console.log('[AI] Gemini response:', data);
+    const text = data?.text?.trim() || '';
     if (text) sessionStorage.setItem(cacheKey, text);
-    p.textContent = text || '';
-    p.classList.remove('loading');
-  }));
+    return text;
+  } catch (e) {
+    console.error('[AI] fetch error:', e);
+    return '';
+  }
 }
 
-let _offersLoaded = false;
+async function addAIDescriptions(container) {
+  await new Promise((resolve) => setTimeout(resolve, 0));
+
+  const cards = container.querySelectorAll('.cards-card-body');
+  if (!cards.length) return;
+
+  await Promise.all(
+    [...cards].map(async (body) => {
+      const img = body.closest('li')?.querySelector('picture img');
+      const imgAlt = img?.alt?.trim();
+
+      // Get ONLY the first <p> or heading — nothing else
+      const firstEl = body.querySelector('p, h1, h2, h3, h4, h5, h6');
+      const rawText = firstEl?.textContent?.trim() || '';
+
+      // Strip price patterns like $45, $67 from the text
+      const title = rawText.replace(/\$\d+(\s*\$\d+)?/g, '').replace(/\d+%?\s*off/gi, '').trim();
+      const finalTitle = title || imgAlt;
+
+      console.log('[AI] final title:', finalTitle);
+      if (!finalTitle) return;
+
+      const p = document.createElement('p');
+      p.className = 'cards-card-description loading';
+      p.textContent = 'Loading description…';
+      body.appendChild(p);
+
+      const text = await getAIDescription(finalTitle);
+      if (text) {
+        p.textContent = text;
+        p.classList.remove('loading');
+      } else {
+        p.remove();
+      }
+    }),
+  );
+}
+// ── OFFERS ─────────────────────────────────────────────────
 
 async function loadSingleOffer({ container, offerPath, titleKey, lang }) {
   const [placeholderJson, offerHtml] = await Promise.all([
@@ -163,7 +188,6 @@ async function loadSingleOffer({ container, offerPath, titleKey, lang }) {
     const rows = Array.isArray(placeholderJson?.data)
       ? placeholderJson.data
       : Array.isArray(placeholderJson) ? placeholderJson : [];
-
     const row = rows.find((d) => (d.key || d.Key) === titleKey);
     if (row && (row[lang] || row.en)) {
       const titleEl = document.createElement('h2');
@@ -190,13 +214,15 @@ async function loadSingleOffer({ container, offerPath, titleKey, lang }) {
         document.head.appendChild(link);
       }
       const { default: decorateCards } = await import('../cards/cards.js');
-      cardsBlocks.forEach((card) => decorateCards(card));
+      await Promise.all([...cardsBlocks].map((card) => decorateCards(card)));
       await addAIDescriptions(container);
     }
   } else {
     container.innerHTML = '<p style="font-family:sans-serif;padding:1rem;">Offers coming soon.</p>';
   }
 }
+
+let _offersLoaded = false;
 
 async function loadOffersOnPage(attributes = {}) {
   const path = window.location.pathname;
@@ -209,56 +235,17 @@ async function loadOffersOnPage(attributes = {}) {
 
   const fragmentBlocks = [...document.querySelectorAll('[data-offer-base]')];
 
-  if (fragmentBlocks.length === 0) {
-    let fallbackDiv = document.getElementById('offers-section');
-    if (!fallbackDiv) {
-      fallbackDiv = document.createElement('div');
-      fallbackDiv.id = 'offers-section';
-      fallbackDiv.style.padding = '2rem';
-      const main = document.querySelector('main');
-      if (main) {
-        const sections = main.querySelectorAll(':scope > .section');
-        if (sections.length >= 2) main.insertBefore(fallbackDiv, sections[1]);
-        else if (sections.length === 1) sections[0].after(fallbackDiv);
-        else main.appendChild(fallbackDiv);
-      }
-    }
-    fallbackDiv.innerHTML = '<p style="font-family:sans-serif;padding:1rem;">Loading offers...</p>';
-    const firstValue = Object.values(attributes)[0] || '';
-    await loadSingleOffer({
-      container: fallbackDiv,
-      offerPath: `/us/${lang}/offers/${firstValue}`,
-      titleKey: `offer-title-${firstValue}`,
-      lang,
-    });
-    return;
-  }
-
   for (const block of fragmentBlocks) {
     const base = block.getAttribute('data-offer-base');
     const folderType = base.split('/').pop();
     const attributeValue = attributes[folderType];
-
     if (!attributeValue) continue;
 
-    const category = window.location.pathname.split('/').filter(Boolean).pop();
-    let offerPath = `${base}/${attributeValue}/${category}`;
-
-    try {
-      const check = await fetch(`${window.location.origin}${offerPath}.plain.html`, {
-        method: 'HEAD',
-      });
-      if (!check.ok) {
-        offerPath = `${base}/${attributeValue}`;
-      }
-    } catch (e) {
-      offerPath = `${base}/${attributeValue}`;
-    }
-
+    const offerPath = `${base}/${attributeValue}`;
     const titleKey = `offer-title-${attributeValue}`;
 
     block.style.display = '';
-    block.innerHTML = '<p style="font-family:sans-serif;padding:1rem;">Loading offers...</p>';
+    block.innerHTML = '<p style="font-family:sans-serif;padding:1rem;">Loading offers…</p>';
 
     const prevEl = block.previousElementSibling;
     if (prevEl && prevEl.classList.contains('offers-title')) prevEl.remove();
@@ -275,8 +262,6 @@ function removeOffers() {
     block.style.display = 'none';
     block.innerHTML = '';
   });
-  const fallback = document.getElementById('offers-section');
-  if (fallback) fallback.remove();
 }
 
 // ── NAV UI ─────────────────────────────────────────────────
@@ -286,10 +271,7 @@ function showLoggedInUI(username) {
   if (existing) existing.remove();
 
   const loginBtn = document.getElementById('nav-login-btn-trigger');
-  const navTools = loginBtn
-    ? loginBtn.parentElement
-    : document.querySelector('.nav-tools');
-
+  const navTools = loginBtn ? loginBtn.parentElement : document.querySelector('.nav-tools');
   if (loginBtn) loginBtn.style.display = 'none';
 
   const wrapper = document.createElement('div');
@@ -304,8 +286,7 @@ function showLoggedInUI(username) {
   logoutBtn.textContent = 'Logout';
   logoutBtn.style.cssText = `
     background:#e34850;color:white;border:none;
-    border-radius:20px;padding:6px 14px;cursor:pointer;
-    font-size:14px;
+    border-radius:20px;padding:6px 14px;cursor:pointer;font-size:14px;
   `;
   logoutBtn.addEventListener('click', handleLogout);
 
@@ -317,12 +298,9 @@ function showLoggedInUI(username) {
 function showLoggedOutUI() {
   const wrapper = document.getElementById('nav-user-wrapper');
   if (wrapper) wrapper.remove();
-
   const loginBtn = document.getElementById('nav-login-btn-trigger');
   if (loginBtn) loginBtn.style.display = '';
 }
-
-// ── LOGOUT ─────────────────────────────────────────────────
 
 function handleLogout() {
   clearSession();
@@ -330,7 +308,7 @@ function handleLogout() {
   showLoggedOutUI();
 }
 
-// ── REACTIVE UI ────────────────────────────────────────────
+// ── REACTIVE SESSION SYNC ──────────────────────────────────
 
 let _refreshScheduled = false;
 function refreshUIFromSession() {
@@ -390,16 +368,13 @@ function showLoginPopup() {
   const overlay = document.createElement('div');
   overlay.id = 'nav-login-overlay';
   overlay.style.cssText = `
-    position:fixed;inset:0;
-    background:rgba(0,0,0,0.5);
-    display:flex;align-items:center;
-    justify-content:center;z-index:9999;
+    position:fixed;inset:0;background:rgba(0,0,0,0.5);
+    display:flex;align-items:center;justify-content:center;z-index:9999;
   `;
 
   const popup = document.createElement('div');
   popup.style.cssText = `
-    background:white;border-radius:12px;
-    padding:2rem;width:360px;
+    background:white;border-radius:12px;padding:2rem;width:360px;
     box-shadow:0 4px 24px rgba(0,0,0,0.18);
   `;
   popup.innerHTML = `
@@ -414,18 +389,14 @@ function showLoginPopup() {
       font-family:sans-serif;min-height:18px;"></p>
     <button id="nl-submit"
       style="width:100%;padding:12px;background:#1473e6;color:white;
-      border:none;border-radius:8px;font-size:15px;cursor:pointer;
-      font-family:sans-serif;">
+      border:none;border-radius:8px;font-size:15px;cursor:pointer;font-family:sans-serif;">
       Login
     </button>
   `;
 
   overlay.appendChild(popup);
   document.body.appendChild(overlay);
-
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) overlay.remove();
-  });
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
 
   const submitBtn = popup.querySelector('#nl-submit');
 
@@ -455,13 +426,10 @@ function showLoginPopup() {
       );
 
       if (user) {
-        localStorage.setItem(
-          'userSession',
-          JSON.stringify({
-            username: user.username,
-            attributes: user.attributes,
-          }),
-        );
+        localStorage.setItem('userSession', JSON.stringify({
+          username: user.username,
+          attributes: user.attributes,
+        }));
         overlay.remove();
       } else {
         errorEl.textContent = 'Invalid username or password.';
@@ -477,9 +445,7 @@ function showLoginPopup() {
 
   submitBtn.addEventListener('click', doLogin);
   popup.querySelectorAll('input').forEach((input) => {
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') doLogin();
-    });
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') doLogin(); });
   });
 }
 
@@ -539,9 +505,7 @@ export default async function decorate(block) {
   nav.prepend(hamburger);
   nav.setAttribute('aria-expanded', 'false');
   toggleMenu(nav, navSections, isDesktop.matches);
-  isDesktop.addEventListener('change', () =>
-    toggleMenu(nav, navSections, isDesktop.matches),
-  );
+  isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, isDesktop.matches));
 
   const navWrapper = document.createElement('div');
   navWrapper.className = 'nav-wrapper';
@@ -549,22 +513,17 @@ export default async function decorate(block) {
   block.append(navWrapper);
 
   const loginBtn = block.querySelector('#nav-login-btn-trigger');
-  if (loginBtn) {
-    loginBtn.addEventListener('click', showLoginPopup);
-  }
+  if (loginBtn) loginBtn.addEventListener('click', showLoginPopup);
 
-  // ── RESTORE SESSION ON PAGE LOAD ──
+  // Restore session on page load
   const session = getSession();
   if (session) {
     showLoggedInUI(session.username);
-
     let attempts = 0;
     const tryLoad = setInterval(() => {
       attempts++;
       const hasFragment = document.querySelector('[data-offer-base]');
-      const timeout = attempts > 20;
-
-      if (hasFragment || timeout) {
+      if (hasFragment || attempts > 20) {
         clearInterval(tryLoad);
         loadOffersOnPage(session.attributes);
       }
