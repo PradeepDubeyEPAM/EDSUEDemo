@@ -92,11 +92,8 @@
                 "template": {
                   "name": "API Mesh Data",
                   "model": "api-mesh-data",
-                  "fields": [
-                    {
-                      "name": "category"
-                    }
-                  ]
+                  "category": "Please select the category",
+                  "pdpUrl": "Please enter the PDP URL"
                 }
               }
             }
