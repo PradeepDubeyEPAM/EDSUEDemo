@@ -4,7 +4,7 @@ export default async function decorate(block) {
 
   // Get dropdown value from authored content
   const category = getFieldValue(block);
-  const pdpUrl = getFieldValue(block);
+  const pdpUrl = getPDPFieldValue(block);
 
   // Loading state
   block.innerHTML = '<div class="api-data-loading">Loading...</div>';
@@ -112,6 +112,12 @@ export default async function decorate(block) {
 function getFieldValue(block) {
   const p = block.querySelector('p');
     return p ? p.textContent.trim() : 'Tops';
+}
+
+// helper function
+function getPDPFieldValue(block) {
+  const p = block.querySelector('a');
+    return p ? p.textContent.trim() : '/product-detail';
 }
 
 async function getUserCurrency() {

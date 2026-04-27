@@ -40,7 +40,7 @@
           "required": true
         },
         {
-          "component": "text",
+          "component": "aem-content",
           "name": "pdpUrl",
           "label": "Product Detail Page URL",
           "valueType": "string",
