@@ -175,6 +175,12 @@
         "label": "Product Detail Page URL",
         "valueType": "string",
         "required": true
+      },
+      {
+        "component": "text",
+        "name": "title",
+        "label": "Title",
+        "valueType": "string"
       }
     ]
   },

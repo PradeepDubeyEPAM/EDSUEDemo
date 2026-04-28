@@ -1,4 +1,5 @@
 import { fetchAPI } from '../../scripts/api.js';
+import { fetchLocalCurrency } from '../../scripts/currency-conversion.js';
 
 export default async function decorate(block) {
 
@@ -61,25 +62,29 @@ export default async function decorate(block) {
       return;
     }
 
-    const userCurrency = await getUserCurrency();
+const baseCurrency = products[0]?.price_range?.maximum_price?.final_price?.currency || 'USD';
+const formattedProducts = await Promise.all(
+       products.map(async (p) => {
+         const price = p.price_range?.maximum_price?.final_price?.value || 0;
+         let convertedPrice;
 
-    const baseCurrency = products[0]?.price_range?.maximum_price?.final_price?.currency || 'USD';
+         try {
+           convertedPrice = await fetchLocalCurrency(baseCurrency, price);
+         } catch (e) {
+           console.error('Conversion failed:', e);
+           convertedPrice = formatCurrency(price, baseCurrency); // fallback
+         }
 
-    const rate = await getExchangeRate(baseCurrency, userCurrency);
-
-    const formattedProducts = products.map(p => {
-      const price = p.price_range?.maximum_price?.final_price?.value || 0;
-
-      const convertedPrice = price * rate;
-
-      return {
-        ...p,
-        displayPrice: formatCurrency(convertedPrice, userCurrency)
-      };
-    });
+         return {
+           ...p,
+           displayPrice: convertedPrice,
+         };
+       })
+     );
 
     //  Render
     block.innerHTML = `
+      <h2>Top Products</h2>
       <div class="api-data-container">
         ${formattedProducts.map(p => `
         <a class="card-link">
