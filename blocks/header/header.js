@@ -108,30 +108,37 @@ function clearSession() {
 
 // ── AI DESCRIPTIONS ────────────────────────────────────────
 
-async function getAIDescription(title, imgSrc) {
+async function getAIDescription(title, productId, defaultDescription) {
   const cacheKey = `card-desc-${title}`;
+
+  // Only use cache if it was a verified CF description
   const cached = sessionStorage.getItem(cacheKey);
-  if (cached && cached.length > 0) return cached;
+  if (cached) return cached;
 
   try {
-    const prompt = imgSrc
-      ? `Look at this product image (${imgSrc}) and this product name "${title}". Write a short 1-2 sentence promotional description. No quotes.`
-      : `Write a short 1-2 sentence promotional product description for "${title}". No quotes.`;
-
     const response = await fetch(GEMINI_PROXY_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ prompt }),
+      body: JSON.stringify({ title, productId, defaultDescription }),
     });
-    if (!response.ok) return '';
+
+    if (!response.ok) return defaultDescription || '';
+
     const data = await response.json();
-    console.log('[AI] Gemini response:', data);
+    console.log('[AI] Worker response:', data);
+
     const text = data?.text?.trim() || '';
-    if (text) sessionStorage.setItem(cacheKey, text);
-    return text;
-  } catch (e) {
-    console.error('[AI] fetch error:', e);
-    return '';
+    const source = data?.source || '';
+
+    // Only permanently cache if author has verified in AEM
+    if (text && source === 'cf-verified') {
+      sessionStorage.setItem(cacheKey, text);
+    }
+
+    return text || defaultDescription || '';
+  } catch (err) {
+    console.error('[AI] Worker call failed:', err);
+    return defaultDescription || '';
   }
 }
 
@@ -143,26 +150,29 @@ async function addAIDescriptions(container) {
 
   await Promise.all(
     [...cards].map(async (body) => {
+      // Get image alt text first — most reliable product name
       const img = body.closest('li')?.querySelector('picture img');
       const imgAlt = img?.alt?.trim();
 
-      // Get ONLY the first <p> or heading — nothing else
-      const firstEl = body.querySelector('p, h1, h2, h3, h4, h5, h6');
-      const rawText = firstEl?.textContent?.trim() || '';
+      // Get first non-empty, non-price line of text
+      const allText = [...body.querySelectorAll('p, h1, h2, h3, h4, h5, h6')]
+        .map((el) => el.textContent.trim())
+        .filter((t) => t && !/^\$|%/.test(t)); // skip price lines
 
-      // Strip price patterns like $45, $67 from the text
-      const title = rawText.replace(/\$\d+(\s*\$\d+)?/g, '').replace(/\d+%?\s*off/gi, '').trim();
-      const finalTitle = title || imgAlt;
+      const title = imgAlt || allText[0];
+      console.log('[AI] using title:', title);
+      if (!title) return;
 
-      console.log('[AI] final title:', finalTitle);
-      if (!finalTitle) return;
+      // Derive productId from title slug, defaultDescription from card text
+      const productId = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      const defaultDescription = allText[0] || title;
 
       const p = document.createElement('p');
       p.className = 'cards-card-description loading';
       p.textContent = 'Loading description…';
       body.appendChild(p);
 
-      const text = await getAIDescription(finalTitle);
+      const text = await getAIDescription(title, productId, defaultDescription);
       if (text) {
         p.textContent = text;
         p.classList.remove('loading');
@@ -172,6 +182,7 @@ async function addAIDescriptions(container) {
     }),
   );
 }
+
 // ── OFFERS ─────────────────────────────────────────────────
 
 async function loadSingleOffer({ container, offerPath, titleKey, lang }) {
