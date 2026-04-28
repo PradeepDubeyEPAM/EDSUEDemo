@@ -4,7 +4,7 @@ import { loadFragment } from '../fragment/fragment.js';
 const isDesktop = window.matchMedia('(min-width: 900px)');
 
 // Gemini proxy — key lives in Cloudflare, never in GitHub
-const GEMINI_PROXY_URL = 'https://gemini-proxy.jayabhishikthapureddy.workers.dev';
+const GEMINI_PROXY_URL = 'https://gemini-proxy.jayabhishikthapuredla.workers.dev';
 
 // ── NAV HELPERS ────────────────────────────────────────────
 
