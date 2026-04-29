@@ -29,6 +29,10 @@ export default async function decorate(block) {
               }
             }
           }
+          thumbnail {
+            url
+            label
+          }
         }
       }
     }
@@ -45,6 +49,8 @@ export default async function decorate(block) {
     }
 
     const priceObj = product.price_range?.maximum_price?.final_price;
+    const image = product.thumbnail?.url;
+    const imageAltText = product.thumbnail?.label;
 
     try {
       const price  = await fetchLocalCurrency(priceObj?.currency, priceObj?.value);
@@ -54,11 +60,14 @@ export default async function decorate(block) {
           }
           block.innerHTML = `
                 <div class="product-detail">
-                  <h2>${product.name}</h1>
-                  <p><strong>SKU:</strong> ${product.sku}</p>
-                  <p><strong>Price:</strong> ${price}</p>
-                  <div class="description">
-                   <strong>Description:</strong> ${product.description?.html || ''}
+                  <img src="${image}" alt="${imageAltText}"/>
+                  <div class="info">
+                    <h1>${product.name}</h1>
+                    <p class="sku"><strong>SKU:</strong> ${product.sku}</p>
+                    <p><strong>Price:</strong> ${price}</p>
+                    <div class="description">
+                     <strong>Description:</strong> ${product.description?.html || ''}
+                    </div>
                   </div>
                 </div>
               `;

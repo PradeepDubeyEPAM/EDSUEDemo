@@ -3,13 +3,12 @@ import { fetchLocalCurrency } from '../../scripts/currency-conversion.js';
 
 export default async function decorate(block) {
 
-  // Get dropdown value from authored content
-  const category = getFieldValue(block);
-  const pdpUrl = getPDPFieldValue(block);
+  const category = localStorage.getItem('selectedCategory');
+  const pdpUrl = window.location.href;
   const title = getTitleFieldValue(block);
 
   // Loading state
-  block.innerHTML = '<div class="api-data-loading">Loading...</div>';
+  block.innerHTML = '<div class="related-products-loading">Loading...</div>';
 
   const query = `
   query GetProducts($category: String!) {
@@ -98,7 +97,7 @@ export default async function decorate(block) {
         `).join('')}
       </div>
     `;
-    localStorage.setItem('selectedCategory', category);
+
   } catch (error) {
     console.error('API Mesh Block Error:', error);
     block.innerHTML = `<div class="api-data-error">Failed to load data</div>`;
@@ -114,20 +113,8 @@ export default async function decorate(block) {
 
 }
 
-// helper function
-function getFieldValue(block) {
-  const p = block.querySelector('p');
-    return p ? p.textContent.trim() : 'Tops';
-}
-
-// helper function
-function getPDPFieldValue(block) {
-  const p = block.querySelector('a');
-    return p ? p.textContent.trim() : '/product-detail';
-}
-
 function getTitleFieldValue(block) {
   const allP = block.querySelectorAll('p');
   const lastP = allP[allP.length - 1];
-  return lastP ? lastP.textContent.trim() : 'Top Products';
+  return lastP ? lastP.textContent.trim() : 'Related Products';
 }

@@ -1,0 +1,28 @@
+.api-data-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.api-data-container .card {
+  border: 1px solid #ddd;
+  padding: 12px;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.api-data-loading,
+.api-data-error {
+  padding: 16px;
+  text-align: center;
+}
+
+.api-data-container a.card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.card {
+  cursor: pointer;
+}

@@ -5212,6 +5212,17 @@
     ]
   },
   {
+    "id": "related-products",
+    "fields": [
+      {
+        "component": "text",
+        "name": "title",
+        "label": "Title",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
     "id": "tile",
     "fields": [
       {
