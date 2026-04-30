@@ -159,16 +159,15 @@ async function addAIDescriptions(container) {
         .map((el) => el.textContent.trim())
         .filter((t) => t && !/^\$|%/.test(t)); // skip price lines
 
-      const title = imgAlt || allText[0];
+      const titleEl = body.querySelector('h1,h2,h3,h4,h5,h6');
+const title = titleEl?.textContent.trim();
       console.log('[AI] using title:', title);
       if (!title) return;
 
       // Derive productId from title slug, defaultDescription from card text
-     const productId =
-  body.closest('li')?.dataset.productId?.trim() ||
-  title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-
-const defaultDescription = allText[0] || title;
+const li = body.closest('li');
+const productId = li?.dataset?.productId?.trim();
+const defaultDescription = '';
 
       const p = document.createElement('p');
       p.className = 'cards-card-description loading';
