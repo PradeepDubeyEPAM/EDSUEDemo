@@ -22,7 +22,6 @@
       "username": "emma",
       "password": "emma123",
       "attributes": {
-        "ethinicity":"asian",
         "cities": "nyc",
         "ethinicity": "asian",
         "gender": "women"

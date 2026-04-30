@@ -33,24 +33,30 @@
   ],
   "models": [
     {
-      "id": "card",
-      "fields": [
-        {
-          "component": "reference",
-          "valueType": "string",
-          "name": "image",
-          "label": "Image",
-          "multi": false
-        },
-        {
-          "component": "richtext",
-          "name": "text",
-          "value": "",
-          "label": "Text",
-          "valueType": "string"
-        }
-      ]
+  "id": "card",
+  "fields": [
+    {
+      "component": "reference",
+      "valueType": "string",
+      "name": "image",
+      "label": "Image",
+      "multi": false
+    },
+    {
+      "component": "richtext",
+      "name": "text",
+      "value": "",
+      "label": "Text",
+      "valueType": "string"
+    },
+    {
+      "component": "text",
+      "valueType": "string",
+      "name": "productId",
+      "label": "Product ID"
     }
+  ]
+}
   ],
   "filters": [
     {

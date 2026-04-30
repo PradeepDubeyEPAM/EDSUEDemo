@@ -164,8 +164,11 @@ async function addAIDescriptions(container) {
       if (!title) return;
 
       // Derive productId from title slug, defaultDescription from card text
-      const productId = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      const defaultDescription = allText[0] || title;
+     const productId =
+  body.closest('li')?.dataset.productId?.trim() ||
+  title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+const defaultDescription = allText[0] || title;
 
       const p = document.createElement('p');
       p.className = 'cards-card-description loading';
