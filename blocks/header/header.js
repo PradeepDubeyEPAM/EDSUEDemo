@@ -176,7 +176,7 @@ const defaultDescription = '';
 
       const text = await getAIDescription(title, productId, defaultDescription);
       if (text) {
-        p.textContent = text;
+        p.innerHTML = text;
         p.classList.remove('loading');
       } else {
         p.remove();
