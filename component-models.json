@@ -150,6 +150,41 @@
     ]
   },
   {
+    "id": "api-mesh-data",
+    "fields": [
+      {
+        "component": "select",
+        "name": "category",
+        "label": "Select Category",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Tops",
+            "value": "Tops"
+          },
+          {
+            "name": "Jewelry",
+            "value": "Jewelry"
+          }
+        ],
+        "required": true
+      },
+      {
+        "component": "aem-content",
+        "name": "pdpUrl",
+        "label": "Product Detail Page URL",
+        "valueType": "string",
+        "required": true
+      },
+      {
+        "component": "text",
+        "name": "title",
+        "label": "Title",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
     "id": "blog-post",
     "fields": [
       {
@@ -5145,6 +5180,10 @@
     ]
   },
   {
+    "id": "product-detail",
+    "fields": []
+  },
+  {
     "id": "product-list",
     "fields": []
   },
@@ -5174,6 +5213,17 @@
         "name": "text",
         "value": "",
         "label": "Text",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "related-products",
+    "fields": [
+      {
+        "component": "text",
+        "name": "title",
+        "label": "Title",
         "valueType": "string"
       }
     ]

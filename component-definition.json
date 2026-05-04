@@ -83,6 +83,24 @@
       "id": "blocks",
       "components": [
         {
+          "title": "API Mesh Data",
+          "id": "api-mesh-data",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "API Mesh Data",
+                  "model": "api-mesh-data",
+                  "category": "Please select the category",
+                  "pdpUrl": "Please enter the PDP URL",
+                  "title": "Please enter the title"
+                }
+              }
+            }
+          }
+        },
+        {
           "title": "Blog",
           "id": "blog",
           "plugins": {
@@ -811,6 +829,21 @@
           }
         },
         {
+          "title": "Product Detail",
+          "id": "product-detail",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Product Detail",
+                  "model": "product-detail"
+                }
+              }
+            }
+          }
+        },
+        {
           "title": "Product Listing",
           "id": "product-list",
           "plugins": {
@@ -850,6 +883,22 @@
                 "template": {
                   "name": "Hero",
                   "model": "hero"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Related Products",
+          "id": "related-products",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Related Products",
+                  "model": "related-products",
+                  "title": "Please enter the title"
                 }
               }
             }
