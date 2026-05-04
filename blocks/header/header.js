@@ -109,8 +109,7 @@ function clearSession() {
 // ── AI DESCRIPTIONS ────────────────────────────────────────
 
 async function getAIDescription(title, productId, defaultDescription) {
-  const cacheKey = `card-desc-${title}`;
-
+const cacheKey = `card-desc-${productId}`;
   // Only use cache if it was a verified CF description
   const cached = sessionStorage.getItem(cacheKey);
   if (cached) return cached;
@@ -167,6 +166,12 @@ const title = titleEl?.textContent.trim();
       // Derive productId from title slug, defaultDescription from card text
 const li = body.closest('li');
 const productId = li?.dataset?.productId?.trim();
+
+if (!productId) {
+  console.warn('[AI] Missing productId for card:', title);
+  return; 
+}
+
 const defaultDescription = '';
 
       const p = document.createElement('p');
