@@ -6,6 +6,7 @@ export default async function decorate(block) {
   const category = localStorage.getItem('selectedCategory');
   const pdpUrl = window.location.href;
   const title = getTitleFieldValue(block);
+  const excludeSku = localStorage.getItem('selectedProduct');
 
   // Loading state
   block.innerHTML = '<div class="related-products-loading">Loading...</div>';
@@ -19,7 +20,10 @@ export default async function decorate(block) {
     ) {
       items {
         name
-        products(pageSize: 10, currentPage: 1) {
+        products(
+        pageSize: 5,
+        currentPage: 1
+      ) {
           items {
             name
             sku
@@ -30,6 +34,10 @@ export default async function decorate(block) {
                     currency
                   }
                 }
+            }
+            thumbnail {
+                        url
+                        label
             }
           }
         }
@@ -82,19 +90,28 @@ export default async function decorate(block) {
        })
      );
 
+    const filteredProducts = formattedProducts
+    .filter(p => p.sku !== excludeSku)
+    .slice(0, 4);
+
     //  Render
     block.innerHTML = `
-      <h2>${title}</h2>
-      <div class="api-data-container">
-        ${formattedProducts.map(p => `
+      <h2 class="title">${title}</h2>
+      <ul class="cards-list">
+        ${filteredProducts.map(p => `
+        <li class="card" data-sku="${p.sku}">
         <a class="card-link">
-          <div class="card" data-sku="${p.sku}">
+        <img loading="lazy" class="card-thumbnail" src="${p.thumbnail?.url}"
+              alt="${p.thumbnail?.label}"/>
+          <div class="card-details">
             <h3>${p.name}</h3>
             <p>SKU: ${p.sku}</p>
             <p>Price: ${p.displayPrice}</p>
           </div>
         </a>
+        </li>
         `).join('')}
+      </ul>
       </div>
     `;
 

@@ -219,6 +219,12 @@
         "value": "",
         "label": "Text",
         "valueType": "string"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "productId",
+        "label": "Product ID"
       }
     ]
   },
