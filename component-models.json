@@ -5218,6 +5218,17 @@
     ]
   },
   {
+    "id": "recently-viewed-products",
+    "fields": [
+      {
+        "component": "text",
+        "name": "title",
+        "label": "Title",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
     "id": "related-products",
     "fields": [
       {

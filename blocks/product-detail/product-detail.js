@@ -12,6 +12,12 @@ export default async function decorate(block) {
     return;
   }
 
+  let isLoggedIn = localStorage.getItem('userSession');
+
+  if (isLoggedIn) {
+      setRecentlyViewedProducts(sku);
+  }
+
   const query = `
     query GetProduct($sku: String!) {
       GraphQL_products(filter: { sku: { eq: $sku } }) {
@@ -81,4 +87,19 @@ export default async function decorate(block) {
     console.error(error);
     block.innerHTML = '<div>Failed to load product</div>';
   }
+}
+
+function setRecentlyViewedProducts(sku) {
+    const key = "recentlyViewedProducts";
+      const limit = 5;
+      const stored = localStorage.getItem(key);
+      let arr = stored ? JSON.parse(stored) : [];
+      arr = arr.filter(item => item !== sku);
+      arr.unshift(sku);
+
+      if (arr.length > limit) {
+        arr = arr.slice(0, limit);
+      }
+
+      localStorage.setItem(key, JSON.stringify(arr));
 }
