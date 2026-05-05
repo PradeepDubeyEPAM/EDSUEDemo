@@ -7,7 +7,7 @@ const CF_BASE = `${AEM_HOST}/api/assets/edsuedemo/descriptions/product-descripti
 
 // ── 1. FETCH PRODUCT CATALOG ───────────────────────────────
 async function fetchCatalog() {
-  const res = await fetch(`${AEM_SITE_ORIGIN}/us/en/product-catalog.json`);
+const res = await fetch(`${AEM_SITE_ORIGIN}/product-catalog.json`);
   if (!res.ok) throw new Error(`Catalog fetch failed: ${res.status}`);
   const data = await res.json();
   return data?.data || [];
