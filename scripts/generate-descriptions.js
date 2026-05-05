@@ -3,8 +3,8 @@ const AEM_TOKEN = process.env.AEM_TOKEN;
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 const AEM_SITE_ORIGIN = process.env.AEM_SITE_ORIGIN;
 
-const CF_BASE = `${AEM_HOST}/api/assets/edsuedemo/descriptions/product-descriptions`;
-
+const CF_BASE = `${AEM_HOST}/api/assets/edsuedemo/descriptions`;
+const CF_NAME = 'product-descriptions';
 // ── 1. FETCH PRODUCT CATALOG ───────────────────────────────
 async function fetchCatalog() {
 const res = await fetch(`${AEM_SITE_ORIGIN}/product-catalog.json`);
@@ -15,34 +15,56 @@ const res = await fetch(`${AEM_SITE_ORIGIN}/product-catalog.json`);
 
 // ── 2. READ CF VARIATION ───────────────────────────────────
 async function readVariation(productId) {
-  const res = await fetch(`${CF_BASE}/${productId}.json`, {
-    headers: { Authorization: `Bearer ${AEM_TOKEN}` },
-  });
+  // Read master CF, then find the variation inside
+  const res = await fetch(
+    `${AEM_HOST}/api/assets/edsuedemo/descriptions/product-descriptions.json`,
+    { headers: { Authorization: `Bearer ${AEM_TOKEN}` } }
+  );
+
   if (!res.ok) {
-    console.warn(`  [SKIP] CF variation not found: ${productId}`);
+    console.warn(`  [SKIP] Master CF not found: ${res.status}`);
     return null;
   }
-  return res.json();
+
+  const cf = await res.json();
+  
+  // Variations are under properties.elements per variation name
+  const variations = cf?.properties?.variations;
+  if (!variations || !variations[productId]) {
+    console.warn(`  [SKIP] Variation not found in master CF: ${productId}`);
+    return null;
+  }
+
+  // Return a normalised object so the rest of the script works unchanged
+  return {
+    properties: {
+      elements: variations[productId]?.elements || {},
+    },
+  };
 }
 
 // ── 3. WRITE AI DESCRIPTION TO VARIATION ──────────────────
 async function writeAiDescription(productId, aiDescription) {
-  const res = await fetch(`${CF_BASE}/${productId}`, {
-    method: 'PUT',
-    headers: {
-      Authorization: `Bearer ${AEM_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      class: 'asset',
-      properties: {
-        elements: {
-          aiDescription: { value: aiDescription },
-          verified: { value: false },
-        },
+  // Write to the specific variation inside the master CF
+  const res = await fetch(
+    `${AEM_HOST}/api/assets/edsuedemo/descriptions/product-descriptions/${productId}`,
+    {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${AEM_TOKEN}`,
+        'Content-Type': 'application/json',
       },
-    }),
-  });
+      body: JSON.stringify({
+        class: 'asset',
+        properties: {
+          elements: {
+            aiDescription: { value: aiDescription },
+            verified: { value: false },
+          },
+        },
+      }),
+    }
+  );
 
   if (!res.ok) {
     const body = await res.text();
