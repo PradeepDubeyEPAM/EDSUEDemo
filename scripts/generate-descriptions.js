@@ -43,9 +43,10 @@ function getVariationData(cf, variationName) {
   return { defaultDescription, aiDescription, verified };
 }
 
-// ── 4. WRITE AI DESCRIPTION TO VARIATION ──────────────────
-async function writeAiDescription(variationName, aiDescription) {
-  const res = await fetch(`${CF_URL}/${variationName}`, {
+// 4. WRITE AI DESCRIPTION TO VARIATION 
+async function writeAiDescription(variationKey, aiDescription) {
+ 
+  const res = await fetch(`${CF_URL}`, {
     method: 'PUT',
     headers: {
       Authorization: `Bearer ${AEM_TOKEN}`,
@@ -55,8 +56,17 @@ async function writeAiDescription(variationName, aiDescription) {
       class: 'asset',
       properties: {
         elements: {
-          aiDescription: { value: aiDescription },
-          verified: { value: false },
+          aiDescription: {
+            value: aiDescription,
+            variations: {
+              [variationKey]: { value: aiDescription },
+            },
+          },
+          verified: {
+            variations: {
+              [variationKey]: { value: false },
+            },
+          },
         },
       },
     }),
@@ -64,7 +74,7 @@ async function writeAiDescription(variationName, aiDescription) {
 
   if (!res.ok) {
     const body = await res.text();
-    console.error(`  [ERROR] Write failed for ${variationName}: ${res.status} ${body}`);
+    console.error(`  [ERROR] Write failed for ${variationKey}: ${res.status} ${body}`);
   }
   return res.ok;
 }
