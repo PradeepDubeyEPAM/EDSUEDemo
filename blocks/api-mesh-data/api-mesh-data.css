@@ -26,3 +26,9 @@
 .card {
   cursor: pointer;
 }
+
+.api-mesh-data h2 {
+  color : darkblue;
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+}

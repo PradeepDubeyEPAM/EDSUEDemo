@@ -4,105 +4,112 @@ import { fetchLocalCurrency } from '../../scripts/currency-conversion.js';
 export default async function decorate(block) {
 
   let isLoggedIn = localStorage.getItem('userSession');
-  const category = localStorage.getItem('selectedCategory');
-  const pdpUrl = window.location.href;
+  const pdpUrl = getPDPFieldValue(block);
   const title = getTitleFieldValue(block);
-  const excludeSku = localStorage.getItem('selectedProduct');
 
   // Loading state
-  block.innerHTML = '<div class="recently-viewed-products-loading">Loading...</div>';
+  block.innerHTML = '<div class="recently-viewed-products-loading">There are no recently viewed products...</div>';
 
   if (isLoggedIn) {
       const stored = localStorage.getItem("recentlyViewedProducts");
       let arr = stored ? JSON.parse(stored) : [];
-        const query = `
-        query GetProductsBySkus($arr: [String!]) {
-          products(filter: { sku: { in: $arr } }) {
-            items {
-              name
-              sku
-              price_range {
-                maximum_price {
-                  final_price {
-                    value
-                    currency
+          if (arr && arr.length !== 0) {
+            const query = `
+            query GetProductsBySkus($arr: [String!]) {
+              GraphQL_products(filter: { sku: { in: $arr } }) {
+                items {
+                  name
+                  sku
+                  price_range {
+                    maximum_price {
+                      final_price {
+                        value
+                        currency
+                      }
+                    }
+                  }
+                  thumbnail {
+                      url
+                      label
                   }
                 }
               }
             }
+            `;
+          const variables = { arr };
+
+          try {
+            const response = await fetchAPI(query, variables);
+
+            //  Validate response properly
+            if (!response || !response.data) {
+              throw new Error('Invalid API response');
+            }
+
+            const data = response.data;
+
+            if (!data || data.length === 0) {
+              block.innerHTML = `<div class="api-data-error">No data found</div>`;
+              return;
+            }
+
+            const products = data.GraphQL_products?.items || [];
+
+            if (products.length === 0) {
+              block.innerHTML = `<div class="api-data-error">No products found</div>`;
+              return;
+            }
+
+            const baseCurrency = products[0]?.price_range?.maximum_price?.final_price?.currency || 'USD';
+            const formattedProducts = await Promise.all(
+               products.map(async (p) => {
+                 const price = p.price_range?.maximum_price?.final_price?.value || 0;
+                 let convertedPrice;
+
+                 try {
+                   convertedPrice = await fetchLocalCurrency(baseCurrency, price);
+                 } catch (e) {
+                   console.error('Conversion failed:', e);
+                   convertedPrice = formatCurrency(price, baseCurrency); // fallback
+                 }
+
+                 return {
+                   ...p,
+                   displayPrice: convertedPrice,
+                 };
+               })
+             );
+
+             const sortedProducts = arr
+               .map(sku => products.find(p => p.sku === sku))
+               .filter(Boolean);
+
+            //  Render
+            block.innerHTML = `
+              <h2 class="title">${title}</h2>
+              <ul class="cards-list">
+                ${formattedProducts.map(p => `
+                <li class="card" data-sku="${p.sku}">
+                <a class="card-link">
+                <img loading="lazy" class="card-thumbnail" src="${p.thumbnail?.url}"
+                      alt="${p.thumbnail?.label}"/>
+                  <div class="card-details">
+                    <h3>${p.name}</h3>
+                    <p>SKU: ${p.sku}</p>
+                    <p>Price: ${p.displayPrice}</p>
+                  </div>
+                </a>
+                </li>
+                `).join('')}
+              </ul>
+              </div>
+            `;
+
+          } catch (error) {
+            console.error('API Mesh Block Error:', error);
+            block.innerHTML = `<div class="api-data-error">Failed to load data</div>`;
           }
-        }
-        `;
-  }
-
-  const variables = { category };
-
-  try {
-    const response = await fetchAPI(query, variables);
-
-    //  Validate response properly
-    if (!response || !response.data) {
-      throw new Error('Invalid API response');
-    }
-
-    const categories = response.data.GraphQL_categories?.items;
-
-    if (!categories || categories.length === 0) {
-      block.innerHTML = `<div class="api-data-error">No data found</div>`;
-      return;
-    }
-
-    const products = categories[0].products?.items || [];
-
-    if (products.length === 0) {
-      block.innerHTML = `<div class="api-data-error">No products found</div>`;
-      return;
-    }
-
-    const baseCurrency = products[0]?.price_range?.maximum_price?.final_price?.currency || 'USD';
-    const formattedProducts = await Promise.all(
-       products.map(async (p) => {
-         const price = p.price_range?.maximum_price?.final_price?.value || 0;
-         let convertedPrice;
-
-         try {
-           convertedPrice = await fetchLocalCurrency(baseCurrency, price);
-         } catch (e) {
-           console.error('Conversion failed:', e);
-           convertedPrice = formatCurrency(price, baseCurrency); // fallback
-         }
-
-         return {
-           ...p,
-           displayPrice: convertedPrice,
-         };
-       })
-     );
-
-    //  Render
-    block.innerHTML = `
-      <h2 class="title">${title}</h2>
-      <ul class="cards-list">
-        ${formattedProducts.map(p => `
-        <li class="card" data-sku="${p.sku}">
-        <a class="card-link">
-        <img loading="lazy" class="card-thumbnail" src="${p.thumbnail?.url}"
-              alt="${p.thumbnail?.label}"/>
-          <div class="card-details">
-            <h3>${p.name}</h3>
-            <p>SKU: ${p.sku}</p>
-            <p>Price: ${p.displayPrice}</p>
-          </div>
-        </a>
-        </li>
-        `).join('')}
-      </ul>
-      </div>
-    `;
-
-  } catch (error) {
-    console.error('API Mesh Block Error:', error);
-    block.innerHTML = `<div class="api-data-error">Failed to load data</div>`;
+      }
   }
 
   block.querySelectorAll('.card').forEach(card => {
@@ -119,4 +126,9 @@ function getTitleFieldValue(block) {
   const allP = block.querySelectorAll('p');
   const lastP = allP[allP.length - 1];
   return lastP ? lastP.textContent.trim() : 'Related Products';
+}
+
+function getPDPFieldValue(block) {
+  const p = block.querySelector('a');
+    return p ? p.textContent.trim() : '/product-detail';
 }

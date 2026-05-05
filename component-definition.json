@@ -898,7 +898,8 @@
                 "template": {
                   "name": "Recently Viewed Products",
                   "model": "recently-viewed-products",
-                  "title": "Please enter the title"
+                  "title": "Please enter the title",
+                  "pdpUrl": "Please enter the PDP URL"
                 }
               }
             }

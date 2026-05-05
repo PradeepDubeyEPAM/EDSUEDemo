@@ -10,7 +10,8 @@
             "template": {
               "name": "Recently Viewed Products",
               "model": "recently-viewed-products",
-              "title": "Please enter the title"
+              "title": "Please enter the title",
+              "pdpUrl": "Please enter the PDP URL"
             }
           }
         }
@@ -26,6 +27,13 @@
           "name": "title",
           "label": "Title",
           "valueType": "string"
+        },
+        {
+          "component": "aem-content",
+          "name": "pdpUrl",
+          "label": "Product Detail Page URL",
+          "valueType": "string",
+          "required": true
         }
       ]
     }

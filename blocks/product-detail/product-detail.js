@@ -91,7 +91,7 @@ export default async function decorate(block) {
 
 function setRecentlyViewedProducts(sku) {
     const key = "recentlyViewedProducts";
-      const limit = 5;
+      const limit = 4;
       const stored = localStorage.getItem(key);
       let arr = stored ? JSON.parse(stored) : [];
       arr = arr.filter(item => item !== sku);
