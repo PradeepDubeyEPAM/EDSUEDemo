@@ -8,7 +8,7 @@ export default async function decorate(block) {
   const title = getTitleFieldValue(block);
 
   // Loading state
-  block.innerHTML = '<div class="recently-viewed-products-loading">There are no recently viewed products...</div>';
+  block.innerHTML = '<h4 class="recently-viewed-products-loading">There are no recently viewed products...</h4>';
 
   if (isLoggedIn) {
       const stored = localStorage.getItem("recentlyViewedProducts");
@@ -88,7 +88,7 @@ export default async function decorate(block) {
             block.innerHTML = `
               <h2 class="title">${title}</h2>
               <ul class="cards-list">
-                ${formattedProducts.map(p => `
+                ${sortedProducts.map(p => `
                 <li class="card" data-sku="${p.sku}">
                 <a class="card-link">
                 <img loading="lazy" class="card-thumbnail" src="${p.thumbnail?.url}"
@@ -123,9 +123,8 @@ export default async function decorate(block) {
 }
 
 function getTitleFieldValue(block) {
-  const allP = block.querySelectorAll('p');
-  const lastP = allP[allP.length - 1];
-  return lastP ? lastP.textContent.trim() : 'Related Products';
+  const firstP = block.querySelector('p');
+  return firstP ? firstP.textContent.trim() : 'Recently Viewed Products';
 }
 
 function getPDPFieldValue(block) {
