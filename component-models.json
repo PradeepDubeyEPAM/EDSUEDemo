@@ -5218,6 +5218,24 @@
     ]
   },
   {
+    "id": "recently-viewed-products",
+    "fields": [
+      {
+        "component": "text",
+        "name": "title",
+        "label": "Title",
+        "valueType": "string"
+      },
+      {
+        "component": "aem-content",
+        "name": "pdpUrl",
+        "label": "Product Detail Page URL",
+        "valueType": "string",
+        "required": true
+      }
+    ]
+  },
+  {
     "id": "related-products",
     "fields": [
       {
