@@ -3,9 +3,7 @@ const AEM_TOKEN = process.env.AEM_TOKEN;
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 const AEM_SITE_ORIGIN = process.env.AEM_SITE_ORIGIN;
 
-const CF_URL = `${AEM_HOST}/api/assets/edsuedemo/descriptions/product-descriptions`;
-
-// ── 1. FETCH PRODUCT CATALOG ───────────────────────────────
+// FETCH PRODUCT CATALOG ───────────────────────────────
 async function fetchCatalog() {
   const res = await fetch(`${AEM_SITE_ORIGIN}/product-catalog.json`);
   if (!res.ok) throw new Error(`Catalog fetch failed: ${res.status}`);
@@ -13,73 +11,58 @@ async function fetchCatalog() {
   return data?.data || [];
 }
 
-// ── 2. READ ENTIRE MASTER CF ONCE ─────────────────────────
-async function readMasterCF() {
-  const res = await fetch(`${CF_URL}.json`, {
-    headers: { Authorization: `Bearer ${AEM_TOKEN}` },
-  });
+// Read individual CF
+async function readCF(productId) {
+  const res = await fetch(
+    `${AEM_HOST}/api/assets/edsuedemo/descriptions/${productId}.json`,
+    { headers: { Authorization: `Bearer ${AEM_TOKEN}` } }
+  );
   if (!res.ok) {
-    throw new Error(`Master CF read failed: ${res.status}`);
+    console.warn(`  [SKIP] CF not found: ${productId}`);
+    return null;
   }
   return res.json();
 }
 
-// ── 3. EXTRACT VARIATION DATA FROM CF RESPONSE ────────────
-// Structure: cf.properties.elements.{fieldName}.variations.{variationName}.value
-function getVariationData(cf, variationName) {
-  const elements = cf?.properties?.elements;
-  if (!elements) return null;
-
-  const defaultDescription = stripHtml(
-    elements?.defaultDescription?.variations?.[variationName]?.value || ''
-  );
-  const aiDescription = stripHtml(
-    elements?.aiDescription?.variations?.[variationName]?.value || ''
-  );
-  const verified =
-    elements?.verified?.variations?.[variationName]?.value === true ||
-    elements?.verified?.variations?.[variationName]?.value === 'true';
-
-  return { defaultDescription, aiDescription, verified };
+// Extract fields 
+function getCFData(cf) {
+  const elements = cf?.properties?.elements ?? {};
+  return {
+    defaultDescription: stripHtml(elements?.defaultDescription?.value || ''),
+    aiDescription: stripHtml(elements?.aiDescription?.value || ''),
+    verified: elements?.verified?.value === true,
+  };
 }
 
-// 4. WRITE AI DESCRIPTION TO VARIATION 
-async function writeAiDescription(variationKey, aiDescription) {
- 
-  const res = await fetch(`${CF_URL}`, {
-    method: 'PUT',
-    headers: {
-      Authorization: `Bearer ${AEM_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      class: 'asset',
-      properties: {
-        elements: {
-          aiDescription: {
-            value: aiDescription,
-            variations: {
-              [variationKey]: { value: aiDescription },
-            },
-          },
-          verified: {
-            variations: {
-              [variationKey]: { value: false },
-            },
+// Write to individual CF
+async function writeAiDescription(productId, aiDescription) {
+  const res = await fetch(
+    `${AEM_HOST}/api/assets/edsuedemo/descriptions/${productId}`,
+    {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${AEM_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        class: 'asset',
+        properties: {
+          elements: {
+            aiDescription: { value: aiDescription },
+            verified: { value: false },
           },
         },
-      },
-    }),
-  });
-
+      }),
+    }
+  );
   if (!res.ok) {
     const body = await res.text();
-    console.error(`  [ERROR] Write failed for ${variationKey}: ${res.status} ${body}`);
+    console.error(`  [ERROR] Write failed for ${productId}: ${res.status} ${body}`);
   }
   return res.ok;
 }
 
-// ── 5. CALL GROQ ───────────────────────────────────────────
+//  CALL GROQ ───────────────────────────────────────────
 async function generateDescription(productTitle, defaultDescription) {
   const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
@@ -113,20 +96,11 @@ async function generateDescription(productTitle, defaultDescription) {
   return data?.choices?.[0]?.message?.content?.trim() || null;
 }
 
-// ── 6. STRIP HTML ──────────────────────────────────────────
+
 function stripHtml(html = '') {
   return html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
 }
 
-// ── 7. MAP catalog productId → CF variation name ──────────
-// Some catalog IDs differ from CF variation names
-function getCFVariationName(productId) {
-  const map = {
-    'get-complimentary-beverages': 'complimentary-beverages',
-    't-shirt-women': 't-shirt',
-  };
-  return map[productId] || productId;
-}
 
 // ── MAIN ───────────────────────────────────────────────────
 async function main() {
@@ -135,9 +109,8 @@ async function main() {
   const products = await fetchCatalog();
   console.log(`Found ${products.length} products`);
 
-  // Read master CF once — avoid hammering AEM with 23 separate calls
-  console.log('Reading master CF...');
-  const masterCF = await readMasterCF();
+  
+
   console.log('Master CF loaded.\n');
 
   let generated = 0;
@@ -157,7 +130,9 @@ async function main() {
     const variationName = productId;
     console.log(`Processing: ${productId} → variation: ${variationName}`);
 
-    const data = getVariationData(masterCF, variationName);
+  const cf = await readCF(productId);
+if (!cf) { failed++; continue; }
+const data = getCFData(cf);
 
     if (!data) {
       console.warn(`  [SKIP] Variation not found in CF: ${variationName}`);
