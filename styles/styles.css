@@ -272,3 +272,47 @@ html[data-lang="fr"] .fr-section {
   display: block;
 }
 
+.product-page {
+  display: flex;
+  gap: 40px;
+}
+
+.product-image {
+  width: 350px;
+  border-radius: 8px;
+}
+
+.product-content {
+  max-width: 500px;
+}
+
+.price {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.related-products {
+  margin-top: 60px;
+}
+
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.related-card {
+  border: 1px solid #eee;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.related-card img {
+  width: 100%;
+}
+
+.review-card {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
+
