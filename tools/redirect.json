@@ -1,7 +1,0 @@
-[
-  {
-    "from": "/us/en/product/(\\d+)",
-    "to": "/us/en/product?productId=$1",
-    "status": 200
-  }
-]
