@@ -149,21 +149,14 @@ async function addAIDescriptions(container) {
 
   await Promise.all(
     [...cards].map(async (body) => {
-      // Get image alt text first — most reliable product name
-      const img = body.closest('li')?.querySelector('picture img');
-      const imgAlt = img?.alt?.trim();
-
-      // Get first non-empty, non-price line of text
-      const allText = [...body.querySelectorAll('p, h1, h2, h3, h4, h5, h6')]
-        .map((el) => el.textContent.trim())
-        .filter((t) => t && !/^\$|%/.test(t)); // skip price lines
+     
 
       const titleEl = body.querySelector('h1,h2,h3,h4,h5,h6');
 const title = titleEl?.textContent.trim();
       console.log('[AI] using title:', title);
       if (!title) return;
 
-      // Derive productId from title slug, defaultDescription from card text
+      // D
 const li = body.closest('li');
 const productId = li?.dataset?.productId?.trim();
 
