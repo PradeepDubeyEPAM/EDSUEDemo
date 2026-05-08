@@ -140,12 +140,13 @@ const data = getCFData(cf);
       continue;
     }
 
-    // Skip if already has AI description
-    if (data.aiDescription) {
-      console.log(`  Already has aiDescription — skipping`);
-      skipped++;
-      continue;
-    }
+    
+    //  skip only if aiDescription exists AND verified=true
+if (data.aiDescription && data.verified) {
+  console.log(`  Already verified — skipping`);
+  skipped++;
+  continue;
+}
 
     const hint = data.defaultDescription || productTitle;
     console.log(`  Generating for: "${productTitle}" | hint: "${hint.substring(0, 50)}..."`);
