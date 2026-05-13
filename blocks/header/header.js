@@ -1,10 +1,9 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
-
+import { addAIDescriptions } from '../cards/ai-descriptions.js';
 const isDesktop = window.matchMedia('(min-width: 900px)');
 
-// Gemini proxy — key lives in Cloudflare, never in GitHub
-const GEMINI_PROXY_URL = 'https://gemini-proxy.jayabhishikthapuredla.workers.dev';
+
 
 // ── NAV HELPERS ────────────────────────────────────────────
 
@@ -104,83 +103,6 @@ function getSession() {
 
 function clearSession() {
   localStorage.removeItem('userSession');
-}
-
-// ── AI DESCRIPTIONS ────────────────────────────────────────
-
-async function getAIDescription(title, productId, defaultDescription) {
-const cacheKey = `card-desc-${productId}`;
-  // Only use cache if it was a verified CF description
-  const cached = sessionStorage.getItem(cacheKey);
-  if (cached) return cached;
-
-  try {
-    const response = await fetch(GEMINI_PROXY_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, productId, defaultDescription }),
-    });
-
-    if (!response.ok) return defaultDescription || '';
-
-    const data = await response.json();
-    console.log('[AI] Worker response:', data);
-
-    const text = data?.text?.trim() || '';
-    const source = data?.source || '';
-
-    // Only permanently cache if author has verified in AEM
-    if (text && source === 'cf-verified') {
-      sessionStorage.setItem(cacheKey, text);
-    }
-
-    return text || defaultDescription || '';
-  } catch (err) {
-    console.error('[AI] Worker call failed:', err);
-    return defaultDescription || '';
-  }
-}
-
-async function addAIDescriptions(container) {
-  await new Promise((resolve) => setTimeout(resolve, 0));
-
-  const cards = container.querySelectorAll('.cards-card-body');
-  if (!cards.length) return;
-
-  await Promise.all(
-    [...cards].map(async (body) => {
-     
-
-      const titleEl = body.querySelector('h1,h2,h3,h4,h5,h6');
-const title = titleEl?.textContent.trim();
-      console.log('[AI] using title:', title);
-      if (!title) return;
-
-      // D
-const li = body.closest('li');
-const productId = li?.dataset?.productId?.trim();
-
-if (!productId) {
-  console.warn('[AI] Missing productId for card:', title);
-  return; 
-}
-
-const defaultDescription = '';
-
-      const p = document.createElement('p');
-      p.className = 'cards-card-description loading';
-      p.textContent = 'Loading description…';
-      body.appendChild(p);
-
-      const text = await getAIDescription(title, productId, defaultDescription);
-      if (text) {
-        p.innerHTML = text;
-        p.classList.remove('loading');
-      } else {
-        p.remove();
-      }
-    }),
-  );
 }
 
 // ── OFFERS ─────────────────────────────────────────────────
