@@ -9,6 +9,7 @@ export async function getAEMAccessToken() {
   .replace(/\s+/g, '');            // remove real whitespace
 
 const privateKey = `-----BEGIN RSA PRIVATE KEY-----\n${rawKey}\n-----END RSA PRIVATE KEY-----\n`;
+console.log('KEY PREVIEW:', privateKey.substring(0, 80));
   const payload = {
     exp: Math.round(Date.now() / 1000) + 60 * 60,
     iss: process.env.AEM_IMS_ORG,
