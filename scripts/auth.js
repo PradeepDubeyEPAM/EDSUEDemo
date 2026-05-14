@@ -1,6 +1,5 @@
-import jwt from 'jsonwebtoken';
 import fetch from 'node-fetch';
-import { createPrivateKey } from 'crypto';  
+import { createPrivateKey, createSign } from 'crypto';
 
 export async function getAEMAccessToken() {
 
@@ -8,19 +7,27 @@ export async function getAEMAccessToken() {
     .replace(/\\r\\n|\\n|\\r/g, '')
     .replace(/\s+/g, '');
 
-  const privateKeyPem = `-----BEGIN RSA PRIVATE KEY-----\n${rawKey}\n-----END RSA PRIVATE KEY-----\n`;
-  
-  const privateKey = createPrivateKey(privateKeyPem);  // convert to KeyObject
+  const privateKeyPem = `-----BEGIN PRIVATE KEY-----\n${rawKey}\n-----END PRIVATE KEY-----\n`;
+  const privateKey = createPrivateKey(privateKeyPem);
 
-  const payload = {
+  const header = Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT' })).toString('base64url');
+
+  const payload = Buffer.from(JSON.stringify({
     exp: Math.round(Date.now() / 1000) + 60 * 60,
     iss: process.env.AEM_IMS_ORG,
     sub: process.env.AEM_TECH_ACCOUNT_ID,
     aud: `https://ims-na1.adobelogin.com/c/${process.env.AEM_CLIENT_ID}`,
     'https://ims-na1.adobelogin.com/s/ent_aem_cloud_api': true
-  };
+  })).toString('base64url');
 
-  const jwtToken = jwt.sign(payload, privateKey, { algorithm: 'RS256' });
+  const signingInput = `${header}.${payload}`;
+
+  const sign = createSign('RSA-SHA256');
+  sign.update(signingInput);
+  const signature = sign.sign(privateKey, 'base64url');
+
+  const jwtToken = `${signingInput}.${signature}`;
+
   const response = await fetch('https://ims-na1.adobelogin.com/ims/exchange/jwt', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
