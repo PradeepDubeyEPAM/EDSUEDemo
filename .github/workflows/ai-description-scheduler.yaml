@@ -2,8 +2,8 @@ name: AI Description Batch Job
 
 on:
   schedule:
-    - cron: '30 18 * * *'  
-  workflow_dispatch:       
+    - cron: '30 18 * * *'
+  workflow_dispatch:
 
 jobs:
   generate:
@@ -18,10 +18,17 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Install dependencies
+        run: npm install jsonwebtoken node-fetch
+
       - name: Run description generator
         run: node scripts/generate-descriptions.js
         env:
           AEM_HOST: ${{ secrets.AEM_HOST }}
-          AEM_TOKEN: ${{ secrets.AEM_TOKEN }}
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           AEM_SITE_ORIGIN: ${{ secrets.AEM_SITE_ORIGIN }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          AEM_CLIENT_ID: ${{ secrets.AEM_CLIENT_ID }}
+          AEM_CLIENT_SECRET: ${{ secrets.AEM_CLIENT_SECRET }}
+          AEM_TECH_ACCOUNT_ID: ${{ secrets.AEM_TECH_ACCOUNT_ID }}
+          AEM_IMS_ORG: ${{ secrets.AEM_IMS_ORG }}
+          AEM_PRIVATE_KEY: ${{ secrets.AEM_PRIVATE_KEY }}
