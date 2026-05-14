@@ -1,15 +1,17 @@
 import jwt from 'jsonwebtoken';
 import fetch from 'node-fetch';
+import { createPrivateKey } from 'crypto';  
 
 export async function getAEMAccessToken() {
 
-  
   const rawKey = (process.env.AEM_PRIVATE_KEY || '')
-  .replace(/\\r\\n|\\n|\\r/g, '')  // remove any literal \r\n escape text
-  .replace(/\s+/g, '');            // remove real whitespace
+    .replace(/\\r\\n|\\n|\\r/g, '')
+    .replace(/\s+/g, '');
 
-const privateKey = `-----BEGIN RSA PRIVATE KEY-----\n${rawKey}\n-----END RSA PRIVATE KEY-----\n`;
-console.log('KEY PREVIEW:', privateKey.substring(0, 80));
+  const privateKeyPem = `-----BEGIN RSA PRIVATE KEY-----\n${rawKey}\n-----END RSA PRIVATE KEY-----\n`;
+  
+  const privateKey = createPrivateKey(privateKeyPem);  // convert to KeyObject
+
   const payload = {
     exp: Math.round(Date.now() / 1000) + 60 * 60,
     iss: process.env.AEM_IMS_ORG,
@@ -19,7 +21,6 @@ console.log('KEY PREVIEW:', privateKey.substring(0, 80));
   };
 
   const jwtToken = jwt.sign(payload, privateKey, { algorithm: 'RS256' });
-
   const response = await fetch('https://ims-na1.adobelogin.com/ims/exchange/jwt', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
