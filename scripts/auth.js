@@ -7,7 +7,8 @@ export async function getAEMAccessToken() {
     .replace(/\\r\\n|\\n|\\r/g, '')
     .replace(/\s+/g, '');
 
-  const privateKeyPem = `-----BEGIN PRIVATE KEY-----\n${rawKey}\n-----END PRIVATE KEY-----\n`;
+  const privateKeyPem = `-----BEGIN RSA PRIVATE KEY-----\n${rawKey}\n-----END RSA PRIVATE KEY-----\n`;
+
   const privateKey = createPrivateKey(privateKeyPem);
 
   const header = Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT' })).toString('base64url');
