@@ -1,9 +1,13 @@
-const AEM_HOST = process.env.AEM_HOST;
-const AEM_TOKEN = process.env.AEM_TOKEN;
-const GROQ_API_KEY = process.env.GROQ_API_KEY;
-const AEM_SITE_ORIGIN = process.env.AEM_SITE_ORIGIN;
+import { getAEMAccessToken } from './auth.js';
 
-// FETCH PRODUCT CATALOG ───────────────────────────────
+// ── ENV VARS ────────────────────────────────────────────────
+const AEM_HOST = process.env.AEM_HOST;
+const AEM_SITE_ORIGIN = process.env.AEM_SITE_ORIGIN;
+const GROQ_API_KEY = process.env.GROQ_API_KEY;
+
+let AEM_TOKEN; // set in main() after auth exchange
+
+// ── FETCH PRODUCT CATALOG ───────────────────────────────────
 async function fetchCatalog() {
   const res = await fetch(`${AEM_SITE_ORIGIN}/product-catalog.json`);
   if (!res.ok) throw new Error(`Catalog fetch failed: ${res.status}`);
@@ -11,7 +15,7 @@ async function fetchCatalog() {
   return data?.data || [];
 }
 
-// Read individual CF
+// ── READ INDIVIDUAL CF ──────────────────────────────────────
 async function readCF(productId) {
   const res = await fetch(
     `${AEM_HOST}/api/assets/edsuedemo/descriptions/${productId}.json`,
@@ -24,7 +28,7 @@ async function readCF(productId) {
   return res.json();
 }
 
-// Extract fields 
+// ── EXTRACT FIELDS ──────────────────────────────────────────
 function getCFData(cf) {
   const elements = cf?.properties?.elements ?? {};
   return {
@@ -34,7 +38,7 @@ function getCFData(cf) {
   };
 }
 
-// Write to individual CF
+// ── WRITE AI DESCRIPTION TO CF ──────────────────────────────
 async function writeAiDescription(productId, aiDescription) {
   const res = await fetch(
     `${AEM_HOST}/api/assets/edsuedemo/descriptions/${productId}`,
@@ -62,7 +66,7 @@ async function writeAiDescription(productId, aiDescription) {
   return res.ok;
 }
 
-//  CALL GROQ ───────────────────────────────────────────
+// ── CALL GROQ ───────────────────────────────────────────────
 async function generateDescription(productTitle, defaultDescription) {
   const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
@@ -77,8 +81,7 @@ async function generateDescription(productTitle, defaultDescription) {
       messages: [
         {
           role: 'system',
-          content:
-            'Write a short premium retail product description in 2 sentences. No markdown. Plain text only.',
+          content: 'Write a short premium retail product description in 2 sentences. No markdown. Plain text only.',
         },
         {
           role: 'user',
@@ -96,22 +99,18 @@ async function generateDescription(productTitle, defaultDescription) {
   return data?.choices?.[0]?.message?.content?.trim() || null;
 }
 
-
+// ── HELPERS ─────────────────────────────────────────────────
 function stripHtml(html = '') {
   return html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
 }
 
-
-// ── MAIN ───────────────────────────────────────────────────
+// ── MAIN ────────────────────────────────────────────────────
 async function main() {
+  AEM_TOKEN = await getAEMAccessToken(); // sets module-level token
   console.log('=== AI Description Batch Job Started ===');
 
   const products = await fetchCatalog();
-  console.log(`Found ${products.length} products`);
-
-  
-
-  console.log('Master CF loaded.\n');
+  console.log(`Found ${products.length} products\n`);
 
   let generated = 0;
   let skipped = 0;
@@ -127,26 +126,19 @@ async function main() {
       continue;
     }
 
-    const variationName = productId;
-    console.log(`Processing: ${productId} → variation: ${variationName}`);
+    console.log(`Processing: ${productId}`);
 
-  const cf = await readCF(productId);
-if (!cf) { failed++; continue; }
-const data = getCFData(cf);
+    const cf = await readCF(productId);
+    if (!cf) { failed++; continue; }
 
-    if (!data) {
-      console.warn(`  [SKIP] Variation not found in CF: ${variationName}`);
-      failed++;
+    const data = getCFData(cf);
+
+    // Skip only if aiDescription exists AND verified = true
+    if (data.aiDescription && data.verified) {
+      console.log(`  Already verified — skipping`);
+      skipped++;
       continue;
     }
-
-    
-    //  skip only if aiDescription exists AND verified=true
-if (data.aiDescription && data.verified) {
-  console.log(`  Already verified — skipping`);
-  skipped++;
-  continue;
-}
 
     const hint = data.defaultDescription || productTitle;
     console.log(`  Generating for: "${productTitle}" | hint: "${hint.substring(0, 50)}..."`);
@@ -158,9 +150,9 @@ if (data.aiDescription && data.verified) {
       continue;
     }
 
-    const written = await writeAiDescription(variationName, aiDescription);
+    const written = await writeAiDescription(productId, aiDescription);
     if (written) {
-      console.log(`  Written: "${aiDescription.substring(0, 60)}..."`);
+      console.log(` Written: "${aiDescription.substring(0, 60)}..."`);
       generated++;
     } else {
       failed++;
@@ -168,7 +160,7 @@ if (data.aiDescription && data.verified) {
   }
 
   console.log('\n=== Batch Job Complete ===');
-  console.log(` Generated: ${generated}`);
+  console.log(`Generated: ${generated}`);
   console.log(`  Skipped:   ${skipped}`);
   console.log(` Failed:    ${failed}`);
 
