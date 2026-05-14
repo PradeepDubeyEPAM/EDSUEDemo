@@ -4,9 +4,11 @@ import fetch from 'node-fetch';
 export async function getAEMAccessToken() {
 
   
-  const rawKey = process.env.AEM_PRIVATE_KEY.replace(/\s+/g, '');
-  const privateKey = `-----BEGIN PRIVATE KEY-----\n${rawKey}\n-----END PRIVATE KEY-----\n`;
+  const rawKey = (process.env.AEM_PRIVATE_KEY || '')
+  .replace(/\\r\\n|\\n|\\r/g, '')  // remove any literal \r\n escape text
+  .replace(/\s+/g, '');            // remove real whitespace
 
+const privateKey = `-----BEGIN RSA PRIVATE KEY-----\n${rawKey}\n-----END RSA PRIVATE KEY-----\n`;
   const payload = {
     exp: Math.round(Date.now() / 1000) + 60 * 60,
     iss: process.env.AEM_IMS_ORG,
