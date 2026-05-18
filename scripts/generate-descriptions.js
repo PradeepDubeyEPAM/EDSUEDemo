@@ -1,9 +1,10 @@
-const AEM_HOST = process.env.AEM_HOST;
-const AEM_TOKEN = process.env.AEM_TOKEN;
-const GROQ_API_KEY = process.env.GROQ_API_KEY;
+import { getAuthHeader } from './auth.js';
+
+const AEM_HOST        = process.env.AEM_HOST;
+const GROQ_API_KEY    = process.env.GROQ_API_KEY;
 const AEM_SITE_ORIGIN = process.env.AEM_SITE_ORIGIN;
 
-// FETCH PRODUCT CATALOG ───────────────────────────────
+// ── FETCH PRODUCT CATALOG 
 async function fetchCatalog() {
   const res = await fetch(`${AEM_SITE_ORIGIN}/product-catalog.json`);
   if (!res.ok) throw new Error(`Catalog fetch failed: ${res.status}`);
@@ -11,37 +12,37 @@ async function fetchCatalog() {
   return data?.data || [];
 }
 
-// Read individual CF
+// ── READ CONTENT FRAGMENT 
 async function readCF(productId) {
   const res = await fetch(
     `${AEM_HOST}/api/assets/edsuedemo/descriptions/${productId}.json`,
-    { headers: { Authorization: `Bearer ${AEM_TOKEN}` } }
+    { headers: { Authorization: getAuthHeader() } }
   );
   if (!res.ok) {
-    console.warn(`  [SKIP] CF not found: ${productId}`);
+    console.warn(`  [SKIP] CF not found: ${productId} (${res.status})`);
     return null;
   }
   return res.json();
 }
 
-// Extract fields 
+// ── EXTRACT CF FIELDS 
 function getCFData(cf) {
   const elements = cf?.properties?.elements ?? {};
   return {
     defaultDescription: stripHtml(elements?.defaultDescription?.value || ''),
-    aiDescription: stripHtml(elements?.aiDescription?.value || ''),
-    verified: elements?.verified?.value === true,
+    aiDescription:      stripHtml(elements?.aiDescription?.value || ''),
+    verified:           elements?.verified?.value === true,
   };
 }
 
-// Write to individual CF
+// ── WRITE AI DESCRIPTION BACK TO CF 
 async function writeAiDescription(productId, aiDescription) {
   const res = await fetch(
     `${AEM_HOST}/api/assets/edsuedemo/descriptions/${productId}`,
     {
       method: 'PUT',
       headers: {
-        Authorization: `Bearer ${AEM_TOKEN}`,
+        Authorization: getAuthHeader(),
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -49,12 +50,13 @@ async function writeAiDescription(productId, aiDescription) {
         properties: {
           elements: {
             aiDescription: { value: aiDescription },
-            verified: { value: false },
+            verified:      { value: false },
           },
         },
       }),
     }
   );
+
   if (!res.ok) {
     const body = await res.text();
     console.error(`  [ERROR] Write failed for ${productId}: ${res.status} ${body}`);
@@ -62,26 +64,25 @@ async function writeAiDescription(productId, aiDescription) {
   return res.ok;
 }
 
-//  CALL GROQ ───────────────────────────────────────────
+// ── CALL GROQ LLM ─────────────────────────────────────────────────────────
 async function generateDescription(productTitle, defaultDescription) {
   const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${GROQ_API_KEY}`,
+      Authorization:  `Bearer ${GROQ_API_KEY}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'llama-3.3-70b-versatile',
+      model:       'llama-3.3-70b-versatile',
       temperature: 0.3,
-      max_tokens: 120,
+      max_tokens:  120,
       messages: [
         {
-          role: 'system',
-          content:
-            'Write a short premium retail product description in 2 sentences. No markdown. Plain text only.',
+          role:    'system',
+          content: 'Write a short premium retail product description in 2 sentences. No markdown. Plain text only.',
         },
         {
-          role: 'user',
+          role:    'user',
           content: `Product: ${productTitle}\nHint: ${defaultDescription}`,
         },
       ],
@@ -92,75 +93,81 @@ async function generateDescription(productTitle, defaultDescription) {
     console.error(`  [ERROR] Groq failed: ${res.status}`);
     return null;
   }
+
   const data = await res.json();
   return data?.choices?.[0]?.message?.content?.trim() || null;
 }
 
-
+// ── STRIP HTML ────────────────────────────────────────────────────────────
 function stripHtml(html = '') {
   return html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
 }
 
-
-// ── MAIN ───────────────────────────────────────────────────
+// ── MAIN ──────────────────────────────────────────────────────────────────
 async function main() {
-  console.log('=== AI Description Batch Job Started ===');
+  console.log('=== AI Description Batch Job Started ===\n');
+
+  // Validate all required env vars upfront
+  const required = ['AEM_HOST', 'AEM_SERVICE_USER', 'AEM_SERVICE_PASS', 'GROQ_API_KEY', 'AEM_SITE_ORIGIN'];
+  const missing  = required.filter(k => !process.env[k]);
+  if (missing.length) {
+    throw new Error(`Missing required env vars: ${missing.join(', ')}`);
+  }
+
+  // Validate auth upfront — fail fast before processing any products
+  console.log('Validating service user credentials...');
+  const testRes = await fetch(
+    `${process.env.AEM_HOST}/api/assets/edsuedemo/descriptions.json`,
+    { headers: { Authorization: getAuthHeader() } }
+  );
+  if (testRes.status === 401) {
+    throw new Error('[AUTH] Invalid service user credentials — check AEM_SERVICE_USER and AEM_SERVICE_PASS');
+  }
+  console.log('Credentials valid.\n');
 
   const products = await fetchCatalog();
-  console.log(`Found ${products.length} products`);
-
-  
-
-  console.log('Master CF loaded.\n');
+  console.log(`Found ${products.length} products\n`);
 
   let generated = 0;
-  let skipped = 0;
-  let failed = 0;
+  let skipped   = 0;
+  let failed    = 0;
 
   for (const product of products) {
-    const productId = product.productId;
-    const productTitle = product.productTitle;
+    const { productId, productTitle } = product;
 
     if (!productId || !productTitle) {
-      console.warn('Skipping row — missing productId or productTitle:', product);
+      console.warn('  [SKIP] Missing productId or productTitle:', product);
       skipped++;
       continue;
     }
 
-    const variationName = productId;
-    console.log(`Processing: ${productId} → variation: ${variationName}`);
+    console.log(`\nProcessing: ${productId}`);
 
-  const cf = await readCF(productId);
-if (!cf) { failed++; continue; }
-const data = getCFData(cf);
+    const cf = await readCF(productId);
+    if (!cf) { failed++; continue; }
 
-    if (!data) {
-      console.warn(`  [SKIP] Variation not found in CF: ${variationName}`);
-      failed++;
+    const data = getCFData(cf);
+
+    if (data.aiDescription && data.verified) {
+      console.log('  Already verified — skipping');
+      skipped++;
       continue;
     }
 
-    
-    //  skip only if aiDescription exists AND verified=true
-if (data.aiDescription && data.verified) {
-  console.log(`  Already verified — skipping`);
-  skipped++;
-  continue;
-}
-
     const hint = data.defaultDescription || productTitle;
-    console.log(`  Generating for: "${productTitle}" | hint: "${hint.substring(0, 50)}..."`);
+    console.log(`  Generating for: "${productTitle}"`);
+    console.log(`  Hint: "${hint.substring(0, 60)}..."`);
 
     const aiDescription = await generateDescription(productTitle, hint);
     if (!aiDescription) {
-      console.error(`  Groq returned nothing for: ${productId}`);
+      console.error(`  [ERROR] Groq returned nothing for: ${productId}`);
       failed++;
       continue;
     }
 
-    const written = await writeAiDescription(variationName, aiDescription);
+    const written = await writeAiDescription(productId, aiDescription);
     if (written) {
-      console.log(`  Written: "${aiDescription.substring(0, 60)}..."`);
+      console.log(`  [OK] Written: "${aiDescription.substring(0, 80)}..."`);
       generated++;
     } else {
       failed++;
@@ -168,14 +175,14 @@ if (data.aiDescription && data.verified) {
   }
 
   console.log('\n=== Batch Job Complete ===');
-  console.log(` Generated: ${generated}`);
+  console.log(`  Generated: ${generated}`);
   console.log(`  Skipped:   ${skipped}`);
-  console.log(` Failed:    ${failed}`);
+  console.log(`  Failed:    ${failed}`);
 
   if (failed > 0) process.exit(1);
 }
 
-main().catch((err) => {
-  console.error('Fatal error:', err);
+main().catch(err => {
+  console.error('\n[FATAL]', err.message);
   process.exit(1);
 });

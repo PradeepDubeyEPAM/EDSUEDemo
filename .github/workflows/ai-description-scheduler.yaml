@@ -22,6 +22,7 @@ jobs:
         run: node scripts/generate-descriptions.js
         env:
           AEM_HOST: ${{ secrets.AEM_HOST }}
-          AEM_TOKEN: ${{ secrets.AEM_TOKEN }}
+          AEM_SERVICE_USER: ${{ secrets.AEM_SERVICE_USER }}
+          AEM_SERVICE_PASS: ${{ secrets.AEM_SERVICE_PASS }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           AEM_SITE_ORIGIN: ${{ secrets.AEM_SITE_ORIGIN }}
