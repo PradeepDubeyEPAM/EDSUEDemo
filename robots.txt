@@ -3,4 +3,4 @@ Disallow: /bin/
 Disallow: /admin/
 Allow: /
 
-Sitemap: https://main--edsuedemo--pradeepdubeyepam.aem.live
+Sitemap: https://main--edsuedemo--pradeepdubeyepam.aem.live/sitemap.xml
