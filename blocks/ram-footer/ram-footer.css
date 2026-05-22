@@ -1,0 +1,139 @@
+.ram-footer.block {
+  padding: 0;
+  background: #1a1a2e;
+  color: rgb(255 255 255 / 80%);
+}
+
+/* ── Section wrapper reset ──────────────────────────────── */
+.section:has(.ram-footer) {
+  padding: 0;
+  margin: 0;
+}
+
+.ram-footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 2rem 0;
+}
+
+/* ── Link columns ───────────────────────────────────────── */
+.ram-footer-cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid rgb(255 255 255 / 12%);
+}
+
+.ram-footer-col h3 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #fff;
+  margin: 0 0 1rem;
+}
+
+.ram-footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.ram-footer-col ul li a {
+  color: rgb(255 255 255 / 65%);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+.ram-footer-col ul li a:hover {
+  color: #fff;
+}
+
+/* ── Social row ─────────────────────────────────────────── */
+.ram-footer-social {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 0;
+  border-bottom: 1px solid rgb(255 255 255 / 12%);
+}
+
+.ram-footer-social span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  margin-right: 0.5rem;
+}
+
+.ram-footer-social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 10%);
+  color: #fff;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.ram-footer-social a:hover {
+  background: #c8102e;
+}
+
+/* ── Bottom bar ─────────────────────────────────────────── */
+.ram-footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1.25rem 0 1.5rem;
+}
+
+.ram-footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+
+.ram-footer-legal a {
+  color: rgb(255 255 255 / 60%);
+  font-size: 0.82rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.ram-footer-legal a:hover {
+  color: #fff;
+}
+
+.ram-footer-copyright {
+  margin: 0;
+  font-size: 0.82rem;
+  color: rgb(255 255 255 / 50%);
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .ram-footer-cols {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ram-footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .ram-footer-cols {
+    grid-template-columns: 1fr;
+  }
+}
