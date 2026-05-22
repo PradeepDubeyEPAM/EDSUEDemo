@@ -1,4 +1,0 @@
-User-agent: *
-Disallow: /
-
-Sitemap: https://main--edsuedemo--pradeepdubeyepam.aem.live/sitemap.xml
