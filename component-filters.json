@@ -25,14 +25,7 @@
       "tile",
       "language-navigation",
       "login",
-      "hero-section",
-      "product",
-      "product-list",
-      "feature-section",
-      "api-mesh-data",
-      "product-detail",
-      "related-products",
-      "recently-viewed-products"
+      "hero-section"
     ]
   },
   {
@@ -60,6 +53,12 @@
       "image",
       "button",
       "title"
+    ]
+  },
+  {
+    "id": "destination-deals",
+    "components": [
+      "destination-deal-item"
     ]
   },
   {
@@ -96,6 +95,12 @@
     "id": "hero-banner",
     "components": [
       "custom-button"
+    ]
+  },
+  {
+    "id": "why-fly",
+    "components": [
+      "why-fly-item"
     ]
   }
 ]

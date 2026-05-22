@@ -1,0 +1,89 @@
+{
+  "definitions": [
+    {
+      "title": "Why Fly",
+      "id": "why-fly",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Why Fly",
+              "filter": "why-fly"
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Why Fly Item",
+      "id": "why-fly-item",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "name": "Why Fly Item",
+              "model": "why-fly-item"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "why-fly-item",
+      "fields": [
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "icon",
+          "label": "Icon (Emoji)",
+          "required": false,
+          "description": "Emoji or short icon character shown above the title e.g. 🍽️"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "title",
+          "label": "Feature Title",
+          "required": true,
+          "description": "Short title for this feature/benefit"
+        },
+        {
+          "component": "richtext",
+          "valueType": "string",
+          "name": "description",
+          "label": "Description",
+          "required": false,
+          "description": "Brief description of the benefit (1–2 sentences)"
+        },
+        {
+          "component": "aem-content",
+          "valueType": "string",
+          "name": "linkHref",
+          "label": "Learn More URL",
+          "required": false,
+          "description": "Link destination for the 'Learn more' anchor"
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "linkLabel",
+          "label": "Learn More Label",
+          "required": false,
+          "description": "Text for the learn-more link (defaults to 'Learn more')"
+        }
+      ]
+    }
+  ],
+  "filters": [
+    {
+      "id": "why-fly",
+      "components": [
+        "why-fly-item"
+      ]
+    }
+  ]
+}

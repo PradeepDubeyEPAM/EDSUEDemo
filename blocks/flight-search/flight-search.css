@@ -1,0 +1,174 @@
+.flight-search {
+  background: #fff;
+  box-shadow: 0 4px 20px rgb(0 0 0 / 12%);
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 1100px;
+  margin: -3rem auto 0;
+  position: relative;
+  z-index: 10;
+}
+
+.flight-search-wrapper {
+  width: 100%;
+}
+
+/* Tab bar */
+.flight-search-tabs {
+  display: flex;
+  background: #1a1a2e;
+}
+
+.flight-search-tab {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  background: none;
+  border: none;
+  color: rgb(255 255 255 / 70%);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.flight-search-tab:hover {
+  color: #fff;
+}
+
+.flight-search-tab.active {
+  color: #fff;
+  border-bottom-color: #c8102e;
+}
+
+/* Panels */
+.flight-search-panel {
+  display: none;
+  padding: 1.5rem 2rem;
+}
+
+.flight-search-panel.active {
+  display: block;
+}
+
+/* Trip type radios */
+.flight-search-type {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.9rem;
+  color: #505050;
+}
+
+.flight-search-type label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+}
+
+/* Row of fields */
+.flight-search-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.flight-search-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex: 1;
+  min-width: 130px;
+}
+
+.flight-search-field label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #505050;
+}
+
+.flight-search-field input,
+.flight-search-field select {
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #dadada;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  color: #131313;
+  background: #fff;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.flight-search-field input:focus,
+.flight-search-field select:focus {
+  border-color: #c8102e;
+}
+
+/* Swap button */
+.flight-search-swap {
+  background: none;
+  border: 1px solid #dadada;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: #505050;
+  flex-shrink: 0;
+  margin-bottom: 0.1rem;
+  transition: background 0.2s;
+}
+
+.flight-search-swap:hover {
+  background: #f0f0f0;
+}
+
+/* Search button */
+.flight-search-btn {
+  background: #c8102e;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.7rem 1.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.flight-search-btn:hover {
+  background: #a00d25;
+}
+
+@media (max-width: 768px) {
+  .flight-search {
+    margin: -1rem 1rem 0;
+  }
+
+  .flight-search-panel {
+    padding: 1rem;
+  }
+
+  .flight-search-row {
+    flex-direction: column;
+  }
+
+  .flight-search-field {
+    min-width: 100%;
+  }
+
+  .flight-search-swap {
+    display: none;
+  }
+
+  .flight-search-btn {
+    width: 100%;
+  }
+}
