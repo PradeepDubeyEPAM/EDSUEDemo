@@ -150,52 +150,6 @@
     ]
   },
   {
-    "id": "airline-hero",
-    "fields": [
-      {
-        "component": "reference",
-        "valueType": "string",
-        "name": "backgroundUrl",
-        "label": "Background Image",
-        "multi": false,
-        "required": true,
-        "description": "Full-width hero background image (1920×900 px recommended)"
-      },
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "heading",
-        "label": "Heading",
-        "required": true,
-        "description": "Main hero heading displayed as h1"
-      },
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "subheading",
-        "label": "Subheading",
-        "required": false,
-        "description": "Supporting text below the heading"
-      },
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "ctaLabel",
-        "label": "CTA Button Label",
-        "required": false,
-        "description": "Text label for the call-to-action button"
-      },
-      {
-        "component": "aem-content",
-        "valueType": "string",
-        "name": "ctaUrl",
-        "label": "CTA Button URL",
-        "required": false,
-        "description": "Link destination for the CTA button"
-      }
-    ]
-  },
-  {
     "id": "api-mesh-data",
     "fields": [
       {
@@ -227,52 +181,6 @@
         "name": "title",
         "label": "Title",
         "valueType": "string"
-      }
-    ]
-  },
-  {
-    "id": "app-download",
-    "fields": [
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "heading",
-        "label": "Heading",
-        "required": true,
-        "description": "Section heading displayed as h2"
-      },
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "description",
-        "label": "Description",
-        "required": false,
-        "description": "Supporting paragraph below the heading"
-      },
-      {
-        "component": "aem-content",
-        "valueType": "string",
-        "name": "appStoreUrl",
-        "label": "App Store URL",
-        "required": false,
-        "description": "Link to the iOS App Store listing"
-      },
-      {
-        "component": "aem-content",
-        "valueType": "string",
-        "name": "googlePlayUrl",
-        "label": "Google Play URL",
-        "required": false,
-        "description": "Link to the Google Play Store listing"
-      },
-      {
-        "component": "reference",
-        "valueType": "string",
-        "name": "appImage",
-        "label": "App Preview Image",
-        "multi": false,
-        "required": false,
-        "description": "App screenshot or mockup shown beside the text (420×580 px recommended)"
       }
     ]
   },
@@ -375,44 +283,6 @@
             "value": "secondary"
           }
         ]
-      }
-    ]
-  },
-  {
-    "id": "destination-deal-item",
-    "fields": [
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "city",
-        "label": "City Name",
-        "required": true,
-        "description": "Destination city name shown as the card heading"
-      },
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "price",
-        "label": "Price Label",
-        "required": true,
-        "description": "Price label displayed on the card e.g. 'from €299 / Round Trip'"
-      },
-      {
-        "component": "reference",
-        "valueType": "string",
-        "name": "image",
-        "label": "Destination Image",
-        "multi": false,
-        "required": false,
-        "description": "Card thumbnail image (400×280 px recommended)"
-      },
-      {
-        "component": "aem-content",
-        "valueType": "string",
-        "name": "linkHref",
-        "label": "Booking Link",
-        "required": false,
-        "description": "URL the 'Book Now' button points to"
       }
     ]
   },
@@ -5310,81 +5180,6 @@
     ]
   },
   {
-    "id": "loyalty-program",
-    "fields": [
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "heading",
-        "label": "Section Heading",
-        "required": true,
-        "description": "Main heading of the loyalty section"
-      },
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "subheading",
-        "label": "Subheading",
-        "required": false,
-        "description": "Short supporting sentence below the heading"
-      },
-      {
-        "component": "richtext",
-        "valueType": "string",
-        "name": "bullets",
-        "label": "Benefit Bullet Points",
-        "required": false,
-        "description": "List of programme benefits; each list item renders as a checkmark bullet"
-      },
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "ctaLabel",
-        "label": "CTA Button Label",
-        "required": false,
-        "description": "Text for the join CTA button"
-      },
-      {
-        "component": "aem-content",
-        "valueType": "string",
-        "name": "ctaUrl",
-        "label": "CTA Button URL",
-        "required": false,
-        "description": "Link destination for the CTA button"
-      },
-      {
-        "component": "reference",
-        "valueType": "string",
-        "name": "image",
-        "label": "Programme Image",
-        "multi": false,
-        "required": false,
-        "description": "Image shown on the right column (600×450 px recommended)"
-      }
-    ]
-  },
-  {
-    "id": "newsletter-signup",
-    "fields": [
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "heading",
-        "label": "Heading",
-        "required": true,
-        "description": "Section heading displayed as h2"
-      },
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "description",
-        "label": "Description",
-        "required": false,
-        "description": "Supporting sentence displayed below the heading"
-      }
-    ]
-  },
-  {
     "id": "product-detail",
     "fields": []
   },
@@ -5466,51 +5261,6 @@
         "valueType": "string",
         "name": "tile_description",
         "label": "Enter Description"
-      }
-    ]
-  },
-  {
-    "id": "why-fly-item",
-    "fields": [
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "icon",
-        "label": "Icon (Emoji)",
-        "required": false,
-        "description": "Emoji or short icon character shown above the title e.g. 🍽️"
-      },
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "title",
-        "label": "Feature Title",
-        "required": true,
-        "description": "Short title for this feature/benefit"
-      },
-      {
-        "component": "richtext",
-        "valueType": "string",
-        "name": "description",
-        "label": "Description",
-        "required": false,
-        "description": "Brief description of the benefit (1–2 sentences)"
-      },
-      {
-        "component": "aem-content",
-        "valueType": "string",
-        "name": "linkHref",
-        "label": "Learn More URL",
-        "required": false,
-        "description": "Link destination for the 'Learn more' anchor"
-      },
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "linkLabel",
-        "label": "Learn More Label",
-        "required": false,
-        "description": "Text for the learn-more link (defaults to 'Learn more')"
       }
     ]
   }
