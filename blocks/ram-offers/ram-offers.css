@@ -1,49 +1,72 @@
 .ram-offers-section {
   position: relative;
-  padding: 90px 40px;
-  background: #f5f5f5;
+
+  padding:
+    140px 40px 120px;
+
+  background: #f5f5f3;
+
   overflow: hidden;
-  font-family: Arial, sans-serif;
 }
 
-/* Background Pattern */
+/* PATTERN */
 
 .ram-pattern {
   position: absolute;
   inset: 0;
-  opacity: 0.04;
+
+  opacity: 0.035;
+
   background-image:
     radial-gradient(#000 1px, transparent 1px),
     radial-gradient(#000 1px, transparent 1px);
+
   background-size: 60px 60px;
   background-position: 0 0, 30px 30px;
+
+  pointer-events: none;
 }
 
-/* Wrapper */
+/* WRAPPER */
 
 .ram-offers-wrapper {
+
   position: relative;
   z-index: 2;
+
   max-width: 1320px;
+
   margin: 0 auto;
+
   display: flex;
   align-items: flex-start;
-  gap: 48px;
+
+  gap: 72px;
 }
 
-/* Left */
+/* LEFT CONTENT */
 
 .ram-offers-content {
+
   width: 360px;
+
+  flex-shrink: 0;
+
   padding-top: 40px;
 }
 
 .ram-offers-content h2 {
-  font-size: 56px;
-  line-height: 1.05;
-  font-weight: 300;
+
+  margin-bottom: 18px;
+
+  font-size: clamp(46px, 5vw, 68px);
+  line-height: 0.95;
+
+  letter-spacing: -2px;
+
   color: #111;
-  margin-bottom: 10px;
+
+  font-weight: 300;
 }
 
 .ram-offers-content h2 strong {
@@ -51,167 +74,334 @@
 }
 
 .ram-offers-content p {
+
+  margin-bottom: 42px;
+
   font-size: 22px;
-  color: #111;
-  margin-bottom: 36px;
+  line-height: 1.6;
+
+  color: #444;
 }
 
+/* BUTTON */
+
 .ram-offers-btn {
+
   width: 100%;
-  max-width: 350px;
-  height: 62px;
+  max-width: 320px;
+
+  height: 60px;
+
   border: none;
-  background: #d10037;
+  border-radius: 999px;
+
+  background: #c8102e;
   color: white;
-  font-size: 22px;
+
+  font-size: 16px;
   font-weight: 700;
-  border-radius: 6px;
+
   cursor: pointer;
-  transition: all 0.3s ease;
+
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .ram-offers-btn:hover {
-  background: #b3002f;
+
+  background: #a70027;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 14px 30px rgba(200,16,46,0.24);
 }
 
-/* Cards */
+/* CARDS */
 
 .ram-offers-cards {
+
+  flex: 1;
+
   display: flex;
-  gap: 24px;
-  align-items: flex-start;
+  align-items: stretch;
+
+  gap: 28px;
+
+  overflow-x: auto;
+
+  scroll-behavior: smooth;
+
+  padding-bottom: 10px;
+
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
+.ram-offers-cards::-webkit-scrollbar {
+  display: none;
+}
+
+/* CARD */
+
 .ram-offer-card {
+
+  position: relative;
+
   width: 360px;
+
+  flex-shrink: 0;
+
   background: white;
-  border-radius: 22px;
+
+  border-radius: 30px;
+
   overflow: hidden;
-  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
-  transition: all 0.4s ease;
+
+  box-shadow:
+    0 20px 50px rgba(0,0,0,0.08);
+
+  transition:
+    transform 0.45s ease,
+    box-shadow 0.45s ease,
+    opacity 0.45s ease;
+
   transform: scale(0.94);
+
   opacity: 0.6;
 }
 
 .ram-offer-card.active {
+
   transform: scale(1);
+
   opacity: 1;
+
+  box-shadow:
+    0 28px 70px rgba(0,0,0,0.14);
 }
 
+.ram-offer-card:hover {
+
+  transform: translateY(-8px);
+
+  box-shadow:
+    0 34px 80px rgba(0,0,0,0.16);
+}
+
+/* IMAGE */
+
 .ram-offer-image {
+
+  position: relative;
+
   height: 520px;
+
   overflow: hidden;
 }
 
 .ram-offer-image img {
+
   width: 100%;
   height: 100%;
+
   object-fit: cover;
+
+  transition: transform 0.6s ease;
 }
+
+.ram-offer-card:hover .ram-offer-image img {
+  transform: scale(1.05);
+}
+
+/* DETAILS */
 
 .ram-offer-details {
+
   display: flex;
   align-items: center;
-  gap: 18px;
-  padding: 22px 24px;
+
+  gap: 20px;
+
+  padding: 28px;
 }
 
+/* ARROW */
+
 .ram-arrow {
+
+  position: relative;
+
   width: 24px;
   height: 24px;
-  position: relative;
+
   flex-shrink: 0;
 }
 
 .ram-arrow::before,
 .ram-arrow::after {
+
   content: '';
+
   position: absolute;
-  background: #d10037;
 }
 
 .ram-arrow::before {
+
   width: 18px;
-  height: 4px;
-  top: 10px;
+  height: 2px;
+
+  top: 11px;
   left: 0;
+
+  background: #c8102e;
 }
 
 .ram-arrow::after {
-  width: 10px;
-  height: 10px;
-  border-top: 4px solid #d10037;
-  border-right: 4px solid #d10037;
+
+  width: 8px;
+  height: 8px;
+
+  right: 1px;
+  top: 7px;
+
+  border-top: 2px solid #c8102e;
+  border-right: 2px solid #c8102e;
+
   transform: rotate(45deg);
-  right: 0;
-  top: 4px;
-  background: transparent;
 }
 
+/* TEXT */
+
 .ram-offer-details h3 {
+
+  margin-bottom: 8px;
+
   font-size: 52px;
   line-height: 1;
-  margin-bottom: 10px;
+
+  letter-spacing: -2px;
+
   color: #111;
 }
 
 .ram-offer-details p {
-  font-size: 18px;
-  color: #111;
+
+  margin: 0;
+
+  font-size: 16px;
+  line-height: 1.5;
+
+  color: #555;
 }
 
 .ram-offer-details strong {
-  font-size: 44px;
+
+  display: inline-block;
+
+  margin-top: 4px;
+
+  font-size: 42px;
   font-weight: 700;
+
+  color: #111;
 }
+
+/* MOBILE */
 
 @media (max-width: 992px) {
 
   .ram-offers-section {
-    padding: 50px 20px;
+
+    padding:
+      100px 20px 80px;
   }
 
   .ram-offers-wrapper {
+
     flex-direction: column;
+
+    gap: 40px;
   }
 
   .ram-offers-content {
+
     width: 100%;
+
     padding-top: 0;
   }
 
-  .ram-offers-content h2 {
-    font-size: 42px;
-  }
-
   .ram-offers-content p {
+
     font-size: 18px;
+
+    margin-bottom: 30px;
   }
 
   .ram-offers-btn {
     max-width: 100%;
-    font-size: 18px;
   }
 
   .ram-offers-cards {
+
     width: 100%;
-    overflow-x: auto;
-    padding-bottom: 10px;
+
+    gap: 20px;
   }
 
   .ram-offer-card {
-    min-width: 300px;
+    width: 300px;
   }
 
   .ram-offer-image {
     height: 420px;
   }
 
+  .ram-offer-details {
+
+    padding: 22px;
+  }
+
   .ram-offer-details h3 {
-    font-size: 38px;
+
+    font-size: 40px;
   }
 
   .ram-offer-details strong {
+
     font-size: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .ram-offers-section {
+
+    padding-top: 80px;
+  }
+
+  .ram-offers-content h2 {
+
+    line-height: 1;
+  }
+
+  .ram-offer-card {
+    width: 280px;
+  }
+
+  .ram-offer-image {
+    height: 380px;
+  }
+
+  .ram-offer-details h3 {
+
+    font-size: 34px;
+  }
+
+  .ram-offer-details strong {
+
+    font-size: 28px;
   }
 }

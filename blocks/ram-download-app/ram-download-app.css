@@ -1,17 +1,28 @@
 .ram-download-app {
   position: relative;
+
   overflow: hidden;
-  padding: 130px 40px;
-  background: #c8102e;
-  font-family: Arial, sans-serif;
+
+  padding:
+    160px 40px 150px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #c8102e 0%,
+      #b10d28 100%
+    );
 }
 
-/* Background Pattern */
+/* BACKGROUND PATTERN */
 
 .ram-download-pattern {
+
   position: absolute;
   inset: 0;
+
   opacity: 0.08;
+
   background-image:
     repeating-linear-gradient(
       45deg,
@@ -22,41 +33,61 @@
     ),
     repeating-linear-gradient(
       -45deg,
-      rgba(255,255,255,0.10) 0px,
-      rgba(255,255,255,0.10) 2px,
+      rgba(255,255,255,0.08) 0px,
+      rgba(255,255,255,0.08) 2px,
       transparent 2px,
       transparent 120px
     );
+
+  pointer-events: none;
 }
 
-/* HASHTAG STRIP */
+/* FLOATING HASHTAG SECTION */
 
 .ram-hashtag-strip {
+
   position: absolute;
+
   top: 40px;
   left: 0;
+
   width: 100%;
+
   overflow: hidden;
+
   z-index: 1;
+
   pointer-events: none;
 }
 
 .ram-hashtag-track {
+
   display: flex;
   align-items: center;
+
   gap: 90px;
+
   width: max-content;
+
   white-space: nowrap;
-  animation: ramHashtagMove 30s linear infinite;
+
+  animation:
+    ramHashtagMove 32s linear infinite;
 }
 
 .ram-hashtag-track span {
-  font-size: 78px;
+
+  font-size: 92px;
   line-height: 1;
+
   font-weight: 700;
-  color: rgba(255,255,255,0.07);
+
+  letter-spacing: -3px;
+
+  color:
+    rgba(255,255,255,0.06);
+
   text-transform: uppercase;
-  letter-spacing: -2px;
 }
 
 @keyframes ramHashtagMove {
@@ -70,178 +101,343 @@
   }
 }
 
-/* Layout */
+/* WRAPPER */
 
 .ram-download-wrapper {
+
   position: relative;
   z-index: 3;
+
   max-width: 1320px;
+
   margin: 0 auto;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 80px;
+
+  gap: 100px;
 }
 
 /* LEFT */
 
 .ram-download-content {
-  max-width: 520px;
+
+  max-width: 540px;
+
   color: white;
 }
 
+/* EYEBROW */
+
 .ram-download-eyebrow {
+
+  display: inline-block;
+
+  margin-bottom: 20px;
+
   text-transform: uppercase;
   letter-spacing: 2px;
+
   font-size: 13px;
-  margin-bottom: 20px;
-  opacity: 0.9;
+  font-weight: 700;
+
+  color:
+    rgba(255,255,255,0.9);
 }
+
+/* TITLE */
 
 .ram-download-content h2 {
-  font-size: 72px;
-  line-height: 0.98;
-  font-weight: 700;
+
   margin-bottom: 28px;
-  letter-spacing: -1px;
+
+  font-size: clamp(52px, 6vw, 82px);
+  line-height: 0.92;
+
+  letter-spacing: -3px;
+
+  font-weight: 700;
+
+  color: white;
 }
+
+/* DESCRIPTION */
 
 .ram-download-description {
+
+  margin-bottom: 46px;
+
   font-size: 20px;
-  line-height: 1.8;
-  margin-bottom: 42px;
-  color: rgba(255,255,255,0.92);
+  line-height: 1.9;
+
+  color:
+    rgba(255,255,255,0.92);
 }
 
-/* Store Buttons */
+/* STORE BUTTONS */
 
 .ram-store-buttons {
+
   display: flex;
   flex-wrap: wrap;
+
   gap: 18px;
 }
 
+/* BUTTON */
+
 .ram-store-btn {
+
   display: inline-flex;
-  transition: transform 0.3s ease;
+
+  transition:
+    transform 0.35s ease,
+    filter 0.35s ease;
 }
 
 .ram-store-btn:hover {
-  transform: translateY(-4px);
+
+  transform:
+    translateY(-4px)
+    scale(1.02);
+
+  filter:
+    drop-shadow(0 12px 24px rgba(0,0,0,0.18));
 }
 
+/* STORE IMAGE */
+
 .ram-store-btn img {
-  height: 58px;
+
+  height: 60px;
+
   display: block;
 }
 
 /* RIGHT VISUAL */
 
 .ram-download-visual {
+
   position: relative;
+
   flex: 1;
+
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 }
 
-/* Phone */
+/* PHONE */
 
 .ram-phone-wrapper {
+
   position: relative;
-  width: 390px;
+
+  width: 420px;
+
   transition:
-    transform 0.6s ease,
-    filter 0.6s ease;
+    transform 0.7s ease,
+    filter 0.7s ease;
 }
 
-.ram-phone-wrapper.hovered {
-  transform: translateY(-12px) rotate(-2deg);
+/* FLOAT EFFECT */
+
+.ram-phone-wrapper.hovered,
+.ram-phone-wrapper:hover {
+
+  transform:
+    translateY(-14px)
+    rotate(-2deg);
 }
+
+/* PHONE IMAGE */
 
 .ram-phone-image {
+
   width: 100%;
+
   display: block;
+
   filter:
-    drop-shadow(0 30px 60px rgba(0,0,0,0.35));
+    drop-shadow(0 40px 70px rgba(0,0,0,0.38));
 }
 
 /* QR CARD */
 
 .ram-qr-card {
+
   position: absolute;
-  right: 10px;
-  bottom: 10px;
-  width: 190px;
+
+  right: -30px;
+  bottom: 0;
+
+  width: 210px;
+
   background: white;
-  border-radius: 22px;
+
+  border-radius: 28px;
+
   padding: 18px;
+
   box-shadow:
-    0 20px 40px rgba(0,0,0,0.20);
+    0 24px 60px rgba(0,0,0,0.22);
+
   text-align: center;
+
+  transition:
+    transform 0.45s ease;
 }
+
+.ram-phone-wrapper:hover .ram-qr-card {
+
+  transform:
+    translateY(-6px);
+}
+
+/* QR IMAGE */
 
 .ram-qr-card img {
+
   width: 100%;
+
   display: block;
-  border-radius: 12px;
-  margin-bottom: 12px;
+
+  border-radius: 18px;
+
+  margin-bottom: 14px;
 }
 
+/* QR TEXT */
+
 .ram-qr-card p {
+
+  margin: 0;
+
   color: #111;
-  font-size: 16px;
+
+  font-size: 15px;
+  line-height: 1.5;
+
   font-weight: 700;
 }
 
-/* Responsive */
+/* TABLET */
 
 @media (max-width: 992px) {
 
   .ram-download-app {
-    padding: 90px 20px;
+
+    padding:
+      110px 20px 100px;
   }
 
   .ram-hashtag-strip {
+
     top: 30px;
   }
 
   .ram-hashtag-track {
-    gap: 40px;
+
+    gap: 44px;
   }
 
   .ram-hashtag-track span {
-    font-size: 34px;
+
+    font-size: 40px;
   }
 
   .ram-download-wrapper {
+
     flex-direction: column;
-    gap: 60px;
+
+    gap: 70px;
   }
 
   .ram-download-content {
+
     max-width: 100%;
   }
 
   .ram-download-content h2 {
-    font-size: 52px;
+
+    line-height: 1;
   }
 
   .ram-download-description {
+
     font-size: 18px;
   }
 
   .ram-store-btn img {
+
+    height: 54px;
+  }
+
+  .ram-phone-wrapper {
+
+    width: 320px;
+  }
+
+  .ram-qr-card {
+
+    width: 170px;
+
+    right: -12px;
+    bottom: -10px;
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+
+  .ram-download-app {
+
+    padding:
+      90px 20px 90px;
+  }
+
+  .ram-download-wrapper {
+
+    gap: 50px;
+  }
+
+  .ram-download-description {
+
+    margin-bottom: 34px;
+
+    line-height: 1.7;
+  }
+
+  .ram-store-buttons {
+
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .ram-store-btn img {
+
     height: 52px;
   }
 
   .ram-phone-wrapper {
-    width: 300px;
+
+    width: 280px;
   }
 
   .ram-qr-card {
-    width: 150px;
-    right: -10px;
-    bottom: -10px;
+
+    width: 145px;
+
+    border-radius: 20px;
+
+    padding: 14px;
+  }
+
+  .ram-qr-card p {
+
+    font-size: 13px;
   }
 }
