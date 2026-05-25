@@ -1,0 +1,167 @@
+.ram-safar-flyer {
+  position: relative;
+  overflow: hidden;
+  padding: 130px 40px;
+  background: #f4f4f2;
+  font-family: Arial, sans-serif;
+}
+
+/* Background Pattern */
+
+.ram-safar-pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  background-image:
+    radial-gradient(#000 1px, transparent 1px),
+    radial-gradient(#000 1px, transparent 1px);
+  background-size: 80px 80px;
+  background-position: 0 0, 40px 40px;
+}
+
+/* Layout */
+
+.ram-safar-wrapper {
+  position: relative;
+  z-index: 2;
+  max-width: 1320px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 80px;
+}
+
+/* LEFT */
+
+.ram-safar-content {
+  max-width: 560px;
+}
+
+.ram-safar-eyebrow {
+  color: #c8102e;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 13px;
+  margin-bottom: 24px;
+}
+
+.ram-safar-content h2 {
+  font-size: 68px;
+  line-height: 1.02;
+  font-weight: 300;
+  color: #111;
+  margin-bottom: 36px;
+  letter-spacing: -1px;
+}
+
+.ram-safar-content h2 strong {
+  font-weight: 700;
+}
+
+.ram-safar-list {
+  margin: 0 0 44px;
+  padding: 0;
+  list-style: none;
+}
+
+.ram-safar-list li {
+  position: relative;
+  padding-left: 34px;
+  margin-bottom: 24px;
+  font-size: 20px;
+  line-height: 1.7;
+  color: #333;
+}
+
+.ram-safar-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 12px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #c8102e;
+}
+
+/* Button */
+
+.ram-safar-btn {
+  min-width: 220px;
+  height: 62px;
+  border: none;
+  border-radius: 4px;
+  background: #c8102e;
+  color: white;
+  font-size: 22px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.ram-safar-btn:hover {
+  background: #a70027;
+}
+
+/* RIGHT IMAGE */
+
+.ram-safar-image-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.ram-safar-image-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 620px;
+  transition:
+    transform 0.6s ease,
+    filter 0.6s ease;
+}
+
+.ram-safar-image-wrapper img {
+  width: 100%;
+  display: block;
+}
+
+.ram-safar-image-wrapper.hovered {
+  transform: translateY(-10px) scale(1.02);
+}
+
+/* Responsive */
+
+@media (max-width: 992px) {
+
+  .ram-safar-flyer {
+    padding: 90px 20px;
+  }
+
+  .ram-safar-wrapper {
+    flex-direction: column;
+    gap: 60px;
+  }
+
+  .ram-safar-content {
+    max-width: 100%;
+  }
+
+  .ram-safar-content h2 {
+    font-size: 48px;
+  }
+
+  .ram-safar-list li {
+    font-size: 18px;
+  }
+
+  .ram-safar-btn {
+    width: 100%;
+    max-width: 100%;
+    font-size: 18px;
+  }
+
+  .ram-safar-image-wrapper {
+    max-width: 100%;
+  }
+}

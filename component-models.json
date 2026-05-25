@@ -5218,6 +5218,46 @@
     ]
   },
   {
+    "id": "ram-download-app",
+    "fields": []
+  },
+  {
+    "id": "ram-flying-benefits-cards",
+    "fields": []
+  },
+  {
+    "id": "ram-footer",
+    "fields": []
+  },
+  {
+    "id": "ram-header",
+    "fields": []
+  },
+  {
+    "id": "ram-hero",
+    "fields": []
+  },
+  {
+    "id": "ram-news-letter",
+    "fields": []
+  },
+  {
+    "id": "ram-offers-carousel",
+    "fields": []
+  },
+  {
+    "id": "ram-offers",
+    "fields": []
+  },
+  {
+    "id": "ram-safar-flyer",
+    "fields": []
+  },
+  {
+    "id": "ram-service-shortcuts",
+    "fields": []
+  },
+  {
     "id": "recently-viewed-products",
     "fields": [
       {
