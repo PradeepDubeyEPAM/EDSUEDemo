@@ -25,7 +25,24 @@
       "tile",
       "language-navigation",
       "login",
-      "hero-section"
+      "hero-section",
+      "product",
+      "product-list",
+      "feature-section",
+      "api-mesh-data",
+      "product-detail",
+      "related-products",
+      "recently-viewed-products",
+      "ram-download-app",
+      "ram-flying-benefits-cards",
+      "ram-footer",
+      "ram-header",
+      "ram-hero",
+      "ram-news-letter",
+      "ram-offers",
+      "ram-offers-carousel",
+      "ram-safar-flyer",
+      "ram-service-shortcuts"
     ]
   },
   {
