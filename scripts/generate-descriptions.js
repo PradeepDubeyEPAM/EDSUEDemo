@@ -30,7 +30,6 @@ async function getCF(productId, token) {
 async function updateCF(fragment, aiDescription, token) {
   const url = `${AEM_HOST}/adobe/sites/cf/fragments/${fragment.id}`;
 
-  // Build updated fields — only change aiDescription and verified
   const updatedFields = fragment.fields.map(f => {
     if (f.name === 'aiDescription') return { ...f, values: [aiDescription] };
     if (f.name === 'verified')       return { ...f, values: [false] };
@@ -41,15 +40,17 @@ async function updateCF(fragment, aiDescription, token) {
     method: 'PUT',
     headers: {
       ...headers(token),
-      'If-Match': fragment.etag,  // optimistic locking — required by AEM CF API
+      'If-Match': fragment.etag,
     },
-    body: JSON.stringify({ fields: updatedFields }),
+    body: JSON.stringify({
+      title: fragment.title,   // ← this was missing
+      fields: updatedFields,
+    }),
   });
 
   if (!res.ok) console.error(`[ERROR] PUT failed (${res.status}):`, await res.text());
   return res.ok;
 }
-
 async function generateDescription(productTitle, hint) {
   const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
