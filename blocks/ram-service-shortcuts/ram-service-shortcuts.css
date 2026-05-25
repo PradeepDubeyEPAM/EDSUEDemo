@@ -1,0 +1,218 @@
+.ram-shortcuts {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  padding: 12px 24px;
+  position: relative;
+}
+
+.ram-shortcuts-wrapper {
+  overflow: hidden;
+  flex: 1;
+  max-width: 1200px;
+}
+
+.ram-shortcuts-track {
+  display: flex;
+  gap: 45px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.ram-shortcuts-track::-webkit-scrollbar {
+  display: none;
+}
+
+.ram-shortcut-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #c8102e;
+  font-family: Arial, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  white-space: nowrap;
+  transition: color 0.3s ease;
+}
+
+.ram-shortcut-item:hover {
+  color: #a10f26;
+}
+
+.ram-icon {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* Flight Pass */
+.ram-icon.flight-pass::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  border: 2px solid currentColor;
+  transform: rotate(-8deg);
+}
+
+.ram-icon.flight-pass::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 2px;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+}
+
+/* Upgrade */
+.ram-icon.upgrade::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 3px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 10px solid currentColor;
+}
+
+.ram-icon.upgrade::after {
+  content: '';
+  position: absolute;
+  left: 9px;
+  top: 11px;
+  width: 4px;
+  height: 8px;
+  background: currentColor;
+}
+
+/* Seat */
+.ram-icon.seat::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  bottom: 2px;
+  width: 12px;
+  height: 10px;
+  border: 2px solid currentColor;
+  border-top: none;
+}
+
+.ram-icon.seat::after {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 2px;
+  width: 8px;
+  height: 14px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+/* Extra Bags */
+.ram-icon.extra-bags::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 6px;
+  width: 14px;
+  height: 12px;
+  border: 2px solid currentColor;
+  border-radius: 2px;
+}
+
+.ram-icon.extra-bags::after {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 1px;
+  width: 8px;
+  height: 6px;
+  border: 2px solid currentColor;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+}
+
+/* E-Skyshop */
+.ram-icon.e-skyshop::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 4px;
+  width: 16px;
+  height: 10px;
+  border: 2px solid currentColor;
+  border-top: none;
+}
+
+.ram-icon.e-skyshop::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 10px;
+  height: 6px;
+  border: 2px solid currentColor;
+  border-bottom: none;
+  transform: skewX(-10deg);
+}
+
+.ram-shortcut-nav {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.ram-shortcut-nav .chevron {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border: solid #c8102e;
+  border-width: 0 2px 2px 0;
+  transform: rotate(135deg);
+}
+
+.ram-shortcut-nav.next .chevron {
+  transform: rotate(-45deg);
+}
+
+.ram-shortcut-nav.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+
+  .ram-shortcuts {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .ram-shortcuts-track {
+    gap: 28px;
+  }
+
+  .ram-shortcut-item {
+    font-size: 14px;
+  }
+
+  .ram-shortcut-nav {
+    width: 28px;
+    height: 28px;
+  }
+}

@@ -1,0 +1,217 @@
+.ram-offers-section {
+  position: relative;
+  padding: 90px 40px;
+  background: #f5f5f5;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+}
+
+/* Background Pattern */
+
+.ram-pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  background-image:
+    radial-gradient(#000 1px, transparent 1px),
+    radial-gradient(#000 1px, transparent 1px);
+  background-size: 60px 60px;
+  background-position: 0 0, 30px 30px;
+}
+
+/* Wrapper */
+
+.ram-offers-wrapper {
+  position: relative;
+  z-index: 2;
+  max-width: 1320px;
+  margin: 0 auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 48px;
+}
+
+/* Left */
+
+.ram-offers-content {
+  width: 360px;
+  padding-top: 40px;
+}
+
+.ram-offers-content h2 {
+  font-size: 56px;
+  line-height: 1.05;
+  font-weight: 300;
+  color: #111;
+  margin-bottom: 10px;
+}
+
+.ram-offers-content h2 strong {
+  font-weight: 700;
+}
+
+.ram-offers-content p {
+  font-size: 22px;
+  color: #111;
+  margin-bottom: 36px;
+}
+
+.ram-offers-btn {
+  width: 100%;
+  max-width: 350px;
+  height: 62px;
+  border: none;
+  background: #d10037;
+  color: white;
+  font-size: 22px;
+  font-weight: 700;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ram-offers-btn:hover {
+  background: #b3002f;
+}
+
+/* Cards */
+
+.ram-offers-cards {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.ram-offer-card {
+  width: 360px;
+  background: white;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+  transition: all 0.4s ease;
+  transform: scale(0.94);
+  opacity: 0.6;
+}
+
+.ram-offer-card.active {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.ram-offer-image {
+  height: 520px;
+  overflow: hidden;
+}
+
+.ram-offer-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ram-offer-details {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 22px 24px;
+}
+
+.ram-arrow {
+  width: 24px;
+  height: 24px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.ram-arrow::before,
+.ram-arrow::after {
+  content: '';
+  position: absolute;
+  background: #d10037;
+}
+
+.ram-arrow::before {
+  width: 18px;
+  height: 4px;
+  top: 10px;
+  left: 0;
+}
+
+.ram-arrow::after {
+  width: 10px;
+  height: 10px;
+  border-top: 4px solid #d10037;
+  border-right: 4px solid #d10037;
+  transform: rotate(45deg);
+  right: 0;
+  top: 4px;
+  background: transparent;
+}
+
+.ram-offer-details h3 {
+  font-size: 52px;
+  line-height: 1;
+  margin-bottom: 10px;
+  color: #111;
+}
+
+.ram-offer-details p {
+  font-size: 18px;
+  color: #111;
+}
+
+.ram-offer-details strong {
+  font-size: 44px;
+  font-weight: 700;
+}
+
+@media (max-width: 992px) {
+
+  .ram-offers-section {
+    padding: 50px 20px;
+  }
+
+  .ram-offers-wrapper {
+    flex-direction: column;
+  }
+
+  .ram-offers-content {
+    width: 100%;
+    padding-top: 0;
+  }
+
+  .ram-offers-content h2 {
+    font-size: 42px;
+  }
+
+  .ram-offers-content p {
+    font-size: 18px;
+  }
+
+  .ram-offers-btn {
+    max-width: 100%;
+    font-size: 18px;
+  }
+
+  .ram-offers-cards {
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 10px;
+  }
+
+  .ram-offer-card {
+    min-width: 300px;
+  }
+
+  .ram-offer-image {
+    height: 420px;
+  }
+
+  .ram-offer-details h3 {
+    font-size: 38px;
+  }
+
+  .ram-offer-details strong {
+    font-size: 32px;
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "definitions": [
+    {
+      "title": "Ram Newsletter",
+      "id": "ram-news-letter",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Ram Newsletter",
+              "model": "ram-news-letter"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "ram-news-letter",
+      "fields": []
+    }
+  ],
+  "filters": []
+}

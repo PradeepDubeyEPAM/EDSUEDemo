@@ -1,0 +1,141 @@
+.ram-header {
+  width: 100%;
+  font-family: Arial, sans-serif;
+  border-bottom: 1px solid #ddd;
+  background: #fff;
+}
+
+.top-bar {
+  background: #111;
+  color: #fff;
+  padding: 8px 40px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.top-bar a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 6px;
+}
+
+.main-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 40px;
+  position: relative;
+}
+
+.logo-section img {
+  height: 48px;
+}
+
+.main-nav ul {
+  display: flex;
+  list-style: none;
+  gap: 32px;
+  margin: 0;
+  padding: 0;
+}
+
+.main-nav li {
+  position: relative;
+}
+
+.main-nav a {
+  text-decoration: none;
+  color: #111;
+  font-weight: 600;
+}
+
+.mega-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  display: none;
+  padding: 24px;
+  min-width: 700px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  gap: 40px;
+}
+
+.has-dropdown:hover .mega-menu {
+  display: flex;
+}
+
+.menu-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.menu-column h4 {
+  margin-bottom: 8px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.book-btn {
+  background: #d71920;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.search-btn {
+  background: transparent;
+  border: 1px solid #111;
+  padding: 12px 20px;
+  cursor: pointer;
+}
+
+.mobile-menu-toggle {
+  display: none;
+}
+
+@media (max-width: 992px) {
+
+  .main-nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: white;
+    padding: 20px;
+    display: none;
+    flex-direction: column;
+  }
+
+  .main-nav ul {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .mega-menu {
+    position: static;
+    box-shadow: none;
+    min-width: auto;
+    display: none;
+    padding: 16px 0;
+  }
+
+  .dropdown-open .mega-menu {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: white;
+}

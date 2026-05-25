@@ -1,0 +1,26 @@
+{
+  "definitions": [
+    {
+      "title": "Ram Safar Flyer",
+      "id": "ram-safar-flyer",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Ram Safar Flyer",
+              "model": "ram-safar-flyer"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "ram-safar-flyer",
+      "fields": []
+    }
+  ],
+  "filters": []
+}

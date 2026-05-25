@@ -1,0 +1,247 @@
+.ram-download-app {
+  position: relative;
+  overflow: hidden;
+  padding: 130px 40px;
+  background: #c8102e;
+  font-family: Arial, sans-serif;
+}
+
+/* Background Pattern */
+
+.ram-download-pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(255,255,255,0.12) 0px,
+      rgba(255,255,255,0.12) 2px,
+      transparent 2px,
+      transparent 80px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(255,255,255,0.10) 0px,
+      rgba(255,255,255,0.10) 2px,
+      transparent 2px,
+      transparent 120px
+    );
+}
+
+/* HASHTAG STRIP */
+
+.ram-hashtag-strip {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.ram-hashtag-track {
+  display: flex;
+  align-items: center;
+  gap: 90px;
+  width: max-content;
+  white-space: nowrap;
+  animation: ramHashtagMove 30s linear infinite;
+}
+
+.ram-hashtag-track span {
+  font-size: 78px;
+  line-height: 1;
+  font-weight: 700;
+  color: rgba(255,255,255,0.07);
+  text-transform: uppercase;
+  letter-spacing: -2px;
+}
+
+@keyframes ramHashtagMove {
+
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Layout */
+
+.ram-download-wrapper {
+  position: relative;
+  z-index: 3;
+  max-width: 1320px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 80px;
+}
+
+/* LEFT */
+
+.ram-download-content {
+  max-width: 520px;
+  color: white;
+}
+
+.ram-download-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 13px;
+  margin-bottom: 20px;
+  opacity: 0.9;
+}
+
+.ram-download-content h2 {
+  font-size: 72px;
+  line-height: 0.98;
+  font-weight: 700;
+  margin-bottom: 28px;
+  letter-spacing: -1px;
+}
+
+.ram-download-description {
+  font-size: 20px;
+  line-height: 1.8;
+  margin-bottom: 42px;
+  color: rgba(255,255,255,0.92);
+}
+
+/* Store Buttons */
+
+.ram-store-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+.ram-store-btn {
+  display: inline-flex;
+  transition: transform 0.3s ease;
+}
+
+.ram-store-btn:hover {
+  transform: translateY(-4px);
+}
+
+.ram-store-btn img {
+  height: 58px;
+  display: block;
+}
+
+/* RIGHT VISUAL */
+
+.ram-download-visual {
+  position: relative;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Phone */
+
+.ram-phone-wrapper {
+  position: relative;
+  width: 390px;
+  transition:
+    transform 0.6s ease,
+    filter 0.6s ease;
+}
+
+.ram-phone-wrapper.hovered {
+  transform: translateY(-12px) rotate(-2deg);
+}
+
+.ram-phone-image {
+  width: 100%;
+  display: block;
+  filter:
+    drop-shadow(0 30px 60px rgba(0,0,0,0.35));
+}
+
+/* QR CARD */
+
+.ram-qr-card {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 190px;
+  background: white;
+  border-radius: 22px;
+  padding: 18px;
+  box-shadow:
+    0 20px 40px rgba(0,0,0,0.20);
+  text-align: center;
+}
+
+.ram-qr-card img {
+  width: 100%;
+  display: block;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.ram-qr-card p {
+  color: #111;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* Responsive */
+
+@media (max-width: 992px) {
+
+  .ram-download-app {
+    padding: 90px 20px;
+  }
+
+  .ram-hashtag-strip {
+    top: 30px;
+  }
+
+  .ram-hashtag-track {
+    gap: 40px;
+  }
+
+  .ram-hashtag-track span {
+    font-size: 34px;
+  }
+
+  .ram-download-wrapper {
+    flex-direction: column;
+    gap: 60px;
+  }
+
+  .ram-download-content {
+    max-width: 100%;
+  }
+
+  .ram-download-content h2 {
+    font-size: 52px;
+  }
+
+  .ram-download-description {
+    font-size: 18px;
+  }
+
+  .ram-store-btn img {
+    height: 52px;
+  }
+
+  .ram-phone-wrapper {
+    width: 300px;
+  }
+
+  .ram-qr-card {
+    width: 150px;
+    right: -10px;
+    bottom: -10px;
+  }
+}

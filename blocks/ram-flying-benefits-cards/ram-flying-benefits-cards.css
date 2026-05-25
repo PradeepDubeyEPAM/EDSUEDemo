@@ -1,0 +1,247 @@
+.ram-flying-benefits {
+  position: relative;
+  padding: 120px 40px;
+  background: #ffffff;
+  font-family: Arial, sans-serif;
+}
+
+.ram-benefits-wrapper {
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+/* Header */
+
+.ram-benefits-header {
+  margin-bottom: 60px;
+}
+
+.ram-benefits-header h2 {
+  font-size: 62px;
+  line-height: 1.05;
+  font-weight: 700;
+  color: #111;
+  letter-spacing: -1px;
+}
+
+/* Grid */
+
+.ram-benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+/* Cards */
+
+.ram-benefit-card {
+  position: relative;
+  background: #fff;
+  border-radius: 28px;
+  padding: 42px 34px;
+  min-height: 360px;
+  border: 1px solid #ececec;
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    transform 0.45s ease,
+    box-shadow 0.45s ease,
+    border-color 0.45s ease;
+}
+
+.ram-benefit-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(209,0,55,0),
+    rgba(209,0,55,0.03)
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.ram-benefit-card.active {
+  transform: translateY(-10px);
+  box-shadow: 0 22px 44px rgba(0,0,0,0.10);
+  border-color: rgba(209,0,55,0.16);
+}
+
+.ram-benefit-card.active::before {
+  opacity: 1;
+}
+
+/* Icon */
+
+.ram-benefit-icon {
+  width: 82px;
+  height: 82px;
+  border-radius: 22px;
+  background: rgba(209,0,55,0.06);
+  margin-bottom: 34px;
+  position: relative;
+}
+
+/* Meal */
+
+.ram-benefit-icon.meal::before,
+.ram-benefit-icon.meal::after {
+  content: '';
+  position: absolute;
+  background: #d10037;
+}
+
+.ram-benefit-icon.meal::before {
+  width: 5px;
+  height: 42px;
+  left: 28px;
+  top: 18px;
+}
+
+.ram-benefit-icon.meal::after {
+  width: 5px;
+  height: 42px;
+  right: 28px;
+  top: 18px;
+}
+
+/* luggage */
+
+.ram-benefit-icon.luggage::before {
+  content: '';
+  position: absolute;
+  left: 24px;
+  top: 28px;
+  width: 34px;
+  height: 26px;
+  border: 3px solid #d10037;
+  border-radius: 6px;
+}
+
+.ram-benefit-icon.luggage::after {
+  content: '';
+  position: absolute;
+  left: 33px;
+  top: 18px;
+  width: 16px;
+  height: 10px;
+  border: 3px solid #d10037;
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+}
+
+/* entertainment */
+
+.ram-benefit-icon.entertainment::before {
+  content: '▶';
+  position: absolute;
+  left: 30px;
+  top: 18px;
+  color: #d10037;
+  font-size: 30px;
+}
+
+/* legroom */
+
+.ram-benefit-icon.legroom::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  bottom: 18px;
+  width: 24px;
+  height: 18px;
+  border: 3px solid #d10037;
+  border-top: none;
+}
+
+.ram-benefit-icon.legroom::after {
+  content: '';
+  position: absolute;
+  right: 20px;
+  top: 18px;
+  width: 14px;
+  height: 34px;
+  background: #d10037;
+  border-radius: 4px;
+}
+
+/* Content */
+
+.ram-benefit-content h3 {
+  font-size: 28px;
+  line-height: 1.2;
+  margin-bottom: 18px;
+  color: #111;
+}
+
+.ram-benefit-content p {
+  color: #666;
+  font-size: 17px;
+  line-height: 1.7;
+  margin-bottom: 30px;
+}
+
+.ram-benefit-link {
+  border: none;
+  background: transparent;
+  color: #d10037;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+}
+
+.ram-benefit-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 0;
+  height: 2px;
+  background: #d10037;
+  transition: width 0.3s ease;
+}
+
+.ram-benefit-card:hover .ram-benefit-link::after {
+  width: 100%;
+}
+
+/* Responsive */
+
+@media (max-width: 1200px) {
+
+  .ram-benefits-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+
+  .ram-flying-benefits {
+    padding: 80px 20px;
+  }
+
+  .ram-benefits-header {
+    margin-bottom: 40px;
+  }
+
+  .ram-benefits-header h2 {
+    font-size: 42px;
+  }
+
+  .ram-benefits-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .ram-benefit-card {
+    min-height: auto;
+    padding: 32px 26px;
+  }
+
+  .ram-benefit-content h3 {
+    font-size: 24px;
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "definitions": [
+    {
+      "title": "Ram Offers Carousel",
+      "id": "ram-offers-carousel",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Ram Offers Carousel",
+              "model": "ram-offers-carousel"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "ram-offers-carousel",
+      "fields": []
+    }
+  ],
+  "filters": []
+}
