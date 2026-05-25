@@ -1,12 +1,22 @@
+const IMS_URL = 'https://ims-na1.adobelogin.com/ims/token/v3';
 
-export function getAuthHeader() {
-  const user = process.env.AEM_SERVICE_USER;
-  const pass = process.env.AEM_SERVICE_PASS;
-  
-  if (!user || !pass) {
-    throw new Error('[AUTH] Missing AEM_SERVICE_USER or AEM_SERVICE_PASS');
-  }
-  
-  const encoded = Buffer.from(`${user}:${pass}`).toString('base64');
-  return `Basic ${encoded}`;
+export async function getAccessToken() {
+  const params = new URLSearchParams({
+    grant_type: 'client_credentials',
+    client_id: process.env.AEM_CLIENT_ID,
+    client_secret: process.env.AEM_CLIENT_SECRET,
+    scope: 'AdobeID,openid,aem.folders,aem.fragments.management',
+  });
+
+  const res = await fetch(IMS_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params.toString(),
+  });
+
+  if (!res.ok) throw new Error(`IMS token failed (${res.status}): ${await res.text()}`);
+
+  const data = await res.json();
+  if (!data.access_token) throw new Error('No access_token in IMS response');
+  return data.access_token;
 }
