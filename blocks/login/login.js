@@ -1,6 +1,4 @@
-import { loadOffersOnPage, removeOffers } from './offers.js';
-
-// ── SESSION ────────────────────────────────────────────────
+// ── SESSION HELPERS ────────────────────────────────────────
 
 function getSession() {
   try {
@@ -11,143 +9,17 @@ function getSession() {
   }
 }
 
+function saveSession(username, attributes) {
+  localStorage.setItem('userSession', JSON.stringify({ username, attributes }));
+}
+
 function clearSession() {
   localStorage.removeItem('userSession');
 }
 
-// ── NAV UI ─────────────────────────────────────────────────
-
-function showLoggedInUI(username) {
-  const existing = document.getElementById('nav-user-wrapper');
-  if (existing) existing.remove();
-
-  const loginBtn = document.getElementById('nav-login-btn-trigger');
-  const navTools = loginBtn ? loginBtn.parentElement : document.querySelector('.nav-tools');
-  if (loginBtn) loginBtn.style.display = 'none';
-
-  const wrapper = document.createElement('div');
-  wrapper.id = 'nav-user-wrapper';
-  wrapper.style.cssText = 'display:flex;align-items:center;gap:10px;margin-left:12px;';
-
-  const text = document.createElement('span');
-  text.style.cssText = 'font-size:14px;font-family:sans-serif;';
-  text.textContent = `Logged in as ${username} `;
-
-  const logoutBtn = document.createElement('button');
-  logoutBtn.textContent = 'Logout';
-  logoutBtn.style.cssText = `
-    background:#e34850;color:white;border:none;
-    border-radius:20px;padding:6px 14px;cursor:pointer;font-size:14px;
-  `;
-  logoutBtn.addEventListener('click', handleLogout);
-
-  wrapper.appendChild(text);
-  wrapper.appendChild(logoutBtn);
-  if (navTools) navTools.appendChild(wrapper);
-}
-
-function showLoggedOutUI() {
-  const wrapper = document.getElementById('nav-user-wrapper');
-  if (wrapper) wrapper.remove();
-  const loginBtn = document.getElementById('nav-login-btn-trigger');
-  if (loginBtn) loginBtn.style.display = '';
-}
-
-function handleLogout() {
-  clearSession();
-  removeOffers();
-  showLoggedOutUI();
-}
-
-// ── REACTIVE SESSION SYNC ──────────────────────────────────
-
-let _refreshScheduled = false;
-function refreshUIFromSession() {
-  if (_refreshScheduled) return;
-  _refreshScheduled = true;
-  setTimeout(() => {
-    _refreshScheduled = false;
-    const session = getSession();
-    if (session) {
-      showLoggedInUI(session.username);
-      loadOffersOnPage(session.attributes);
-    } else {
-      removeOffers();
-      showLoggedOutUI();
-    }
-  }, 0);
-}
-
-let _lastKnownSession = localStorage.getItem('userSession');
-let _sessionSyncInitialized = false;
-
-function initializeSessionSync() {
-  if (_sessionSyncInitialized) return;
-  _sessionSyncInitialized = true;
-
-  window.addEventListener('storage', (e) => {
-    if (e.key === 'userSession') refreshUIFromSession();
-  });
-
-  const _originalSetItem = localStorage.setItem.bind(localStorage);
-  localStorage.setItem = function setItem(key, value) {
-    _originalSetItem(key, value);
-    if (key === 'userSession') {
-      _lastKnownSession = value;
-      refreshUIFromSession();
-    }
-  };
-
-  const _originalRemoveItem = localStorage.removeItem.bind(localStorage);
-  localStorage.removeItem = function removeItem(key) {
-    _originalRemoveItem(key);
-    if (key === 'userSession') {
-      _lastKnownSession = null;
-      refreshUIFromSession();
-    }
-  };
-
-  setInterval(() => {
-    const current = localStorage.getItem('userSession');
-    if (current !== _lastKnownSession) {
-      _lastKnownSession = current;
-      refreshUIFromSession();
-    }
-  }, 1000);
-}
-
-// Initialize session sync when module loads
-if (typeof window !== 'undefined') {
-  initializeSessionSync();
-}
-
-// ── SESSION RESTORATION ────────────────────────────────────
-
-let _sessionRestored = false;
-
-export function initializeLoginSession() {
-  if (_sessionRestored) return;
-  _sessionRestored = true;
-
-  // Restore session on page load
-  const session = getSession();
-  if (session) {
-    showLoggedInUI(session.username);
-    let attempts = 0;
-    const tryLoad = setInterval(() => {
-      attempts++;
-      const hasFragment = document.querySelector('[data-offer-base]');
-      if (hasFragment || attempts > 20) {
-        clearInterval(tryLoad);
-        loadOffersOnPage(session.attributes);
-      }
-    }, 100);
-  }
-}
-
 // ── LOGIN POPUP ────────────────────────────────────────────
 
-export function showLoginPopup() {
+function showLoginPopup() {
   const existing = document.getElementById('nav-login-overlay');
   if (existing) existing.remove();
 
@@ -189,7 +61,7 @@ export function showLoginPopup() {
   const doLogin = async () => {
     const username = popup.querySelector('#nl-username').value.trim();
     const password = popup.querySelector('#nl-password').value.trim();
-    const errorEl = popup.querySelector('#nl-error');
+    const errorEl  = popup.querySelector('#nl-error');
     errorEl.textContent = '';
 
     if (!username || !password) {
@@ -212,10 +84,18 @@ export function showLoginPopup() {
       );
 
       if (user) {
-        localStorage.setItem('userSession', JSON.stringify({
-          username: user.username,
-          attributes: user.attributes,
+        saveSession(user.username, user.attributes);
+
+        // tell header to update UI
+        window.dispatchEvent(new CustomEvent('user:login', {
+          detail: { username: user.username, attributes: user.attributes },
         }));
+
+        // tell offers block to load offers
+        window.dispatchEvent(new CustomEvent('user:login', {
+          detail: { username: user.username, attributes: user.attributes },
+        }));
+
         overlay.remove();
       } else {
         errorEl.textContent = 'Invalid username or password.';
@@ -237,19 +117,23 @@ export function showLoginPopup() {
 
 // ── MAIN DECORATE ──────────────────────────────────────────
 
-export default function decorate(block) {
-  block.innerHTML = '';
+export default function decorate() {
+  // listen for header telling us to open the popup
+  window.addEventListener('login:open', () => {
+    showLoginPopup();
+  });
 
-  const btn = document.createElement('button');
-  btn.id = 'nav-login-btn-trigger';
-  btn.textContent = block.dataset.label || 'Login';
-  btn.className = 'nav-login-btn';
+  // listen for logout event fired by header logout button
+  window.addEventListener('user:logout', () => {
+    clearSession();
+  });
 
-  block.appendChild(btn);
-
-  // Attach click handler
-  btn.addEventListener('click', showLoginPopup);
-
-  // Initialize session (will only run once)
-  initializeLoginSession();
+  // if already logged in on page load, fire login event
+  // so header and offers both restore their state
+  const session = getSession();
+  if (session) {
+    window.dispatchEvent(new CustomEvent('user:login', {
+      detail: { username: session.username, attributes: session.attributes },
+    }));
+  }
 }

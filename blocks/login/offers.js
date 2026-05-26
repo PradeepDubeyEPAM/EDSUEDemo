@@ -1,6 +1,6 @@
 import { addAIDescriptions } from '../cards/ai-descriptions.js';
 
-// ── OFFERS ─────────────────────────────────────────────────
+// ── LOAD A SINGLE OFFER BLOCK ──────────────────────────────
 
 async function loadSingleOffer({ container, offerPath, titleKey, lang }) {
   const [placeholderJson, offerHtml] = await Promise.all([
@@ -50,9 +50,11 @@ async function loadSingleOffer({ container, offerPath, titleKey, lang }) {
   }
 }
 
+// ── LOAD ALL OFFERS FOR USER ───────────────────────────────
+
 let _offersLoaded = false;
 
-export async function loadOffersOnPage(attributes = {}) {
+async function loadOffersOnPage(attributes = {}) {
   const path = window.location.pathname;
   if (path.includes('/nav') || path.includes('/footer')) return;
   if (_offersLoaded) return;
@@ -70,7 +72,7 @@ export async function loadOffersOnPage(attributes = {}) {
     if (!attributeValue) continue;
 
     const offerPath = `${base}/${attributeValue}`;
-    const titleKey = `offer-title-${attributeValue}`;
+    const titleKey  = `offer-title-${attributeValue}`;
 
     block.style.display = '';
     block.innerHTML = '<p style="font-family:sans-serif;padding:1rem;">Loading offers…</p>';
@@ -83,11 +85,25 @@ export async function loadOffersOnPage(attributes = {}) {
   }
 }
 
-export function removeOffers() {
+function removeOffers() {
   _offersLoaded = false;
   document.querySelectorAll('.offers-title').forEach((t) => t.remove());
   document.querySelectorAll('[data-offer-base]').forEach((block) => {
     block.style.display = 'none';
     block.innerHTML = '';
+  });
+}
+
+// ── MAIN DECORATE ──────────────────────────────────────────
+
+export default function decorate() {
+  // load offers when user logs in
+  window.addEventListener('user:login', (e) => {
+    loadOffersOnPage(e.detail.attributes);
+  });
+
+  // remove offers when user logs out
+  window.addEventListener('user:logout', () => {
+    removeOffers();
   });
 }
