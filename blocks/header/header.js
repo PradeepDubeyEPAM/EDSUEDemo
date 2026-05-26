@@ -1,10 +1,7 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
-import { showLoginPopup, initializeLoginSession } from '../login/login.js';
 
 const isDesktop = window.matchMedia('(min-width: 900px)');
-
-
 
 // ── NAV HELPERS ────────────────────────────────────────────
 
@@ -91,6 +88,57 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
   }
 }
 
+// ── SESSION ────────────────────────────────────────────────
+
+function getSession() {
+  try {
+    const d = localStorage.getItem('userSession');
+    return d ? JSON.parse(d) : null;
+  } catch {
+    return null;
+  }
+}
+
+// ── NAV UI ─────────────────────────────────────────────────
+
+function showLoggedInUI(username) {
+  const existing = document.getElementById('nav-user-wrapper');
+  if (existing) existing.remove();
+
+  const loginBtn = document.getElementById('nav-login-btn-trigger');
+  const navTools = loginBtn ? loginBtn.parentElement : document.querySelector('.nav-tools');
+  if (loginBtn) loginBtn.style.display = 'none';
+
+  const wrapper = document.createElement('div');
+  wrapper.id = 'nav-user-wrapper';
+  wrapper.style.cssText = 'display:flex;align-items:center;gap:10px;margin-left:12px;';
+
+  const text = document.createElement('span');
+  text.style.cssText = 'font-size:14px;font-family:sans-serif;';
+  text.textContent = `Logged in as ${username} `;
+
+  const logoutBtn = document.createElement('button');
+  logoutBtn.textContent = 'Logout';
+  logoutBtn.style.cssText = `
+    background:#e34850;color:white;border:none;
+    border-radius:20px;padding:6px 14px;cursor:pointer;font-size:14px;
+  `;
+  logoutBtn.addEventListener('click', () => {
+    window.dispatchEvent(new CustomEvent('user:logout'));
+  });
+
+  wrapper.appendChild(text);
+  wrapper.appendChild(logoutBtn);
+  if (navTools) navTools.appendChild(wrapper);
+}
+
+function showLoggedOutUI() {
+  const wrapper = document.getElementById('nav-user-wrapper');
+  if (wrapper) wrapper.remove();
+  const loginBtn = document.getElementById('nav-login-btn-trigger');
+  if (loginBtn) loginBtn.style.display = '';
+}
+
 // ── MAIN DECORATE ──────────────────────────────────────────
 
 export default async function decorate(block) {
@@ -154,9 +202,26 @@ export default async function decorate(block) {
   navWrapper.append(nav);
   block.append(navWrapper);
 
+  // open login popup when login button clicked
   const loginBtn = block.querySelector('#nav-login-btn-trigger');
-  if (loginBtn) loginBtn.addEventListener('click', showLoginPopup);
+  if (loginBtn) {
+    loginBtn.addEventListener('click', () => {
+      window.dispatchEvent(new CustomEvent('login:open'));
+    });
+  }
 
-  // Initialize login session (restore logged-in state if exists)
-  initializeLoginSession();
+  // listen for login/logout events fired by login block
+  window.addEventListener('user:login', (e) => {
+    showLoggedInUI(e.detail.username);
+  });
+
+  window.addEventListener('user:logout', () => {
+    showLoggedOutUI();
+  });
+
+  // restore UI if already logged in on page load
+  const session = getSession();
+  if (session) {
+    showLoggedInUI(session.username);
+  }
 }
