@@ -54,7 +54,7 @@ async function loadSingleOffer({ container, offerPath, titleKey, lang }) {
 
 let _offersLoaded = false;
 
-async function loadOffersOnPage(attributes = {}) {
+export async function loadOffersOnPage(attributes = {}) {
   const path = window.location.pathname;
   if (path.includes('/nav') || path.includes('/footer')) return;
   if (_offersLoaded) return;
@@ -85,7 +85,7 @@ async function loadOffersOnPage(attributes = {}) {
   }
 }
 
-function removeOffers() {
+export function removeOffers() {
   _offersLoaded = false;
   document.querySelectorAll('.offers-title').forEach((t) => t.remove());
   document.querySelectorAll('[data-offer-base]').forEach((block) => {
@@ -94,16 +94,3 @@ function removeOffers() {
   });
 }
 
-// ── MAIN DECORATE ──────────────────────────────────────────
-
-export default function decorate() {
-  // load offers when user logs in
-  window.addEventListener('user:login', (e) => {
-    loadOffersOnPage(e.detail.attributes);
-  });
-
-  // remove offers when user logs out
-  window.addEventListener('user:logout', () => {
-    removeOffers();
-  });
-}
