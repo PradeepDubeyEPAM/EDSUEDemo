@@ -79,36 +79,71 @@ function refreshUIFromSession() {
 }
 
 let _lastKnownSession = localStorage.getItem('userSession');
+let _sessionSyncInitialized = false;
 
-window.addEventListener('storage', (e) => {
-  if (e.key === 'userSession') refreshUIFromSession();
-});
+function initializeSessionSync() {
+  if (_sessionSyncInitialized) return;
+  _sessionSyncInitialized = true;
 
-const _originalSetItem = localStorage.setItem.bind(localStorage);
-localStorage.setItem = function setItem(key, value) {
-  _originalSetItem(key, value);
-  if (key === 'userSession') {
-    _lastKnownSession = value;
-    refreshUIFromSession();
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'userSession') refreshUIFromSession();
+  });
+
+  const _originalSetItem = localStorage.setItem.bind(localStorage);
+  localStorage.setItem = function setItem(key, value) {
+    _originalSetItem(key, value);
+    if (key === 'userSession') {
+      _lastKnownSession = value;
+      refreshUIFromSession();
+    }
+  };
+
+  const _originalRemoveItem = localStorage.removeItem.bind(localStorage);
+  localStorage.removeItem = function removeItem(key) {
+    _originalRemoveItem(key);
+    if (key === 'userSession') {
+      _lastKnownSession = null;
+      refreshUIFromSession();
+    }
+  };
+
+  setInterval(() => {
+    const current = localStorage.getItem('userSession');
+    if (current !== _lastKnownSession) {
+      _lastKnownSession = current;
+      refreshUIFromSession();
+    }
+  }, 1000);
+}
+
+// Initialize session sync when module loads
+if (typeof window !== 'undefined') {
+  initializeSessionSync();
+}
+
+// ── SESSION RESTORATION ────────────────────────────────────
+
+let _sessionRestored = false;
+
+export function initializeLoginSession() {
+  if (_sessionRestored) return;
+  _sessionRestored = true;
+
+  // Restore session on page load
+  const session = getSession();
+  if (session) {
+    showLoggedInUI(session.username);
+    let attempts = 0;
+    const tryLoad = setInterval(() => {
+      attempts++;
+      const hasFragment = document.querySelector('[data-offer-base]');
+      if (hasFragment || attempts > 20) {
+        clearInterval(tryLoad);
+        loadOffersOnPage(session.attributes);
+      }
+    }, 100);
   }
-};
-
-const _originalRemoveItem = localStorage.removeItem.bind(localStorage);
-localStorage.removeItem = function removeItem(key) {
-  _originalRemoveItem(key);
-  if (key === 'userSession') {
-    _lastKnownSession = null;
-    refreshUIFromSession();
-  }
-};
-
-setInterval(() => {
-  const current = localStorage.getItem('userSession');
-  if (current !== _lastKnownSession) {
-    _lastKnownSession = current;
-    refreshUIFromSession();
-  }
-}, 1000);
+}
 
 // ── LOGIN POPUP ────────────────────────────────────────────
 
@@ -215,18 +250,6 @@ export default function decorate(block) {
   // Attach click handler
   btn.addEventListener('click', showLoginPopup);
 
-  // Restore session on page load
-  const session = getSession();
-  if (session) {
-    showLoggedInUI(session.username);
-    let attempts = 0;
-    const tryLoad = setInterval(() => {
-      attempts++;
-      const hasFragment = document.querySelector('[data-offer-base]');
-      if (hasFragment || attempts > 20) {
-        clearInterval(tryLoad);
-        loadOffersOnPage(session.attributes);
-      }
-    }, 100);
-  }
+  // Initialize session (will only run once)
+  initializeLoginSession();
 }

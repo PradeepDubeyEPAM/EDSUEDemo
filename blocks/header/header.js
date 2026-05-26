@@ -1,6 +1,6 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
-import { showLoginPopup } from '../login/login.js';
+import { showLoginPopup, initializeLoginSession } from '../login/login.js';
 
 const isDesktop = window.matchMedia('(min-width: 900px)');
 
@@ -156,4 +156,7 @@ export default async function decorate(block) {
 
   const loginBtn = block.querySelector('#nav-login-btn-trigger');
   if (loginBtn) loginBtn.addEventListener('click', showLoginPopup);
+
+  // Initialize login session (restore logged-in state if exists)
+  initializeLoginSession();
 }
