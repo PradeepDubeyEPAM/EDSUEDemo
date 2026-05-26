@@ -7,7 +7,9 @@ function parseFields(block) {
   const modelOrder = ['image', 'imageAlt', 'headingText', 'description'];
 
   rows.forEach((row, index) => {
-    const attributedCell = row.querySelector('[data-aue-prop], [data-richtext-prop]');
+    const attributedCell = row.matches('[data-aue-prop], [data-richtext-prop]')
+      ? row
+      : row.querySelector('[data-aue-prop], [data-richtext-prop]');
     if (attributedCell) {
       const prop = attributedCell.getAttribute('data-aue-prop')
         || attributedCell.getAttribute('data-richtext-prop');
@@ -40,9 +42,16 @@ function buildHeroBackground(fields) {
     return background;
   }
 
-  const picture = fields.image.querySelector('picture');
-  const existingImg = fields.image.querySelector('img');
-  const linkedImageUrl = fields.image.querySelector('a')?.href
+  const picture = fields.image.matches('picture')
+    ? fields.image
+    : fields.image.querySelector('picture');
+  const existingImg = fields.image.matches('img')
+    ? fields.image
+    : fields.image.querySelector('img');
+  const imageLink = fields.image.matches('a')
+    ? fields.image
+    : fields.image.querySelector('a');
+  const linkedImageUrl = imageLink?.href
     || fields.image.textContent.trim();
   const altText = fields.imageAlt?.textContent?.trim()
     || existingImg?.alt
