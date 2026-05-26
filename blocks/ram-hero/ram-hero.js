@@ -1,35 +1,104 @@
+import { createOptimizedPicture } from '../../scripts/aem.js';
+import { moveInstrumentation } from '../../scripts/scripts.js';
+
+function parseFields(block) {
+  const fields = {};
+  const rows = [...block.children];
+  const modelOrder = ['image', 'imageAlt', 'headingText', 'description'];
+
+  rows.forEach((row, index) => {
+    const attributedCell = row.querySelector('[data-aue-prop], [data-richtext-prop]');
+    if (attributedCell) {
+      const prop = attributedCell.getAttribute('data-aue-prop')
+        || attributedCell.getAttribute('data-richtext-prop');
+      if (prop) fields[prop] = attributedCell;
+      return;
+    }
+
+    const [keyCell, valueCell] = [...row.children];
+    const key = keyCell?.textContent?.trim();
+    if (key && valueCell && modelOrder.includes(key)) {
+      fields[key] = valueCell;
+      return;
+    }
+
+    const fallbackProp = modelOrder[index];
+    const fallbackCell = row.firstElementChild || row;
+    if (fallbackProp && fallbackCell && !fields[fallbackProp]) {
+      fields[fallbackProp] = fallbackCell;
+    }
+  });
+
+  return fields;
+}
+
+function buildHeroBackground(fields) {
+  const background = document.createElement('div');
+  background.className = 'hero-background';
+
+  if (!fields.image) {
+    return background;
+  }
+
+  const picture = fields.image.querySelector('picture');
+  const existingImg = fields.image.querySelector('img');
+  const linkedImageUrl = fields.image.querySelector('a')?.href
+    || fields.image.textContent.trim();
+  const altText = fields.imageAlt?.textContent?.trim()
+    || existingImg?.alt
+    || fields.headingText?.textContent?.trim()
+    || '';
+
+  if (picture) {
+    const img = picture.querySelector('img');
+    if (img) img.alt = altText;
+    moveInstrumentation(fields.image, picture);
+    background.append(picture);
+    return background;
+  }
+
+  if (existingImg) {
+    const optimized = createOptimizedPicture(
+      existingImg.src,
+      altText,
+      false,
+      [{ width: '2000' }],
+    );
+    moveInstrumentation(fields.image, optimized);
+    background.append(optimized);
+    return background;
+  }
+
+  if (linkedImageUrl) {
+    const optimized = createOptimizedPicture(
+      linkedImageUrl,
+      altText,
+      false,
+      [{ width: '2000' }],
+    );
+    moveInstrumentation(fields.image, optimized);
+    background.append(optimized);
+  }
+
+  return background;
+}
+
 export default function decorate(block) {
+  const fields = parseFields(block);
+  const headingText = fields.headingText?.textContent?.trim() || 'Explore the World';
+  const descriptionHtml = fields.description?.innerHTML?.trim();
 
   block.innerHTML = `
     <section class="ram-hero">
-
-      <!-- Background -->
-      <div class="hero-background">
-        <img
-          src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2000"
-          alt="Airplane"
-        />
-      </div>
-
-      <!-- Overlay -->
       <div class="hero-overlay"></div>
 
-      <!-- Hero Content -->
       <div class="hero-content">
-
         <div class="hero-text">
           <p class="eyebrow">Royal Air Maroc</p>
 
-          <h1>
-            Explore the World
-            <br />
-            with Comfort
-          </h1>
+          <h1></h1>
 
-          <p class="hero-description">
-            Discover exclusive fares and premium travel experiences
-            across Europe, Africa, and North America.
-          </p>
+          <div class="hero-description"></div>
 
           <div class="hero-actions">
             <button class="primary-btn">Book Now</button>
@@ -37,7 +106,6 @@ export default function decorate(block) {
           </div>
         </div>
 
-        <!-- Booking Widget -->
         <div class="booking-widget">
 
           <div class="booking-tabs">
@@ -155,20 +223,33 @@ export default function decorate(block) {
           </div>
 
         </div>
-
       </div>
-
     </section>
   `;
+
+  const section = block.querySelector('.ram-hero');
+  section.prepend(buildHeroBackground(fields));
+
+  const heading = block.querySelector('.hero-text h1');
+  heading.textContent = headingText;
+  if (fields.headingText) {
+    moveInstrumentation(fields.headingText, heading);
+  }
+
+  const description = block.querySelector('.hero-description');
+  if (descriptionHtml) {
+    description.innerHTML = descriptionHtml;
+    moveInstrumentation(fields.description, description);
+  } else {
+    description.textContent = 'Discover exclusive fares and premium travel experiences across Europe, Africa, and North America.';
+  }
 
   // Tabs Logic
   const tabs = block.querySelectorAll('.tab');
   const panels = block.querySelectorAll('.tab-panel');
 
   tabs.forEach((tab) => {
-
     tab.addEventListener('click', () => {
-
       const target = tab.dataset.tab;
 
       tabs.forEach((t) => t.classList.remove('active'));
@@ -188,9 +269,7 @@ export default function decorate(block) {
   const searchButtons = block.querySelectorAll('.search-flight-btn');
 
   searchButtons.forEach((button) => {
-
     button.addEventListener('click', () => {
-
       button.classList.add('loading');
 
       const original = button.innerText;
