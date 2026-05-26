@@ -43,7 +43,7 @@ async function updateCF(fragment, aiDescription, token) {
       'If-Match': fragment.etag,
     },
     body: JSON.stringify({
-      title: fragment.title,   // ← this was missing
+      title: fragment.title,   
       fields: updatedFields,
     }),
   });
@@ -51,7 +51,7 @@ async function updateCF(fragment, aiDescription, token) {
   if (!res.ok) console.error(`[ERROR] PUT failed (${res.status}):`, await res.text());
   return res.ok;
 }
-async function generateDescription(productTitle, hint) {
+async function generateDescription(productTitle) {
   const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: { Authorization: `Bearer ${GROQ_API_KEY}`, 'Content-Type': 'application/json' },
@@ -61,17 +61,13 @@ async function generateDescription(productTitle, hint) {
       max_tokens: 120,
       messages: [
         { role: 'system', content: 'Write a short premium retail product description in 2 sentences. No markdown. Plain text only.' },
-        { role: 'user',   content: `Product: ${productTitle}\nHint: ${hint}` },
+        { role: 'user',   content: `Product: ${productTitle}` },
       ],
     }),
   });
   if (!res.ok) { console.error(`[ERROR] Groq (${res.status})`); return null; }
   const data = await res.json();
   return data?.choices?.[0]?.message?.content?.trim() || null;
-}
-
-function stripHtml(html = '') {
-  return html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
 }
 
 async function main() {
@@ -112,8 +108,8 @@ async function main() {
       skipped++; continue;
     }
 
-    const hint = stripHtml(getVal('defaultDescription') || '') || productTitle;
-    const generated_desc = await generateDescription(productTitle, hint);
+   
+    const generated_desc = await generateDescription(productTitle);
     if (!generated_desc) { failed++; continue; }
 
     const ok = await updateCF(fragment, generated_desc, token);
