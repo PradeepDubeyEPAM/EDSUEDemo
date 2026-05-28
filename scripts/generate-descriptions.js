@@ -14,7 +14,7 @@ function headers(token) {
   };
 }
 
-// GET fragment — returns the full fragment object including fields[]
+// GET fragment — returns the full fragment object including fields
 async function getCF(productId, token) {
   const path = `${CF_BASE}/${productId}`;
   const res = await fetch(
@@ -26,7 +26,7 @@ async function getCF(productId, token) {
   return data?.items?.[0] || null;
 }
 
-// PATCH fragment — update only aiDescription + verified fields
+
 async function updateCF(fragment, aiDescription, token) {
   const url = `${AEM_HOST}/adobe/sites/cf/fragments/${fragment.id}`;
 
