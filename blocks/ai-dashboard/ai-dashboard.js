@@ -1,75 +1,139 @@
-const WORKER_URL = 'https://gemini-proxy.jayabhishikthapuredla.workers.dev/stats';
+const CATALOG_URL = 'https://main--edsuedemo--pradeepdubeyepam.aem.live/product-catalog.json';
+const AEM_HOST = 'https://author-p24103-e71623.adobeaemcloud.com';
+
+async function getProductIds() {
+  const res = await fetch(CATALOG_URL);
+  if (!res.ok) throw new Error(`Catalog fetch failed: ${res.status}`);
+  const data = await res.json();
+  return data.data.map(r => r.productId);
+}
+
+async function fetchStats() {
+  const productIds = await getProductIds();
+
+  const products = await Promise.all(
+    productIds.map(async (productId) => {
+      const path = encodeURIComponent(`/content/dam/edsuedemo/descriptions/${productId}`);
+      const res = await fetch(`${AEM_HOST}/adobe/sites/cf/fragments?path=${path}`, { credentials: 'include' });
+      if (!res.ok) return { productId, verified: false, aiDescription: '', lastModified: null };
+
+      const data = await res.json();
+      const fragment = data?.items?.[0];
+      if (!fragment) return { productId, verified: false, aiDescription: '', lastModified: null };
+
+      const getVal = (name) => fragment.fields?.find(f => f.name === name)?.values?.[0];
+      const rawVerified = getVal('verified');
+      return {
+        productId,
+        verified: rawVerified === true || rawVerified === 'true',
+        aiDescription: getVal('aiDescription') || '',
+        lastModified: fragment.modified?.at
+          ? new Date(fragment.modified.at).toLocaleDateString('en-IN')
+          : null,
+      };
+    })
+  );
+
+  return {
+    total: products.length,
+    verified: products.filter(p => p.verified).length,
+    pending: products.filter(p => !p.verified).length,
+    products,
+  };
+}
+
+function renderRows() {
+  const tbody = document.getElementById('dash-tbody');
+  if (!tbody) return;
+
+  const filtered = window.__dashProducts.filter(p => {
+    if (window.__dashFilter === 'verified') return p.verified;
+    if (window.__dashFilter === 'pending') return !p.verified;
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="4" style="padding:24px;text-align:center;color:#aaa;">No products found.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(p => `
+    <tr>
+      <td><span class="product-id">${p.productId}</span></td>
+      <td>
+        ${p.verified
+          ? '<span class="badge badge-verified">Verified</span>'
+          : '<span class="badge badge-pending">Pending</span>'}
+      </td>
+      <td class="description-cell">
+        ${p.aiDescription
+          ? `<span class="description-text">${p.aiDescription}</span>`
+          : '<span class="no-description">Not generated yet</span>'}
+      </td>
+      <td><span class="modified-date">${p.lastModified || '—'}</span></td>
+    </tr>
+  `).join('');
+}
+
+window.dashSetFilter = function (filter) {
+  window.__dashFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.filter === filter);
+  });
+  renderRows();
+};
 
 export default async function decorate(block) {
-  block.innerHTML = '<p>Loading dashboard...</p>';
+  block.classList.add('ai-dashboard');
+  block.innerHTML = '<p class="dashboard-loading">Loading dashboard...</p>';
 
   let stats;
   try {
-    const res = await fetch(WORKER_URL, { method: 'GET' });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    stats = await res.json();
+    stats = await fetchStats();
   } catch (e) {
-    block.innerHTML = '<p style="color:red;">Failed to load dashboard. Please try again later.</p>';
-    console.error('[Dashboard] Fetch error:', e);
+    block.innerHTML = '<p class="dashboard-error">Failed to load dashboard. Please try again later.</p>';
+    console.error('[Dashboard]', e);
     return;
   }
 
   const now = new Date().toLocaleTimeString('en-IN');
 
   block.innerHTML = `
-    <div style="font-family:sans-serif;padding:2rem;max-width:900px;margin:0 auto;">
+    <div class="dashboard-wrapper">
 
-      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:2rem;">
-        <h2 style="color:#0D3B8C;margin:0;">AI Descriptions Dashboard</h2>
-        <span style="font-size:12px;color:#aaa;">Last refreshed: ${now}</span>
+      <div class="dashboard-header">
+        <h2>AI Descriptions Dashboard</h2>
+        <span class="dashboard-updated">Last refreshed: ${now}</span>
       </div>
 
-      <!-- Stat cards -->
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem;">
-        <div style="background:#f0f4ff;border-radius:12px;padding:1.5rem;text-align:center;">
-          <div style="font-size:2.5rem;font-weight:700;color:#0D3B8C;">${stats.total}</div>
-          <div style="font-size:14px;color:#555;margin-top:4px;">Total Products</div>
+      <div class="dashboard-stats">
+        <div class="stat-card stat-total">
+          <div class="stat-number">${stats.total}</div>
+          <div class="stat-label">Total Products</div>
         </div>
-        <div style="background:#f0fff4;border-radius:12px;padding:1.5rem;text-align:center;">
-          <div style="font-size:2.5rem;font-weight:700;color:#1a7f4b;">${stats.verified}</div>
-          <div style="font-size:14px;color:#555;margin-top:4px;">Verified </div>
+        <div class="stat-card stat-verified">
+          <div class="stat-number">${stats.verified}</div>
+          <div class="stat-label">Verified</div>
         </div>
-        <div style="background:#fff8f0;border-radius:12px;padding:1.5rem;text-align:center;">
-          <div style="font-size:2.5rem;font-weight:700;color:#e07b00;">${stats.pending}</div>
-          <div style="font-size:14px;color:#555;margin-top:4px;">Pending Review </div>
+        <div class="stat-card stat-pending">
+          <div class="stat-number">${stats.pending}</div>
+          <div class="stat-label">Pending Review</div>
         </div>
       </div>
 
-      <!-- Filter buttons -->
-      <div style="display:flex;gap:8px;margin-bottom:1rem;">
-        <button
-          id="dash-btn-all"
-          onclick="dashSetFilter('all')"
-          style="padding:6px 16px;border-radius:20px;border:1.5px solid #0D3B8C;background:#0D3B8C;color:white;font-size:13px;cursor:pointer;font-weight:600;">
-          All (${stats.total})
-        </button>
-        <button
-          id="dash-btn-verified"
-          onclick="dashSetFilter('verified')"
-          style="padding:6px 16px;border-radius:20px;border:1.5px solid #ccc;background:white;color:#555;font-size:13px;cursor:pointer;">
-           Verified (${stats.verified})
-        </button>
-        <button
-          id="dash-btn-pending"
-          onclick="dashSetFilter('pending')"
-          style="padding:6px 16px;border-radius:20px;border:1.5px solid #ccc;background:white;color:#555;font-size:13px;cursor:pointer;">
-           Pending (${stats.pending})
-        </button>
+      <div class="dashboard-filters">
+        <button class="filter-btn active" data-filter="all" onclick="dashSetFilter('all')">All (${stats.total})</button>
+        <button class="filter-btn" data-filter="verified" onclick="dashSetFilter('verified')">Verified (${stats.verified})</button>
+        <button class="filter-btn" data-filter="pending" onclick="dashSetFilter('pending')">Pending (${stats.pending})</button>
       </div>
 
-      <!-- Table -->
-      <table style="width:100%;border-collapse:collapse;font-size:14px;">
+      <table class="dashboard-table">
         <thead>
-          <tr style="background:#0D3B8C;color:white;">
-            <th style="padding:10px 12px;text-align:left;border-radius:8px 0 0 0;">Product ID</th>
-            <th style="padding:10px 12px;text-align:left;">Status</th>
-            <th style="padding:10px 12px;text-align:left;">AI Description</th>
-            <th style="padding:10px 12px;text-align:left;border-radius:0 8px 0 0;">Last Modified</th>
+          <tr>
+            <th>Product ID</th>
+            <th>Status</th>
+            <th>AI Description</th>
+            <th>Last Modified</th>
           </tr>
         </thead>
         <tbody id="dash-tbody"></tbody>
@@ -78,66 +142,7 @@ export default async function decorate(block) {
     </div>
   `;
 
-  // Store products on window so the inline onclick handler can reach them
   window.__dashProducts = stats.products;
   window.__dashFilter = 'all';
-
-  window.dashSetFilter = function (filter) {
-    window.__dashFilter = filter;
-
-    // Update button styles
-    const buttons = {
-      all:      document.getElementById('dash-btn-all'),
-      verified: document.getElementById('dash-btn-verified'),
-      pending:  document.getElementById('dash-btn-pending'),
-    };
-    Object.entries(buttons).forEach(([key, btn]) => {
-      if (!btn) return;
-      const active = key === filter;
-      btn.style.background = active ? '#0D3B8C' : 'white';
-      btn.style.color = active ? 'white' : '#555';
-      btn.style.borderColor = active ? '#0D3B8C' : '#ccc';
-      btn.style.fontWeight = active ? '600' : '400';
-    });
-
-    renderRows();
-  };
-
-  function renderRows() {
-    const tbody = document.getElementById('dash-tbody');
-    if (!tbody) return;
-
-    const filtered = window.__dashProducts.filter(p => {
-      if (window.__dashFilter === 'verified') return p.verified;
-      if (window.__dashFilter === 'pending')  return !p.verified;
-      return true;
-    });
-
-    if (filtered.length === 0) {
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="4" style="padding:24px;text-align:center;color:#aaa;">
-            No products found.
-          </td>
-        </tr>`;
-      return;
-    }
-
-    tbody.innerHTML = filtered.map((p, i) => `
-      <tr style="background:${i % 2 === 0 ? '#f9f9f9' : 'white'};">
-        <td style="padding:10px 12px;font-weight:500;">${p.productId}</td>
-        <td style="padding:10px 12px;">
-          ${p.verified
-            ? '<span style="color:#1a7f4b;font-weight:600;"> Verified</span>'
-            : '<span style="color:#e07b00;font-weight:600;"> Pending</span>'}
-        </td>
-        <td style="padding:10px 12px;color:#555;max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-          ${p.aiDescription || '<em style="color:#aaa;">Not generated yet</em>'}
-        </td>
-        <td style="padding:10px 12px;color:#888;">${p.lastModified || '—'}</td>
-      </tr>
-    `).join('');
-  }
-
   renderRows();
 }
