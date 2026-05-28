@@ -31,9 +31,7 @@ export default function decorate(block) {
   block.innerHTML = `
     <div class="ram-shortcuts">
 
-      <button class="ram-shortcut-nav prev" aria-label="Scroll left">
-        <span class="chevron"></span>
-      </button>
+      <img src="/icons/ram-chevron.svg" class="ram-shortcut-nav prev" alt="Scroll left" />
 
       <div class="ram-shortcuts-wrapper">
 
@@ -55,9 +53,7 @@ export default function decorate(block) {
 
       </div>
 
-      <button class="ram-shortcut-nav next" aria-label="Scroll right">
-        <span class="chevron"></span>
-      </button>
+      <img src="/icons/ram-chevron.svg" class="ram-shortcut-nav next" alt="Scroll right" />
 
     </div>
   `;
@@ -65,19 +61,6 @@ export default function decorate(block) {
   const wrapper = block.querySelector('.ram-shortcuts-wrapper');
   const prev = block.querySelector('.ram-shortcut-nav.prev');
   const next = block.querySelector('.ram-shortcut-nav.next');
-
-  const updateButtons = () => {
-
-    prev.classList.toggle(
-      'disabled',
-      wrapper.scrollLeft <= 0
-    );
-
-    next.classList.toggle(
-      'disabled',
-      wrapper.scrollLeft + wrapper.clientWidth >= wrapper.scrollWidth - 1
-    );
-  };
 
   prev.addEventListener('click', () => {
 
@@ -94,10 +77,4 @@ export default function decorate(block) {
       behavior: 'smooth'
     });
   });
-
-  wrapper.addEventListener('scroll', updateButtons);
-
-  window.addEventListener('resize', updateButtons);
-
-  updateButtons();
 }

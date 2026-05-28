@@ -1,108 +1,74 @@
 export default function decorate(block) {
-
   block.innerHTML = `
     <section class="ram-download-app">
-
-      <!-- Background Pattern -->
-      <div class="ram-download-pattern"></div>
-
-      <!-- Moving Hashtags -->
-      <div class="ram-hashtag-strip">
-
-        <div class="ram-hashtag-track">
-
-          <span>#DreamAfrica</span>
-          <span>#MeetMorocco</span>
-
-        </div>
-
-      </div>
-
-      <div class="ram-download-wrapper">
-
-        <!-- LEFT CONTENT -->
-        <div class="ram-download-content">
-
-          <p class="ram-download-eyebrow">
-            Mobile App
-          </p>
-
-          <h2>
-            Download
-            <br />
-            our app
-          </h2>
-
-          <p class="ram-download-description">
-            Book flights, manage your trips,
-            check in online and stay updated
-            with Royal Air Maroc wherever you are.
-          </p>
-
-          <!-- Store Buttons -->
-          <div class="ram-store-buttons">
-
-            <a
-              href="#"
-              class="ram-store-btn"
-              aria-label="Download on the App Store"
-            >
-              <img
-                src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
-                alt="Download on the App Store"
-              />
-            </a>
-
-            <a
-              href="#"
-              class="ram-store-btn"
-              aria-label="Get it on Google Play"
-            >
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
-                alt="Get it on Google Play"
-              />
-            </a>
-
-          </div>
-
-        </div>
-
-        <!-- RIGHT VISUAL -->
-        <div class="ram-download-visual">
-
-          <div class="ram-phone-wrapper">
-
-            <img
-              class="ram-phone-image"
-              src="https://www.royalairmaroc.com/documents/20127/3178766/mockup-app.png"
-              alt="Royal Air Maroc App"
-            />
-
-          </div>
-
-          <!-- QR CARD -->
-          <div class="ram-qr-card">
-
-            <img
-              src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https://www.royalairmaroc.com"
-              alt="QR Code"
-            />
-
-            <p>
-              Scan to download
+      <div class="ram-download-shell">
+        <div class="ram-download-card">
+          <div class="ram-download-content">
+            <h2><span>Download our app</h2></span>
+            <p class="ram-download-description">
+              Unlock a world of convenience with our app! Whether you're
+              looking for personalized offers, quick customer support, or a
+              flawless user experience. Don't miss out!
             </p>
-
+            <div class="ram-store-buttons">
+              <a
+                href="https://apps.apple.com/fr/app/royal-air-maroc/id1302059210"
+                class="ram-store-btn"
+                aria-label="Download on the App Store"
+              >
+                <img
+                  src="https://www.royalairmaroc.com/documents/41472/41474/139574/0eeafef0-2afd-56ce-9fee-76074189a024?t=1760686195594"
+                  alt="Download on the App Store"
+                />
+              </a>
+              <a
+                href="https://play.google.com/store/apps/details?id=com.royalairmaroc.app&hl=fr&pli=1"
+                class="ram-store-btn"
+                aria-label="Get it on Google Play"
+              >
+                <img
+                  src="https://www.royalairmaroc.com/documents/41472/41474/139575/fb702137-ba53-5101-e1d9-102b20352412?t=1760686195658"
+                  alt="Get it on Google Play"
+                />
+              </a>
+            </div>
           </div>
 
+          <div class="ram-download-qr">
+            <img
+              class="ram-qr-image"
+              src="https://www.royalairmaroc.com/documents/41472/61892/139760/4345c368-4072-93a6-d9ae-a138d99b0a4a?t=1760686197720"
+              alt="Scan to download the Royal Air Maroc app"
+            />
+          </div>
+
+          <div class="ram-download-visual">
+            <div class="ram-phone-wrapper">
+              <img
+                class="ram-phone-image"
+                src="https://www.royalairmaroc.com/documents/41472/61892/139770/00a98c07-1681-2309-4f52-6afd1525b275?t=1760686198334"
+                alt="Royal Air Maroc App"
+              />
+            </div>
+          </div>
         </div>
 
+        <div class="ram-download-band" aria-hidden="true">
+          <div class="ram-download-band-pattern"></div>
+          <div class="ram-download-band-text">
+            <span>#DREAMAFRICA</span>
+            <span>#MEETMOROCCO</span>
+          </div>
+        </div>
       </div>
-
     </section>
   `;
 
   const phone = block.querySelector('.ram-phone-wrapper');
+
+  if (!phone) {
+    return;
+  }
 
   phone.addEventListener('mouseenter', () => {
     phone.classList.add('hovered');

@@ -85,22 +85,76 @@ export default function decorate(block) {
   const prev = block.querySelector('.ram-nav.prev');
   const next = block.querySelector('.ram-nav.next');
 
-  const slideWidth = 460;
+  const getStep = () => {
+    const firstSlide = block.querySelector('.ram-slide');
+    const track = block.querySelector('.ram-carousel-track');
+    if (!firstSlide) return 460;
+    const slideRect = firstSlide.getBoundingClientRect();
+    const gap = track ? parseFloat(window.getComputedStyle(track).gap || '0') : 0;
+    return Math.round(slideRect.width + gap);
+  };
+
+  const hasOverflow = () => wrapper.scrollWidth > wrapper.clientWidth + 2;
+
+  const moveNext = (smooth = true) => {
+    if (!hasOverflow()) return;
+
+    const step = getStep();
+    const maxScroll = wrapper.scrollWidth - wrapper.clientWidth;
+    const atEnd = wrapper.scrollLeft + step >= maxScroll - 2;
+
+    if (atEnd) {
+      if (smooth) {
+        wrapper.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        wrapper.scrollLeft = 0;
+      }
+      return;
+    }
+
+    if (smooth) {
+      wrapper.scrollBy({ left: step, behavior: 'smooth' });
+    } else {
+      wrapper.scrollLeft += step;
+    }
+  };
+
+  const shouldAutoRotate = () => window.innerWidth < 1321;
+
+  let autoTimer = null;
+
+  const stopAutoRotate = () => {
+    if (autoTimer) {
+      window.clearInterval(autoTimer);
+      autoTimer = null;
+    }
+  };
+
+  const startAutoRotate = () => {
+    stopAutoRotate();
+
+    if (!shouldAutoRotate() || !hasOverflow()) return;
+
+    autoTimer = window.setInterval(() => {
+      moveNext(false);
+    }, 2000);
+  };
 
   prev.addEventListener('click', () => {
 
     wrapper.scrollBy({
-      left: -slideWidth,
+      left: -getStep(),
       behavior: 'smooth'
     });
+
+    startAutoRotate();
   });
 
   next.addEventListener('click', () => {
 
-    wrapper.scrollBy({
-      left: slideWidth,
-      behavior: 'smooth'
-    });
+    moveNext();
+
+    startAutoRotate();
   });
 
   const slidesEl = block.querySelectorAll('.ram-slide');
@@ -115,4 +169,21 @@ export default function decorate(block) {
       slide.classList.remove('hovered');
     });
   });
+
+  wrapper.addEventListener('mouseenter', stopAutoRotate);
+  wrapper.addEventListener('mouseleave', startAutoRotate);
+  wrapper.addEventListener('focusin', stopAutoRotate);
+  wrapper.addEventListener('focusout', startAutoRotate);
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      stopAutoRotate();
+    } else {
+      startAutoRotate();
+    }
+  });
+
+  window.addEventListener('resize', startAutoRotate);
+
+  startAutoRotate();
 }

@@ -323,3 +323,83 @@
     height: 58px;
   }
 }
+
+/* =========================================
+   INT-EN HOMEPAGE OVERRIDES
+========================================= */
+
+.ram-homepage-page .section.ram-homepage-page-content.ram-news-letter-container {
+  max-width: none;
+  width: 100%;
+}
+
+.ram-homepage-page .ram-newsletter {
+  padding: 64px 0;
+}
+
+.ram-homepage-page .ram-newsletter-wrapper {
+  max-width: 1240px;
+  gap: 56px;
+}
+
+.ram-homepage-page .ram-newsletter-content {
+  width: min(420px, 100%);
+}
+
+.ram-homepage-page .ram-newsletter-content h2 {
+  margin-bottom: 16px;
+  font-size: 32px;
+  line-height: 40px;
+  letter-spacing: 0;
+  font-weight: 300;
+}
+
+.ram-homepage-page .ram-newsletter-description {
+  margin-bottom: 24px;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.ram-homepage-page .ram-newsletter-input-wrapper input {
+  height: 48px;
+  border-radius: 4px;
+}
+
+.ram-homepage-page .ram-newsletter-form button {
+  height: 48px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+@media (max-width: 992px) {
+  .ram-homepage-page .ram-newsletter {
+    padding: 48px 0 56px;
+  }
+
+  .ram-homepage-page .ram-newsletter-wrapper {
+    max-width: 351px;
+    gap: 24px;
+  }
+
+  .ram-homepage-page .ram-newsletter-content {
+    width: 100%;
+  }
+
+  .ram-homepage-page .ram-newsletter-content h2 {
+    margin-bottom: 12px;
+    font-size: 24px;
+    line-height: 32px;
+  }
+
+  .ram-homepage-page .ram-newsletter-description {
+    margin-bottom: 16px;
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  .ram-homepage-page .ram-newsletter-input-wrapper input,
+  .ram-homepage-page .ram-newsletter-form button {
+    height: 44px;
+  }
+}

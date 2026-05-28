@@ -1,27 +1,11 @@
 export default function decorate(block) {
 
-  const offers = [
-    {
-      city: 'Paris',
-      price: '279',
-      currency: 'EUR',
-      image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=1400'
-    },
-
-    {
-      city: 'Dubai',
-      price: '399',
-      currency: 'EUR',
-      image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=1400'
-    },
-
-    {
-      city: 'Marrakech',
-      price: '199',
-      currency: 'EUR',
-      image: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?q=80&w=1400'
-    }
-  ];
+  const offer = {
+    city: 'Paris',
+    price: '280',
+    currency: 'EUR',
+    image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=1400'
+  };
 
   block.innerHTML = `
     <section class="ram-offers-section">
@@ -49,41 +33,41 @@ export default function decorate(block) {
 
         <!-- RIGHT OFFER CARDS -->
         <div class="ram-offers-cards">
+          <article class="ram-offer-card active">
 
-          ${offers.map((offer, index) => `
-            <article
-              class="ram-offer-card ${index === 0 ? 'active' : ''}"
-            >
+            <div class="ram-offer-image">
 
-              <div class="ram-offer-image">
+              <img
+                src="${offer.image}"
+                alt="${offer.city}"
+              />
 
-                <img
-                  src="${offer.image}"
-                  alt="${offer.city}"
-                />
+            </div>
+
+            <div class="ram-offer-details">
+
+              <div class="ram-arrow"></div>
+
+              <div class="ram-offer-meta">
+
+                <h3>${offer.city}</h3>
+
+                <p>
+                  From
+                  <strong>${offer.price}</strong>
+                  ${offer.currency}/ RT
+                </p>
+
+                <a href="#" class="ram-offer-book">
+                  Book now
+                  <span aria-hidden="true">›</span>
+                </a>
 
               </div>
 
-              <div class="ram-offer-details">
+            </div>
 
-                <div class="ram-arrow"></div>
-
-                <div>
-
-                  <h3>${offer.city}</h3>
-
-                  <p>
-                    From
-                    <strong>${offer.price}</strong>
-                    ${offer.currency}/ RT
-                  </p>
-
-                </div>
-
-              </div>
-
-            </article>
-          `).join('')}
+          </article>
 
         </div>
 
@@ -91,16 +75,4 @@ export default function decorate(block) {
 
     </section>
   `;
-
-  const cards = block.querySelectorAll('.ram-offer-card');
-
-  cards.forEach((card) => {
-
-    card.addEventListener('mouseenter', () => {
-
-      cards.forEach((c) => c.classList.remove('active'));
-
-      card.classList.add('active');
-    });
-  });
 }

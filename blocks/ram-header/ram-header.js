@@ -3,30 +3,26 @@ export default function decorate(block) {
   block.innerHTML = `
     <header class="ram-header">
 
-      <!-- Top Utility Bar -->
-      <div class="top-bar">
-        <div class="top-bar-left">
-          <a href="#">EN</a>
-          <span>|</span>
-          <a href="#">FR</a>
-          <span>|</span>
-          <a href="#">ES</a>
-        </div>
-
-        <div class="top-bar-right">
-          <a href="#">Login</a>
-          <span>|</span>
-          <a href="#">Join Safar Flyer</a>
-        </div>
+      <div class="ram-alert-bar" role="region" aria-label="Travel alerts">
+        <span class="ram-alert-icon" aria-hidden="true">ⓘ</span>
+        <p class="ram-alert-text">
+          <a href="#">Travel Restrictions to the United States</a>
+          <a href="#" class="ram-alert-more">Read More</a>
+        </p>
+        <button class="ram-alert-next" aria-label="Next alert">›</button>
       </div>
 
+      <!-- Top Utility Bar -->
       <!-- Main Header -->
       <div class="main-header">
 
         <!-- Logo -->
         <div class="logo-section">
           <a href="/">
-            <img src="/icons/logo.svg" alt="Royal Air Maroc" />
+            <img class="header__logo__img" src="/icons/logo_ram.svg" alt="Royal Air Maroc" />
+          </a>
+          <a href="/oneworld" class="header__oneworld" id="oneworld-logo-desktop">
+            <img class="header__oneworld__img" src="/icons/oneworld.png" alt="Oneworld" />
           </a>
         </div>
 
@@ -35,7 +31,7 @@ export default function decorate(block) {
           <ul>
 
             <li class="has-dropdown">
-              <a href="#">Booking</a>
+              <a href="#">Book</a>
 
               <div class="mega-menu">
                 <div class="menu-column">
@@ -55,7 +51,7 @@ export default function decorate(block) {
             </li>
 
             <li class="has-dropdown">
-              <a href="#">Destinations</a>
+              <a href="#">Explore</a>
 
               <div class="mega-menu">
                 <div class="menu-column">
@@ -75,15 +71,15 @@ export default function decorate(block) {
             </li>
 
             <li>
-              <a href="#">Offers</a>
-            </li>
-
-            <li>
               <a href="#">Experience</a>
             </li>
 
             <li>
-              <a href="#">Help</a>
+              <a href="#">Information</a>
+            </li>
+
+            <li>
+              <a href="#">Safar Flyer</a>
             </li>
 
           </ul>
@@ -91,8 +87,15 @@ export default function decorate(block) {
 
         <!-- Actions -->
         <div class="header-actions">
-          <button class="search-btn">Search</button>
-          <button class="book-btn">Book a Flight</button>
+          <button class="search-btn" aria-label="Search">
+            <img src="/icons/search.svg" alt="" aria-hidden="true" class="search-icon-img" />
+          </button>
+          <div class="lang-selector">
+            <span class="lang-globe">&#127760;</span>
+            <span class="lang-label">EN</span>
+            <span class="lang-caret">&#9660;</span>
+          </div>
+          <a href="#" class="login-join-btn">Login | Join</a>
         </div>
 
         <!-- Mobile Toggle -->
@@ -107,6 +110,19 @@ export default function decorate(block) {
   // Mobile Menu Toggle
   const mobileToggle = block.querySelector('.mobile-menu-toggle');
   const nav = block.querySelector('.main-nav');
+  const logoImage = block.querySelector('.logo-section img');
+  const logoSection = block.querySelector('.logo-section');
+
+  const showLogoFallback = () => {
+    logoSection?.classList.add('logo-missing');
+  };
+
+  if (logoImage) {
+    logoImage.addEventListener('error', showLogoFallback);
+    if (logoImage.complete && logoImage.naturalWidth === 0) {
+      showLogoFallback();
+    }
+  }
 
   mobileToggle.addEventListener('click', () => {
     nav.classList.toggle('open');

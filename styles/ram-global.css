@@ -286,6 +286,71 @@ header img {
 }
 
 /* =========================================
+   RAM HOMEPAGE PAGE — GLOBAL OVERRIDES
+   Scoped to .ram-homepage-page so no other
+   pages are affected.
+========================================= */
+
+/* 1. Kill the 64px header height reservation —
+      the page uses ram-header block inside <main> */
+.ram-homepage-page header {
+  height: 0 !important;
+  min-height: 0 !important;
+}
+
+/* 2. Remove section margins & padding added by styles.css.
+      Each RAM block manages its own spacing internally. */
+.ram-homepage-page main > .section {
+  margin: 0;
+  padding: 0;
+}
+
+/* 3. Remove the 120px section padding from ram-global.css
+      for the homepage — blocks already have internal padding. */
+.ram-homepage-page .section {
+  padding: 0;
+}
+
+/* 4. Remove the max-width / padding wrapper that styles.css
+      applies to section > div — blocks use their own max-width. */
+.ram-homepage-page main > .section > div {
+  max-width: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* 5. Restore link colors to inherit inside homepage blocks
+      so nav / card / footer links aren't forced to --link-color. */
+.ram-homepage-page a:any-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.ram-homepage-page a:any-link:hover {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 6. Keep homepage anchor-buttons neutral without touching
+      native <button> elements used by header/hero blocks. */
+.ram-homepage-page main a.button:any-link {
+  background-color: unset;
+  border: none;
+  border-radius: unset;
+  padding: unset;
+  margin: unset;
+  font-style: normal;
+  font-weight: unset;
+  line-height: unset;
+  max-width: unset;
+  white-space: unset;
+  text-overflow: unset;
+  overflow: unset;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* =========================================
    HERO FIXES
 ========================================= */
 

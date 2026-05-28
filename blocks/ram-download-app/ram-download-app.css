@@ -1,443 +1,370 @@
 .ram-download-app {
   position: relative;
-
-  overflow: hidden;
-
-  padding:
-    160px 40px 150px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #c8102e 0%,
-      #b10d28 100%
-    );
+  left: 50%;
+  width: 100vw;
+  margin-left: -50vw;
+  padding: 54px 0 0;
+  background: linear-gradient(180deg, #f8f5ef 0 154px, #c8102e 154px 100%);
 }
 
-/* BACKGROUND PATTERN */
-
-.ram-download-pattern {
-
-  position: absolute;
-  inset: 0;
-
-  opacity: 0.08;
-
-  background-image:
-    repeating-linear-gradient(
-      45deg,
-      rgba(255,255,255,0.12) 0px,
-      rgba(255,255,255,0.12) 2px,
-      transparent 2px,
-      transparent 80px
-    ),
-    repeating-linear-gradient(
-      -45deg,
-      rgba(255,255,255,0.08) 0px,
-      rgba(255,255,255,0.08) 2px,
-      transparent 2px,
-      transparent 120px
-    );
-
-  pointer-events: none;
-}
-
-/* FLOATING HASHTAG SECTION */
-
-.ram-hashtag-strip {
-
-  position: absolute;
-
-  top: 40px;
-  left: 0;
-
-  width: 100%;
-
-  overflow: hidden;
-
-  z-index: 1;
-
-  pointer-events: none;
-}
-
-.ram-hashtag-track {
-
-  display: flex;
-  align-items: center;
-
-  gap: 90px;
-
-  width: max-content;
-
-  white-space: nowrap;
-
-  animation:
-    ramHashtagMove 32s linear infinite;
-}
-
-.ram-hashtag-track span {
-
-  font-size: 92px;
-  line-height: 1;
-
-  font-weight: 700;
-
-  letter-spacing: -3px;
-
-  color:
-    rgba(255,255,255,0.06);
-
-  text-transform: uppercase;
-}
-
-@keyframes ramHashtagMove {
-
-  0% {
-    transform: translateX(0);
-  }
-
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-/* WRAPPER */
-
-.ram-download-wrapper {
-
-  position: relative;
-  z-index: 3;
-
-  max-width: 1320px;
-
+.ram-download-shell {
+  width: min(1260px, calc(100vw - 80px));
   margin: 0 auto;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 100px;
 }
 
-/* LEFT */
+.ram-download-card {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 110px 330px;
+    align-items: center;
+    gap: 28px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 12px 30px rgba(17, 17, 17, 0.12);
+    bottom: 30px;
+    height: 320px;
+    padding-left: 50px;
+}
 
 .ram-download-content {
-
-  max-width: 540px;
-
-  color: white;
+  max-width: 520px;
+  padding-bottom: 100px;
+  color: #111;
 }
-
-/* EYEBROW */
 
 .ram-download-eyebrow {
-
-  display: inline-block;
-
-  margin-bottom: 20px;
-
-  text-transform: uppercase;
-  letter-spacing: 2px;
-
-  font-size: 13px;
+  margin: 0 0 18px;
+  font-size: 12px;
   font-weight: 700;
-
-  color:
-    rgba(255,255,255,0.9);
+  line-height: 1;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #c8102e;
 }
-
-/* TITLE */
 
 .ram-download-content h2 {
-
-  margin-bottom: 28px;
-
-  font-size: clamp(52px, 6vw, 82px);
-  line-height: 0.92;
-
-  letter-spacing: -3px;
-
-  font-weight: 700;
-
-  color: white;
+  margin: 0 0 14px;
+  font-size: clamp(36px, 3.25vw, 50px);
+  line-height: 1;
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  color: #101010;
 }
 
-/* DESCRIPTION */
+.ram-download-content h2 span {
+  font-weight: 800;
+}
 
 .ram-download-description {
-
-  margin-bottom: 46px;
-
-  font-size: 20px;
-  line-height: 1.9;
-
-  color:
-    rgba(255,255,255,0.92);
+  max-width: 500px;
+  margin: 0 0 24px;
+  font-size: 16px;
+  line-height: 1.45;
+  color: #262626;
 }
-
-/* STORE BUTTONS */
 
 .ram-store-buttons {
-
   display: flex;
   flex-wrap: wrap;
-
-  gap: 18px;
+  align-items: center;
+  gap: 16px;
 }
 
-/* BUTTON */
-
 .ram-store-btn {
-
   display: inline-flex;
-
-  transition:
-    transform 0.35s ease,
-    filter 0.35s ease;
+  line-height: 0;
+  transition: transform 0.3s ease, filter 0.3s ease;
 }
 
 .ram-store-btn:hover {
-
-  transform:
-    translateY(-4px)
-    scale(1.02);
-
-  filter:
-    drop-shadow(0 12px 24px rgba(0,0,0,0.18));
+  transform: translateY(-2px);
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.16));
 }
-
-/* STORE IMAGE */
 
 .ram-store-btn img {
-
-  height: 60px;
-
   display: block;
+  height: 36px;
+  width: auto;
 }
 
-/* RIGHT VISUAL */
+.ram-download-qr {
+  align-self: center;
+  justify-self: center;
+}
+
+.ram-qr-image {
+  display: block;
+  width: 76px;
+  height: auto;
+}
+@media (max-width: 1440px)
+{
+  .ram-qr-image {
+    width: 64px;
+    margin-bottom: 100px;
+    margin-right: 230px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .ram-qr-image {
+    margin-right: 0;
+    margin-bottom: 80px;
+  }
+}
+
 
 .ram-download-visual {
-
-  position: relative;
-
-  flex: 1;
-
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-end;
+  justify-content: flex-end;
+  min-width: 0;
+  align-self: end;
 }
-
-/* PHONE */
 
 .ram-phone-wrapper {
-
-  position: relative;
-
-  width: 420px;
-
-  transition:
-    transform 0.7s ease,
-    filter 0.7s ease;
+  width: min(100%, 330px);
+  margin-right: -2px;
+  transform: translateY(6px);
+  transform-origin: 50% 100%;
+  filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.16));
+  transition: transform 0.35s ease, filter 0.35s ease;
 }
-
-/* FLOAT EFFECT */
 
 .ram-phone-wrapper.hovered,
 .ram-phone-wrapper:hover {
-
-  transform:
-    translateY(-14px)
-    rotate(-2deg);
+  transform: translateY(2px) scale(1.01);
+  filter: drop-shadow(0 20px 38px rgba(0, 0, 0, 0.2));
 }
-
-/* PHONE IMAGE */
 
 .ram-phone-image {
-
-  width: 100%;
-
-  display: block;
-
-  filter:
-    drop-shadow(0 40px 70px rgba(0,0,0,0.38));
+    display: block;
+    width: 100%;
+    height: auto;
+    position: relative;
+    bottom: 130px;
+    margin-left: -30px;
 }
 
-/* QR CARD */
+@media (max-width: 800px) {
+  .ram-phone-image {
+    display: block;
+    width: 79%;
+    height: auto;
+    position: relative;
+    bottom: 130px;
+    margin-left: 159px;
+    margin-top: -300px;
+  }
 
-.ram-qr-card {
+  .ram-qr-image {
+    display: flex;
+    visibility: hidden;
+  }
+}
 
+.ram-download-band {
+  position: relative;
+  margin-top: -18px;
+  padding: 46px 24px 16px;
+  background: linear-gradient(180deg, #c51634 0%, #b10d28 100%);
+}
+
+.ram-download-band-pattern {
   position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.08) 0,
+      rgba(255, 255, 255, 0.08) 2px,
+      transparent 2px,
+      transparent 32px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.06) 0,
+      rgba(255, 255, 255, 0.06) 2px,
+      transparent 2px,
+      transparent 32px
+    );
+  opacity: 0.22;
+}
 
-  right: -30px;
-  bottom: 0;
-
-  width: 210px;
-
-  background: white;
-
-  border-radius: 28px;
-
-  padding: 18px;
-
-  box-shadow:
-    0 24px 60px rgba(0,0,0,0.22);
-
+.ram-download-band-text {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-size: clamp(22px, 2.75vw, 30px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: #fff;
   text-align: center;
-
-  transition:
-    transform 0.45s ease;
 }
 
-.ram-phone-wrapper:hover .ram-qr-card {
-
-  transform:
-    translateY(-6px);
-}
-
-/* QR IMAGE */
-
-.ram-qr-card img {
-
-  width: 100%;
-
-  display: block;
-
-  border-radius: 18px;
-
-  margin-bottom: 14px;
-}
-
-/* QR TEXT */
-
-.ram-qr-card p {
-
-  margin: 0;
-
-  color: #111;
-
-  font-size: 15px;
-  line-height: 1.5;
-
-  font-weight: 700;
-}
-
-/* TABLET */
-
-@media (max-width: 992px) {
-
-  .ram-download-app {
-
-    padding:
-      110px 20px 100px;
-  }
-
-  .ram-hashtag-strip {
-
-    top: 30px;
-  }
-
-  .ram-hashtag-track {
-
-    gap: 44px;
-  }
-
-  .ram-hashtag-track span {
-
-    font-size: 40px;
-  }
-
-  .ram-download-wrapper {
-
-    flex-direction: column;
-
-    gap: 70px;
-  }
-
-  .ram-download-content {
-
-    max-width: 100%;
+@media (max-width: 1100px) {
+  .ram-download-card {
+    grid-template-columns: minmax(0, 1fr) 110px 280px;
+    padding: 36px 32px 0;
+    gap: 20px;
+    min-height: auto;
   }
 
   .ram-download-content h2 {
-
-    line-height: 1;
+    font-size: clamp(36px, 4vw, 54px);
   }
 
   .ram-download-description {
-
-    font-size: 18px;
-  }
-
-  .ram-store-btn img {
-
-    height: 54px;
+    font-size: 17px;
   }
 
   .ram-phone-wrapper {
-
-    width: 320px;
-  }
-
-  .ram-qr-card {
-
-    width: 170px;
-
-    right: -12px;
-    bottom: -10px;
+    width: min(100%, 290px);
+    margin-right: -22px;
+    transform: translateY(8px);
   }
 }
 
-/* MOBILE */
-
-@media (max-width: 768px) {
-
+@media (max-width: 900px) {
   .ram-download-app {
-
-    padding:
-      90px 20px 90px;
+    padding-top: 32px;
+    background: linear-gradient(180deg, #f8f5ef 0 116px, #c8102e 116px 100%);
   }
 
-  .ram-download-wrapper {
-
-    gap: 50px;
+  .ram-download-shell {
+    width: min(100vw - 32px, 960px);
   }
 
-  .ram-download-description {
-
-    margin-bottom: 34px;
-
-    line-height: 1.7;
+  .ram-download-card {
+    grid-template-columns: 1fr;
+    justify-items: start;
+    padding: 28px 24px 24px;
   }
 
-  .ram-store-buttons {
-
-    flex-direction: column;
-
-    align-items: flex-start;
+  .ram-download-content {
+    max-width: none;
+    padding-bottom: 0;
   }
 
-  .ram-store-btn img {
+  .ram-download-qr,
+  .ram-download-visual {
+    justify-self: center;
+  }
 
-    height: 52px;
+  .ram-download-qr {
+    margin-top: 8px;
   }
 
   .ram-phone-wrapper {
-
-    width: 280px;
+    width: min(100%, 280px);
+    margin-right: 0;
+    transform: none;
   }
 
-  .ram-qr-card {
+  .ram-download-band {
+    margin-top: -10px;
+    padding-top: 44px;
+  }
+}
 
-    width: 145px;
-
-    border-radius: 20px;
-
-    padding: 14px;
+@media (max-width: 600px) {
+  .ram-download-app {
+    padding-top: 24px;
+    background: linear-gradient(180deg, #f8f5ef 0 92px, #c8102e 92px 100%);
   }
 
-  .ram-qr-card p {
-
-    font-size: 13px;
+  .ram-download-shell {
+    width: calc(100vw - 24px);
   }
+
+  .ram-download-card {
+    padding: 24px 18px 20px;
+    border-radius: 16px;
+  }
+
+  .ram-download-content h2 {
+    font-size: 38px;
+  }
+
+  .ram-download-description {
+    font-size: 16px;
+  }
+
+  .ram-store-buttons {
+    gap: 12px;
+  }
+
+  .ram-store-btn img {
+    height: 36px;
+  }
+
+  .ram-qr-image {
+    width: 92px;
+  }
+
+  .ram-phone-wrapper {
+    width: min(100%, 220px);
+    transform: none;
+  }
+
+  .ram-download-band {
+    padding: 34px 16px 18px;
+  }
+
+  .ram-download-band-text {
+    flex-direction: column;
+    gap: 6px;
+    font-size: 18px;
+  }
+}
+@media (min-width: 0px) and (max-width: 500px) {
+  .ram-download-card {
+        padding: 24px 18px 20px;
+        border-radius: 16px;
+        height: 450px;
+    }
+
+.ram-store-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    flex-wrap: wrap;
+    top: 20px;
+}
+
+.ram-download-description {
+    max-width: 500px;
+    margin: 0 0 24px;
+    font-size: 16px;
+    margin-bottom: 87px;
+    line-height: 1.45;
+    color: #262626;
+}
+    .ram-phone-image {
+        display: block;
+        width: 79%;
+        height: auto;
+        position: relative;
+        bottom: 130px;
+        margin-left: 46px;
+        margin-top: -259px;
+    }
+}
+
+@media(max-width: 320px) {
+    .ram-phone-image {
+        display: block;
+        width: 70%;
+        height: auto;
+        position: relative;
+        bottom: 130px;
+        margin-left: 71px;
+        margin-top: -259px;
+    }
 }

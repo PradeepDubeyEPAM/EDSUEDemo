@@ -7,6 +7,16 @@
   background: #fff;
 }
 
+.ram-homepage-page .ram-flying-benefits {
+  padding-bottom: 72px;
+}
+
+@media (max-width: 992px) {
+  .ram-homepage-page .ram-flying-benefits {
+    padding-bottom: 56px;
+  }
+}
+
 /* WRAPPER */
 
 .ram-benefits-wrapper {
@@ -14,6 +24,15 @@
   max-width: 1320px;
 
   margin: 0 auto;
+}
+
+@media (max-width: 1240px) {
+  .ram-homepage-page .ram-benefits-wrapper {
+    max-width: 100%;
+    width: 100%;
+    padding: 0 2.5%;
+    box-sizing: border-box;
+  }
 }
 
 /* HEADER */
@@ -397,5 +416,105 @@
   .ram-benefit-content p {
 
     margin-bottom: 28px;
+  }
+}
+
+/* =========================================
+   INT-EN HOMEPAGE OVERRIDES
+========================================= */
+
+.ram-homepage-page .section.ram-homepage-page-content.ram-flying-benefits-cards-container {
+  max-width: none;
+  width: 100%;
+}
+
+.ram-homepage-page .ram-flying-benefits {
+  padding: 64px 0;
+}
+
+.ram-homepage-page .ram-benefits-wrapper {
+  max-width: 1240px;
+}
+
+@media (max-width: 1240px) {
+  .ram-homepage-page .ram-benefits-wrapper {
+    max-width: 100%;
+    width: 100%;
+    padding: 0 2.5%;
+    box-sizing: border-box;
+  }
+}
+
+.ram-homepage-page .ram-benefits-header {
+  max-width: 1240px;
+  margin-bottom: 24px;
+}
+
+.ram-homepage-page .ram-benefits-header h2 {
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: 300;
+  letter-spacing: 0;
+}
+
+.ram-homepage-page .ram-benefits-grid {
+  gap: 16px;
+}
+
+.ram-homepage-page .ram-benefit-card {
+  min-height: 320px;
+  padding: 24px 20px;
+  border-radius: 16px;
+}
+
+.ram-homepage-page .ram-benefit-icon {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 20px;
+}
+
+.ram-homepage-page .ram-benefit-content h3 {
+  margin-bottom: 10px;
+  font-size: 24px;
+  line-height: 30px;
+}
+
+.ram-homepage-page .ram-benefit-content p {
+  margin-bottom: 16px;
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.ram-homepage-page .ram-benefit-link {
+  font-size: 14px;
+}
+
+@media (max-width: 992px) {
+  .ram-homepage-page .ram-flying-benefits {
+    padding: 48px 0 56px;
+  }
+
+  .ram-homepage-page .ram-benefits-wrapper {
+    max-width: 351px;
+  }
+
+  .ram-homepage-page .ram-benefits-header {
+    margin-bottom: 16px;
+  }
+
+  .ram-homepage-page .ram-benefits-header h2 {
+    font-size: 24px;
+    line-height: 32px;
+  }
+
+  .ram-homepage-page .ram-benefits-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .ram-homepage-page .ram-benefit-card {
+    min-height: auto;
+    padding: 20px 16px;
+    border-radius: 12px;
   }
 }
