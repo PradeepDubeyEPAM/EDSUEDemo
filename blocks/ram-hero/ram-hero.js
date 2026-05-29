@@ -110,7 +110,12 @@ export default function decorate(block) {
           <div class="hero-description"></div>
 
           <div class="hero-actions">
-            <button class="primary-btn">Book Now</button>
+            <button class="primary-btn">
+              <span>Let the Journey Begin</span>
+              <svg class="primary-btn-icon" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" focusable="false">
+                <path d="M4 2L8 6L4 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
             <button class="secondary-btn">Discover Offers</button>
           </div>
         </div>
@@ -374,10 +379,48 @@ export default function decorate(block) {
   // Tabs Logic
   const tabs = block.querySelectorAll('.tab');
   const panels = block.querySelectorAll('.tab-panel');
+  const bookingWidget = block.querySelector('.booking-widget');
+  const bookingTabs = block.querySelector('.booking-tabs');
+
+  const applyMobileTabLayout = () => {
+    if (!bookingWidget || !bookingTabs) return;
+    const isMobileView = window.matchMedia('(max-width: 992px)').matches;
+    const activeTab = block.querySelector('.tab.active');
+    const activePanel = activeTab
+      ? block.querySelector(`#${activeTab.dataset.tab}`)
+      : null;
+
+    if (isMobileView) {
+      bookingWidget.classList.add('mobile-tabs');
+      tabs.forEach((tab) => {
+        tab.setAttribute('aria-expanded', tab.classList.contains('active') ? 'true' : 'false');
+      });
+      if (activeTab && activePanel) {
+        activeTab.insertAdjacentElement('afterend', activePanel);
+      }
+      return;
+    }
+
+    bookingWidget.classList.remove('mobile-tabs');
+    tabs.forEach((tab) => tab.removeAttribute('aria-expanded'));
+    panels.forEach((panel) => {
+      bookingWidget.append(panel);
+    });
+  };
 
   tabs.forEach((tab) => {
     tab.addEventListener('click', () => {
       const target = tab.dataset.tab;
+      const isMobileView = window.matchMedia('(max-width: 992px)').matches;
+
+      // On mobile: toggle — tapping the open tab closes it
+      if (isMobileView && tab.classList.contains('active')) {
+        tab.classList.remove('active');
+        tab.setAttribute('aria-expanded', 'false');
+        const openPanel = block.querySelector(`#${target}`);
+        if (openPanel) openPanel.classList.remove('active');
+        return;
+      }
 
       tabs.forEach((t) => t.classList.remove('active'));
       panels.forEach((p) => p.classList.remove('active'));
@@ -389,8 +432,13 @@ export default function decorate(block) {
       if (activePanel) {
         activePanel.classList.add('active');
       }
+
+      applyMobileTabLayout();
     });
   });
+
+  applyMobileTabLayout();
+  window.addEventListener('resize', applyMobileTabLayout);
 
   const flightPanel = block.querySelector('#flight');
   const expandTriggers = block.querySelectorAll('.js-expand-trigger');

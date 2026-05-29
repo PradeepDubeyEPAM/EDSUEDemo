@@ -75,13 +75,19 @@
 
   position: relative;
 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+
   background: #fff;
 
   border-radius: 32px;
 
   padding: 42px 34px;
 
-  min-height: 380px;
+  min-height: auto;
 
   border: 1px solid #ececec;
 
@@ -142,6 +148,8 @@
 
   position: relative;
 
+  flex-shrink: 0;
+
   width: 88px;
   height: 88px;
 
@@ -150,130 +158,43 @@
   background:
     rgba(200,16,46,0.06);
 
-  margin-bottom: 36px;
+  margin-bottom: 16px;
 }
 
 /* MEAL */
 
-.ram-benefit-icon.meal::before,
-.ram-benefit-icon.meal::after {
-
-  content: '';
-
-  position: absolute;
-
-  background: #c8102e;
-
-  border-radius: 4px;
-}
-
-.ram-benefit-icon.meal::before {
-
-  width: 5px;
-  height: 42px;
-
-  left: 30px;
-  top: 22px;
-}
-
-.ram-benefit-icon.meal::after {
-
-  width: 5px;
-  height: 42px;
-
-  right: 30px;
-  top: 22px;
+.ram-benefit-icon.meal {
+  background-image: url('/icons/meal.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /* LUGGAGE */
 
-.ram-benefit-icon.luggage::before {
-
-  content: '';
-
-  position: absolute;
-
-  left: 24px;
-  top: 30px;
-
-  width: 36px;
-  height: 28px;
-
-  border: 3px solid #c8102e;
-
-  border-radius: 6px;
-}
-
-.ram-benefit-icon.luggage::after {
-
-  content: '';
-
-  position: absolute;
-
-  left: 35px;
-  top: 18px;
-
-  width: 16px;
-  height: 10px;
-
-  border: 3px solid #c8102e;
-  border-bottom: none;
-
-  border-radius: 10px 10px 0 0;
+.ram-benefit-icon.luggage {
+  background-image: url('/icons/laggage.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /* ENTERTAINMENT */
 
-.ram-benefit-icon.entertainment::before {
-
-  content: '▶';
-
-  position: absolute;
-
-  left: 31px;
-  top: 22px;
-
-  color: #c8102e;
-
-  font-size: 30px;
+.ram-benefit-icon.entertainment {
+  background-image: url('/icons/entertainment.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /* LEGROOM */
 
-.ram-benefit-icon.legroom::before {
-
-  content: '';
-
-  position: absolute;
-
-  left: 20px;
-  bottom: 18px;
-
-  width: 24px;
-  height: 18px;
-
-  border: 3px solid #c8102e;
-
-  border-top: none;
-
-  border-radius: 2px;
-}
-
-.ram-benefit-icon.legroom::after {
-
-  content: '';
-
-  position: absolute;
-
-  right: 22px;
-  top: 18px;
-
-  width: 14px;
-  height: 36px;
-
-  background: #c8102e;
-
-  border-radius: 4px;
+.ram-benefit-icon.legroom {
+  background-image: url('/icons/legroom.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /* CONTENT */
@@ -281,11 +202,16 @@
 .ram-benefit-content {
   position: relative;
   z-index: 2;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .ram-benefit-content h3 {
 
-  margin-bottom: 18px;
+  margin-bottom: 0;
 
   font-size: 30px;
   line-height: 1.15;
@@ -297,7 +223,7 @@
 
 .ram-benefit-content p {
 
-  margin-bottom: 34px;
+  margin-bottom: 0;
 
   color: #666;
 
@@ -311,8 +237,13 @@
 
   position: relative;
 
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
   border: none;
   background: transparent;
+  outline: none;
 
   color: #c8102e;
 
@@ -326,6 +257,21 @@
   transition:
     transform 0.3s ease,
     color 0.3s ease;
+}
+
+.ram-benefit-link:focus,
+.ram-benefit-link:hover,
+.ram-benefit-link:focus-visible {
+  outline: none;
+  box-shadow: none;
+  background-color:unset;
+}
+
+.ram-benefit-arrow {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  flex-shrink: 0;
 }
 
 .ram-benefit-link::after {
@@ -354,70 +300,119 @@
   width: 100%;
 }
 
-/* TABLET */
+  /* TABLET */
 
-@media (max-width: 1200px) {
+  @media (max-width: 1200px) {
 
-  .ram-benefits-grid {
+    .ram-benefits-grid {
 
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
+      grid-template-columns: repeat(2, 1fr);
+    }
 
-/* MOBILE */
+    .ram-benefit-card {
 
-@media (max-width: 768px) {
+      gap: 12px;
 
-  .ram-flying-benefits {
+      padding: 28px 24px;
+    }
 
-    padding:
-      90px 20px;
-  }
+    .ram-benefit-icon {
 
-  .ram-benefits-header {
+      width: 72px;
+      height: 72px;
+      margin-bottom: 12px;
+    }
 
-    margin-bottom: 44px;
-  }
+    .ram-benefit-content h3 {
 
-  .ram-benefits-header h2 {
+      font-size: 20px;
+      line-height: 1.4;
+    }
 
-    line-height: 1;
-  }
+    .ram-benefit-content p {
 
-  .ram-benefits-grid {
+      font-size: 14px;
+      line-height: 1.6;
 
-    grid-template-columns: 1fr;
-
-    gap: 20px;
-  }
-
-  .ram-benefit-card {
-
-    min-height: auto;
-
-    padding: 34px 28px;
-
-    border-radius: 26px;
+      margin-bottom: 16px;
+    }
   }
 
-  .ram-benefit-icon {
+  /* MOBILE */
 
-    width: 78px;
-    height: 78px;
+  @media (max-width: 768px) {
 
-    margin-bottom: 28px;
+    .ram-flying-benefits {
+
+      padding:
+        60px 16px;
+    }
+
+    .ram-benefits-header {
+
+      margin-bottom: 32px;
+    }
+
+    .ram-benefits-header h2 {
+
+      font-size: 24px;
+      line-height: 32px;
+    }
+
+    .ram-benefits-grid {
+
+      grid-template-columns: 1fr;
+
+      gap: 12px;
+    }
+
+    .ram-benefit-card {
+
+      flex-direction: row;
+
+      padding: 16px 16px;
+
+      gap: 16px;
+
+      border-radius: 16px;
+      align-items: flex-start;
+    }
+
+    .ram-benefit-icon {
+
+      flex-shrink: 0;
+
+      width: 80px;
+      height: 80px;
+
+      margin-bottom: 0;
+
+      border-radius: 12px;
+    }
+
+    .ram-benefit-content h3 {
+
+      font-size: 20px;
+      line-height: 1.4;
+
+      margin-bottom: 8px;
+    }
+
+    .ram-benefit-content p {
+
+      font-size: 14px;
+      line-height: 1.5;
+
+      margin-bottom: 12px;
+
+      display: none;
+    }
+
+    .ram-benefit-link {
+
+      font-size: 13px;
+    }
   }
-
-  .ram-benefit-content h3 {
-
-    font-size: 26px;
-  }
-
-  .ram-benefit-content p {
-
-    margin-bottom: 28px;
-  }
-}
 
 /* =========================================
    INT-EN HOMEPAGE OVERRIDES
@@ -436,12 +431,65 @@
   max-width: 1240px;
 }
 
-@media (max-width: 1240px) {
+@media (max-width: 1275px) {
   .ram-homepage-page .ram-benefits-wrapper {
-    max-width: 100%;
+    max-width: none;
     width: 100%;
-    padding: 0 2.5%;
+    padding: 0 40px;
     box-sizing: border-box;
+  }
+
+  .ram-homepage-page .ram-benefits-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .ram-homepage-page .ram-benefit-card {
+    flex-direction: row;
+    gap: 20px;
+    padding: 24px;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: left;
+    min-height: auto;
+  }
+
+  .ram-homepage-page .ram-benefit-icon {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    margin: 0;
+    margin-bottom: 0;
+    border-radius: 12px;
+  }
+
+  .ram-homepage-page .ram-benefit-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-top: 0;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .ram-homepage-page .ram-benefit-content h3 {
+    margin: 0;
+    font-size: 20px;
+    line-height: 28px;
+    font-weight: 700;
+  }
+
+  .ram-homepage-page .ram-benefit-content p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 20px;
+    display: none;
+  }
+
+  .ram-homepage-page .ram-benefit-link {
+    font-size: 14px;
   }
 }
 
@@ -462,44 +510,91 @@
 }
 
 .ram-homepage-page .ram-benefit-card {
-  min-height: 320px;
-  padding: 24px 20px;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px 24px 0;
   border-radius: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+  min-height: 385px;
 }
 
 .ram-homepage-page .ram-benefit-icon {
-  width: 64px;
-  height: 64px;
-  margin-bottom: 20px;
+  flex-shrink: 0;
+  width: 140px;
+  height: 140px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+}
+
+.ram-homepage-page .ram-benefit-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  margin-top: auto;
+  gap: 8px;
+  width: 100%;
 }
 
 .ram-homepage-page .ram-benefit-content h3 {
-  margin-bottom: 10px;
+  margin-bottom: 0;
   font-size: 24px;
-  line-height: 30px;
+  line-height: 32px;
 }
 
 .ram-homepage-page .ram-benefit-content p {
-  margin-bottom: 16px;
+  margin-bottom: 0;
   font-size: 16px;
-  line-height: 22px;
+  line-height: 22.4px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.35s ease, transform 0.35s ease, max-height 0.35s ease;
+  overflow: hidden;
+  max-height: 0;
+  display: flex;
+}
+
+.ram-homepage-page .ram-benefit-card:hover .ram-benefit-content p,
+.ram-homepage-page .ram-benefit-card.active .ram-benefit-content p {
+  opacity: 1;
+  transform: translateY(0);
+  max-height: 80px;
 }
 
 .ram-homepage-page .ram-benefit-link {
-  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  appearance: none;
+  font-size: 16px;
+  line-height: 22.4px;
+  margin-top: 0;
+  opacity: 1;
+  transform: translateY(0);
+  transition: none;
 }
 
-@media (max-width: 992px) {
+.ram-homepage-page .ram-benefit-card:hover .ram-benefit-link,
+.ram-homepage-page .ram-benefit-card.active .ram-benefit-link {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
   .ram-homepage-page .ram-flying-benefits {
-    padding: 48px 0 56px;
+    padding: 48px 16px;
   }
 
   .ram-homepage-page .ram-benefits-wrapper {
-    max-width: 351px;
+    max-width: 100%;
+    padding: 0;
   }
 
   .ram-homepage-page .ram-benefits-header {
-    margin-bottom: 16px;
+    margin-bottom: 24px;
   }
 
   .ram-homepage-page .ram-benefits-header h2 {
@@ -513,8 +608,120 @@
   }
 
   .ram-homepage-page .ram-benefit-card {
-    min-height: auto;
-    padding: 20px 16px;
+    flex-direction: row;
+    gap: 16px;
+    padding: 12px 12px;
     border-radius: 12px;
+    align-items: flex-start;
+  }
+
+  .ram-homepage-page .ram-benefit-icon {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    margin-bottom: 0;
+  }
+
+  .ram-homepage-page .ram-benefit-content h3 {
+    margin-bottom: 0;
+    font-size: 20px;
+    line-height: 24px;
+  }
+
+  .ram-homepage-page .ram-benefit-content p {
+    margin-bottom: 0;
+    font-size: 13px;
+    line-height: 18px;
+    display: none;
+  }
+}
+
+@media (max-width: 1275px) {
+  .ram-homepage-page .ram-benefits-wrapper {
+    max-width: none;
+    width: 100%;
+    padding: 0 40px;
+    box-sizing: border-box;
+  }
+
+  .ram-homepage-page .ram-benefits-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .ram-homepage-page .ram-benefit-card {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    gap: 16px;
+    padding: 8px 12px;
+    border-radius: 20px;
+    min-height: auto;
+    transform: none;
+  }
+
+  .ram-homepage-page .ram-benefit-card:hover,
+  .ram-homepage-page .ram-benefit-card.active {
+    transform: none;
+  }
+
+  .ram-homepage-page .ram-benefit-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0;
+    border-radius: 0;
+    flex-shrink: 0;
+  }
+
+  .ram-homepage-page .ram-benefit-content {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 8px;
+    margin-top: 0;
+  }
+
+  .ram-homepage-page .ram-benefit-content h3 {
+    margin: 0;
+    font-size: 24px;
+    line-height: 1.4;
+  }
+
+  .ram-homepage-page .ram-benefit-content p,
+  .ram-homepage-page .ram-benefit-card:hover .ram-benefit-content p,
+  .ram-homepage-page .ram-benefit-card.active .ram-benefit-content p {
+    display: none;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transform: none;
+    margin: 0;
+  }
+
+  .ram-homepage-page .ram-benefit-link {
+    font-size: 16px;
+    margin-top: 0;
+    line-height: 1.25;
+  }
+}
+
+@media (max-width: 768px) {
+  .ram-homepage-page .ram-benefits-wrapper {
+    padding: 0;
+  }
+
+  .ram-homepage-page .ram-benefit-card {
+    padding: 8px 12px;
+    border-radius: 20px;
+  }
+
+  .ram-homepage-page .ram-benefit-content h3 {
+    font-size: 20px;
+    line-height: 1.4;
   }
 }

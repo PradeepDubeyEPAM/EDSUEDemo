@@ -1,30 +1,53 @@
-.ram-download-app {
+.section.ram-download-app-container {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0;
+  background: linear-gradient(180deg, #f8f5ef 0 154px, #c8102e 154px 100%);
+  overflow: visible;
+}
+
+.section.ram-download-app-container>div,
+.section.ram-download-app-container .ram-download-app.block {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.section.ram-download-app-container>.ram-download-app-wrapper {
+  width: 100%;
+}
+
+section.ram-download-app {
   position: relative;
-  left: 50%;
-  width: 100vw;
-  margin-left: -50vw;
+  width: 100%;
+  margin-left: 0;
+  left: 0;
   padding: 54px 0 0;
   background: linear-gradient(180deg, #f8f5ef 0 154px, #c8102e 154px 100%);
 }
 
 .ram-download-shell {
-  width: min(1260px, calc(100vw - 80px));
+  width: min(1260px, calc(100% - 80px));
   margin: 0 auto;
 }
 
 .ram-download-card {
-    position: relative;
-    z-index: 2;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 110px 330px;
-    align-items: center;
-    gap: 28px;
-    background: #fff;
-    border-radius: 20px;
-    box-shadow: 0 12px 30px rgba(17, 17, 17, 0.12);
-    bottom: 30px;
-    height: 320px;
-    padding-left: 50px;
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 110px 330px;
+  align-items: center;
+  gap: 28px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 12px 30px rgba(17, 17, 17, 0.12);
+  bottom: 30px;
+  height: 320px;
+  padding-left: 50px;
 }
 
 .ram-download-content {
@@ -98,12 +121,12 @@
   width: 76px;
   height: auto;
 }
-@media (max-width: 1440px)
-{
+
+@media (max-width: 1440px) {
   .ram-qr-image {
     width: 64px;
-    margin-bottom: 100px;
-    margin-right: 230px;
+    margin-bottom: 0;
+    margin-right: 0;
   }
 }
 
@@ -139,12 +162,50 @@
 }
 
 .ram-phone-image {
-    display: block;
-    width: 100%;
-    height: auto;
-    position: relative;
-    bottom: 130px;
-    margin-left: -30px;
+  display: block;
+  width: 100%;
+  height: auto;
+  position: relative;
+  bottom: 30px;
+  margin-left: -12px;
+}
+
+@media (min-width: 1101px) and (max-width: 1440px) {
+  .ram-download-card {
+    grid-template-columns: minmax(0, 1fr) 90px 290px;
+    gap: 20px;
+    padding-left: 40px;
+  }
+
+  .ram-download-visual {
+    justify-content: center;
+  }
+
+  .ram-phone-wrapper {
+    width: min(100%, 290px);
+    margin-right: 0;
+  }
+
+  .ram-phone-image {
+    bottom: 79px;
+    margin-left: -37px;
+  }
+}
+
+@media (min-width: 1441px) {
+  .ram-download-visual {
+    justify-content: center;
+  }
+
+  .ram-phone-wrapper {
+    width: min(100%, 270px);
+    margin-right: 0;
+  }
+
+  .ram-phone-image {
+    bottom: 44px;
+    margin-left: -20px;
+  }
 }
 
 @media (max-width: 800px) {
@@ -166,36 +227,49 @@
 
 .ram-download-band {
   position: relative;
+  width: 100%;
+  left: 0;
+  margin-left: 0;
   margin-top: -18px;
   padding: 46px 24px 16px;
+  background: transparent;
+}
+
+.ram-download-band::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
   background: linear-gradient(180deg, #c51634 0%, #b10d28 100%);
+  z-index: 0;
 }
 
 .ram-download-band-pattern {
   position: absolute;
   inset: 0;
   background-image:
-    repeating-linear-gradient(
-      0deg,
+    repeating-linear-gradient(0deg,
       rgba(255, 255, 255, 0.08) 0,
       rgba(255, 255, 255, 0.08) 2px,
       transparent 2px,
-      transparent 32px
-    ),
-    repeating-linear-gradient(
-      90deg,
+      transparent 32px),
+    repeating-linear-gradient(90deg,
       rgba(255, 255, 255, 0.06) 0,
       rgba(255, 255, 255, 0.06) 2px,
       transparent 2px,
-      transparent 32px
-    );
+      transparent 32px);
   opacity: 0.22;
+  z-index: 1;
 }
 
 .ram-download-band-text {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 10px;
@@ -232,7 +306,7 @@
 }
 
 @media (max-width: 900px) {
-  .ram-download-app {
+  section.ram-download-app {
     padding-top: 32px;
     background: linear-gradient(180deg, #f8f5ef 0 116px, #c8102e 116px 100%);
   }
@@ -274,7 +348,7 @@
 }
 
 @media (max-width: 600px) {
-  .ram-download-app {
+  section.ram-download-app {
     padding-top: 24px;
     background: linear-gradient(180deg, #f8f5ef 0 92px, #c8102e 92px 100%);
   }
@@ -323,48 +397,50 @@
     font-size: 18px;
   }
 }
+
 @media (min-width: 0px) and (max-width: 500px) {
   .ram-download-card {
-        padding: 24px 18px 20px;
-        border-radius: 16px;
-        height: 450px;
-    }
+    padding: 24px 18px 20px;
+    border-radius: 16px;
+    height: 450px;
+  }
 
-.ram-store-buttons {
+  .ram-store-buttons {
     display: flex;
     flex-direction: column;
     align-items: start;
     flex-wrap: wrap;
     top: 20px;
-}
+  }
 
-.ram-download-description {
+  .ram-download-description {
     max-width: 500px;
     margin: 0 0 24px;
     font-size: 16px;
     margin-bottom: 87px;
     line-height: 1.45;
     color: #262626;
-}
-    .ram-phone-image {
-        display: block;
-        width: 79%;
-        height: auto;
-        position: relative;
-        bottom: 130px;
-        margin-left: 46px;
-        margin-top: -259px;
-    }
+  }
+
+  .ram-phone-image {
+    display: block;
+    width: 79%;
+    height: auto;
+    position: relative;
+    bottom: 130px;
+    margin-left: 46px;
+    margin-top: -259px;
+  }
 }
 
 @media(max-width: 320px) {
-    .ram-phone-image {
-        display: block;
-        width: 70%;
-        height: auto;
-        position: relative;
-        bottom: 130px;
-        margin-left: 71px;
-        margin-top: -259px;
-    }
+  .ram-phone-image {
+    display: block;
+    width: 70%;
+    height: auto;
+    position: relative;
+    bottom: 130px;
+    margin-left: 71px;
+    margin-top: -259px;
+  }
 }
