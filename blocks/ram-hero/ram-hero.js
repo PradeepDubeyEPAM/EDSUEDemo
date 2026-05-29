@@ -5,6 +5,7 @@ function parseFields(block) {
   const fields = {};
   const rows = [...block.children];
   const modelOrder = ['image', 'imageAlt', 'headingText', 'description'];
+  const fallbackOrder = ['image', 'headingText', 'description'];
 
   rows.forEach((row, index) => {
     const attributedCell = row.matches('[data-aue-prop], [data-richtext-prop]')
@@ -24,7 +25,7 @@ function parseFields(block) {
       return;
     }
 
-    const fallbackProp = modelOrder[index];
+    const fallbackProp = fallbackOrder[index];
     const fallbackCell = row.firstElementChild || row;
     if (fallbackProp && fallbackCell && !fields[fallbackProp]) {
       fields[fallbackProp] = fallbackCell;
@@ -94,7 +95,7 @@ function buildHeroBackground(fields) {
 
 export default function decorate(block) {
   const fields = parseFields(block);
-  const headingText = fields.headingText?.textContent?.trim() || 'Explore the World';
+  const headingText = fields.headingText?.textContent?.trim() || 'Uncover the Magic of Marrakech';
   const descriptionHtml = fields.description?.innerHTML?.trim();
 
   block.innerHTML = `
@@ -103,9 +104,10 @@ export default function decorate(block) {
 
       <div class="hero-content">
         <div class="hero-text">
-         
-
-          <h1></h1>
+          <div class="hero-title-row">
+            <img src="/icons/ram-chevron.svg" alt="" class="hero-ram-chevron" aria-hidden="true" />
+            <h1></h1>
+          </div>
 
           <div class="hero-description"></div>
 
@@ -373,7 +375,7 @@ export default function decorate(block) {
     description.innerHTML = descriptionHtml;
     moveInstrumentation(fields.description, description);
   } else {
-    description.textContent = 'Discover exclusive fares and premium travel experiences across Europe, Africa, and North America.';
+    description.textContent = 'A city of colors, scents, and timeless charm.';
   }
 
   // Tabs Logic
