@@ -127,6 +127,11 @@
   font-size: 16px;
   font-weight: 700;
 
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
   cursor: pointer;
 
   transition:
@@ -138,6 +143,12 @@
 .primary-btn {
   background: #c8102e;
   color: white;
+}
+
+.primary-btn-icon {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 auto;
 }
 
 .primary-btn:hover {
@@ -480,6 +491,7 @@
   font-weight: 400;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -496,6 +508,7 @@
   font-size: 14px;
   font-weight: 600;
   border-radius: 4px;
+  gap: 8px;
 }
 
 .ram-homepage-page .secondary-btn {
@@ -598,8 +611,13 @@
   align-items: center;
 }
 
+.ram-homepage-page .booking-primary-row {
+  padding-bottom: 15px;
+}
+
 .ram-homepage-page .booking-secondary-row {
   grid-template-columns: 1fr 1fr;
+  gap: 66px;
   margin-top: 0;
 }
 
@@ -714,8 +732,10 @@
   left: 0;
   right: 0;
   top: 100%;
+  margin-top: -1px;
   background: #fff;
-  padding: 8px 20px 16px;
+  padding: 15px 20px 16px;
+  border-top: none;
   border-bottom: 1px solid #d8d8d8;
   border-radius: 0 0 18px 18px;
   z-index: 89;
@@ -877,10 +897,25 @@
   border: 1px solid #d4d4d4;
   border-radius: 8px;
   background: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 30px;
   line-height: 1;
+  padding: 0;
   color: #868686;
   cursor: pointer;
+  text-align: center;
+}
+
+.ram-homepage-page .counter-btn.js-minus {
+  font-size: 34px;
+  line-height: 1;
+}
+
+.ram-homepage-page .counter-btn.plus.js-plus {
+  font-size: 30px;
+  line-height: 1;
 }
 
 .ram-homepage-page .counter-btn.plus {
@@ -976,16 +1011,84 @@
     width: 100%;
     margin-top: 26px;
     transform: none;
+    border-radius: 10px;
+    overflow: hidden;
   }
 
-  .ram-homepage-page .tab {
-    font-size: 14px;
+  .ram-homepage-page .booking-widget.mobile-tabs .booking-tabs {
+    display: block;
+    border-bottom: none;
+    background: #fff;
+    border-radius: 10px 10px 0 0;
+  }
+  
+  .ram-homepage-page .booking-widget.mobile-tabs .booking-tabs:focus,
+  .ram-homepage-page .booking-widget.mobile-tabs .booking-tabs:hover{
+    background-color: unset;
   }
 
-  .ram-homepage-page .trip-btn {
-    min-width: 110px;
-    height: 44px;
-    font-size: 13px;
+  .ram-homepage-page .booking-widget.mobile-tabs .tab {
+    width: 100%;
+    height: 70px;
+    justify-content: space-between;
+    padding: 0 18px;
+    border-bottom: 1px solid #e4e4e4;
+    color: #3b3b3b;
+    font-size: clamp(22px, 4.8vw, 30px);
+    font-weight: 300;
+  }
+
+  .ram-homepage-page .booking-widget.mobile-tabs .tab::after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border-right: 2px solid #7a7a7a;
+    border-bottom: 2px solid #7a7a7a;
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+  }
+
+  .ram-homepage-page .booking-widget.mobile-tabs .tab.active {
+    color: #c8102e;
+    border-bottom-color: #e4e4e4;
+  }
+
+  .ram-homepage-page .booking-widget.mobile-tabs .tab.active::after {
+    transform: rotate(-135deg);
+  }
+
+  .ram-homepage-page .booking-widget.mobile-tabs .tab-panel {
+    padding: 18px 16px 22px;
+    border-bottom: 1px solid #e4e4e4;
+  }
+
+  .ram-homepage-page .booking-widget.mobile-tabs .tab-panel:last-child {
+    border-bottom: none;
+  }
+
+  .ram-homepage-page .booking-widget.mobile-tabs .tab-panel:not(.active) {
+    display: none;
+  }
+
+  .ram-homepage-page .booking-widget.mobile-tabs .trip-type {
+    width: 100%;
+    margin-bottom: 12px;
+  }
+
+  .ram-homepage-page .booking-widget.mobile-tabs .trip-btn {
+    min-width: 0;
+    font-size: 12px;
+    padding: 0 8px;
+    height: 38px;
+  }
+
+  .ram-homepage-page .booking-widget.mobile-tabs #flight.is-expanded .booking-expanded {
+    position: static;
+    margin-top: 10px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
   }
 
   .ram-homepage-page .booking-primary-row,
@@ -1015,8 +1118,23 @@
     display: none;
   }
 
+  .ram-homepage-page .ram-booking-field-btn {
+    min-height: 56px;
+    padding: 8px 14px;
+  }
+
+  .ram-homepage-page .field-label {
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  .ram-homepage-page .field-value {
+    font-size: 16px;
+    line-height: 21px;
+  }
+
   .ram-homepage-page .field-code {
-    font-size: 30px;
+    font-size: 24px;
   }
 
   .ram-homepage-page .booking-footer-row,

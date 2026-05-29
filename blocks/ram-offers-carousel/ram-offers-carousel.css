@@ -1,6 +1,7 @@
 .ram-homepage-page .section.ram-homepage-page-content.ram-offers-carousel-container {
   max-width: none;
   width: 100%;
+  overflow-x: hidden;
 }
 
 .ram-updates-carousel {
@@ -26,7 +27,7 @@
 
   display: flex;
   align-items: flex-end;
-  justify-content: space-between;
+  justify-content: flex-start;
 
   gap: 30px;
 }
@@ -48,23 +49,30 @@
 /* CONTROLS */
 
 .ram-carousel-controls {
+  position: absolute;
+  left: 50%;
+  bottom: 82px;
+  transform: translateX(-50%);
+  z-index: 5;
 
   display: flex;
   align-items: center;
 
-  gap: 14px;
+  gap: 10px;
 }
 
 .ram-nav {
 
-  width: 44px;
-  height: 44px;
+  width: 18px;
+  height: 8px;
+  min-width: 0;
+  padding: 0;
 
-  border-radius: 50%;
+  border-radius: 999px;
 
-  border: 1px solid #e3e3e3;
+  border: none;
 
-  background: white;
+  background: rgba(255, 255, 255, 0.45);
 
   display: flex;
   align-items: center;
@@ -81,29 +89,23 @@
 
 .ram-nav:hover {
 
-  border-color: #c8102e;
+  transform: none;
 
-  transform: translateY(-2px);
+  box-shadow: none;
 
-  box-shadow:
-    0 12px 28px rgba(0,0,0,0.08);
+  background: rgba(255, 255, 255, 0.65);
 }
 
 .ram-nav span {
-
-  width: 10px;
-  height: 10px;
-
-  border: solid #111;
-  border-width: 0 2px 2px 0;
+  display: none;
 }
 
-.ram-nav.prev span {
-  transform: rotate(135deg);
+.ram-nav.is-active {
+  background: #c8102e;
 }
 
-.ram-nav.next span {
-  transform: rotate(-45deg);
+.ram-nav:not(.is-active) {
+  background: rgba(255, 255, 255, 0.45);
 }
 
 /* WRAPPER */
@@ -169,7 +171,7 @@
   transform: translateY(-10px);
 
   box-shadow:
-    0 30px 70px rgba(0,0,0,0.18);
+    0 30px 70px rgba(0, 0, 0, 0.18);
 }
 
 /* IMAGE */
@@ -203,12 +205,10 @@
   inset: 0;
 
   background:
-    linear-gradient(
-      to top,
-      rgba(0,0,0,0.78) 0%,
-      rgba(0,0,0,0.36) 48%,
-      rgba(0,0,0,0.08) 100%
-    );
+    linear-gradient(to top,
+      rgba(0, 0, 0, 0.78) 0%,
+      rgba(0, 0, 0, 0.36) 48%,
+      rgba(0, 0, 0, 0.08) 100%);
 }
 
 /* CONTENT */
@@ -217,7 +217,6 @@
 
   position: absolute;
 
-  left: 0;
   right: 0;
   bottom: 0;
 
@@ -261,7 +260,7 @@
   transform: translateY(-2px);
 
   box-shadow:
-    0 14px 30px rgba(200,16,46,0.24);
+    0 14px 30px rgba(200, 16, 46, 0.24);
 }
 
 /* MOBILE */
@@ -269,42 +268,38 @@
 @media (max-width: 1239px) {
 
   .ram-carousel-wrapper {
-    max-width: 960px;
+    max-width: none;
+    margin: 0 50px;
     padding-left: 0;
     padding-right: 0;
   }
 
   .ram-updates-header {
-    max-width: 960px;
+    max-width: none;
+    margin: 0 50px 16px;
     padding: 0;
   }
 
   .ram-slide {
-    width: 960px;
+    width: calc(100vw - 100px);
+    height: clamp(325px, 33vw, 432px);
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: 768px) {
 
   .ram-updates-carousel {
-
-    padding:
-      0 0 64px;
+    padding: 0 0 64px;
   }
 
   .ram-updates-header {
-
-    max-width: 351px;
-    margin: 0 auto 16px;
+    max-width: none;
+    margin: 0 20px 16px;
     padding: 0;
-
-    margin-bottom: 16px;
-
-    align-items: center;
+    align-items: flex-start;
   }
 
   .ram-updates-header h2 {
-
     font-size: 24px;
     line-height: 32px;
     font-weight: 300;
@@ -315,42 +310,34 @@
   }
 
   .ram-carousel-wrapper {
-    max-width: 351px;
-    margin: 0 auto;
-    padding-left: 0;
-    padding-right: 0;
+    max-width: none;
+    margin: 0 20px;
+    padding: 0;
   }
 
   .ram-carousel-track {
-
     gap: 12px;
-
     padding-right: 0;
   }
 
   .ram-slide {
-
-    width: 351px;
-    height: 256px;
-
+    width: calc(100vw - 40px);
+    height: calc(100vw * 0.333);
+    min-height: 260px;
     border-radius: 1px;
   }
 
   .ram-slide-content {
-
     padding: 16px;
   }
 
   .ram-slide-btn {
-
     min-width: 118px;
     height: 36px;
-
     font-size: 14px;
   }
 
   .ram-nav {
-
     width: 44px;
     height: 44px;
   }
@@ -360,21 +347,42 @@
 
   .ram-updates-carousel {
 
-    padding-top: 80px;
+    padding: 0 0 64px;
   }
 
   .ram-updates-header {
 
-    flex-direction: column;
+    max-width: none;
+    margin: 0 20px 16px;
     align-items: flex-start;
 
     gap: 20px;
   }
 
+  .ram-updates-header h2 {
+
+    font-size: 24px;
+    line-height: 32px;
+  }
+
+  .ram-carousel-controls {
+    display: none;
+  }
+
+  .ram-carousel-wrapper {
+    max-width: none;
+    margin: 0 20px;
+  }
+
+  .ram-carousel-track {
+    gap: 12px;
+  }
+
   .ram-slide {
 
-    width: min(351px, calc(100vw - 39px));
-    height: 256px;
+    width: calc(100vw - 40px);
+    height: calc(100vw * 0.333);
+    min-height: 260px;
   }
 
   .ram-slide-content {
@@ -385,7 +393,6 @@
   .ram-slide-btn {
 
     min-width: 118px;
-    width: auto;
     height: 36px;
     font-size: 14px;
   }

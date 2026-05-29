@@ -442,7 +442,7 @@
   padding: 8px 0;
 }
 
-.ram-homepage-page .ram-shortcut-item {
+.ram-homepage-page .ram-shortcuts-track .ram-shortcut-item {
   color: #c8102e;
   font-size: 15px;
   font-weight: 400;
@@ -469,16 +469,42 @@
 
 @media (max-width: 1275px) {
   .ram-homepage-page .ram-shortcuts {
-    max-width: 840px;
+    width: min(100%, 1080px);
+    max-width: 1080px;
+    gap: 8px;
+    justify-content: space-between;
+  }
+
+  .ram-homepage-page .ram-shortcuts-track {
+    gap: 16px;
+  }
+
+  .ram-homepage-page .ram-shortcut-item {
+    gap: 4px;
+  }
+
+  .ram-homepage-page .ram-shortcut-nav {
+    width: 16px;
+    height: 12px;
+    margin: 0 5px;
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: 1023px) {
+  .ram-homepage-page .ram-shortcuts {
+    width: calc(100% - 32px);
+    max-width: 1080px;
+    padding: 0;
+  }
+}
+
+@media (max-width: 991px) {
   .ram-homepage-page .ram-shortcuts {
     margin-top: 18px;
     max-width: 840px;
     padding: 0;
-    gap: 0;
+    gap: 8px;
+    justify-content: space-between;
   }
 
   .ram-homepage-page .ram-shortcuts-wrapper {
@@ -490,7 +516,7 @@
   .ram-homepage-page .ram-shortcuts-track {
     justify-content: center;
     padding: 8px 0;
-    gap: 0;
+    gap: 16px;
   }
 
   .ram-homepage-page .ram-shortcut-item {
@@ -498,15 +524,20 @@
     font-weight: 400;
     min-height: 36px;
     padding: 6px 8px;
+    gap: 4px;
   }
 }
 
 @media (max-width: 900px) {
   .ram-homepage-page .ram-shortcuts {
+    margin-top: 0;
     max-width: none;
     width: 100%;
     padding: 0;
-    gap: 0;
+    gap: 8px;
+    justify-content: space-between;
+    font-size: 16px;
+    line-height: 24px;
   }
 
   .ram-homepage-page .ram-shortcuts-wrapper {
@@ -517,7 +548,7 @@
   }
 
   .ram-homepage-page .ram-shortcuts-track {
-    justify-content: flex-start;
+    justify-content: center;
     padding: 8px 0;
     gap: 0;
   }
@@ -525,18 +556,29 @@
   .ram-homepage-page .ram-shortcut-item {
     min-height: 50px;
     padding: 6px 8px;
-    font-size: 14px;
-    flex-direction: row;
+    font-size: 16px;
+    line-height: 24px;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: normal;
     white-space: normal;
     text-align: center;
   }
 
+  .ram-homepage-page .ram-shortcut-item .ram-label {
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .ram-homepage-page .ram-shortcut-item .ram-icon {
+    width: 20px;
+    height: 20px;
+  }
+
   .ram-homepage-page .ram-shortcut-nav {
-    width: 24px;
-    height: 24px;
+    width: 16px;
+    height: 12px;
     margin: 0 5px;
   }
 }

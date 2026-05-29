@@ -34,9 +34,7 @@ export default function decorate(block) {
         <div class="ram-benefits-header">
 
           <h2>
-            What makes so great
-            <br />
-            flying with us?
+            What makes so great flying with us?
           </h2>
 
         </div>
@@ -60,6 +58,9 @@ export default function decorate(block) {
 
                 <button class="ram-benefit-link">
                   Learn more
+                  <svg class="ram-benefit-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7 15L13 10L7 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
                 </button>
 
               </div>

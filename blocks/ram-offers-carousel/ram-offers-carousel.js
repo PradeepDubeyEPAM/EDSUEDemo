@@ -3,20 +3,14 @@ export default function decorate(block) {
   const slides = [
     {
       title: 'Discover',
-      image: 'https://www.royalairmaroc.com/documents/20127/3178766/family-pack.jpg',
+      image: '/icons/carousel-family-pack.jpg',
       alt: 'Family Pack'
     },
 
     {
       title: 'Discover',
-      image: 'https://www.royalairmaroc.com/documents/20127/3178766/safar-flyer.jpg',
+      image: '/icons/carousel-safar-flyer.jpg',
       alt: 'Safar Flyer'
-    },
-
-    {
-      title: 'Discover',
-      image: 'https://www.royalairmaroc.com/documents/20127/3178766/business-class.jpg',
-      alt: 'Business Class'
     }
   ];
 
@@ -31,13 +25,11 @@ export default function decorate(block) {
 
         <div class="ram-carousel-controls">
 
-          <button class="ram-nav prev" aria-label="Previous slide">
-            <span></span>
-          </button>
-
-          <button class="ram-nav next" aria-label="Next slide">
-            <span></span>
-          </button>
+          ${slides.map((slide, index) => `
+            <button class="ram-nav ram-indicator${index === 0 ? ' is-active' : ''}" data-index="${index}" aria-label="Go to slide ${index + 1}: ${slide.alt}">
+              <span></span>
+            </button>
+          `).join('')}
 
         </div>
 
@@ -81,9 +73,9 @@ export default function decorate(block) {
   `;
 
   const wrapper = block.querySelector('.ram-carousel-wrapper');
-
-  const prev = block.querySelector('.ram-nav.prev');
-  const next = block.querySelector('.ram-nav.next');
+  const indicators = [...block.querySelectorAll('.ram-indicator')];
+  const slidesEl = [...block.querySelectorAll('.ram-slide')];
+  let currentIndex = 0;
 
   const getStep = () => {
     const firstSlide = block.querySelector('.ram-slide');
@@ -96,30 +88,45 @@ export default function decorate(block) {
 
   const hasOverflow = () => wrapper.scrollWidth > wrapper.clientWidth + 2;
 
+  const setActiveIndicator = (index) => {
+    indicators.forEach((indicator, indicatorIndex) => {
+      const isActive = indicatorIndex === index;
+      indicator.classList.toggle('is-active', isActive);
+      indicator.setAttribute('aria-current', isActive ? 'true' : 'false');
+    });
+  };
+
+  const getCurrentIndex = () => {
+    const step = getStep();
+    if (!step) return 0;
+    const index = Math.round(wrapper.scrollLeft / step);
+    return Math.max(0, Math.min(slidesEl.length - 1, index));
+  };
+
+  const goToIndex = (index, smooth = true) => {
+    if (!slidesEl.length) return;
+    const nextIndex = Math.max(0, Math.min(slidesEl.length - 1, index));
+    const step = getStep();
+    const left = nextIndex * step;
+
+    if (smooth) {
+      wrapper.scrollTo({ left, behavior: 'smooth' });
+    } else {
+      wrapper.scrollLeft = left;
+    }
+
+    currentIndex = nextIndex;
+    setActiveIndicator(currentIndex);
+  };
+
   const moveNext = (smooth = true) => {
     if (!hasOverflow()) return;
 
-    const step = getStep();
-    const maxScroll = wrapper.scrollWidth - wrapper.clientWidth;
-    const atEnd = wrapper.scrollLeft + step >= maxScroll - 2;
-
-    if (atEnd) {
-      if (smooth) {
-        wrapper.scrollTo({ left: 0, behavior: 'smooth' });
-      } else {
-        wrapper.scrollLeft = 0;
-      }
-      return;
-    }
-
-    if (smooth) {
-      wrapper.scrollBy({ left: step, behavior: 'smooth' });
-    } else {
-      wrapper.scrollLeft += step;
-    }
+    const nextIndex = (currentIndex + 1) % slidesEl.length;
+    goToIndex(nextIndex, smooth);
   };
 
-  const shouldAutoRotate = () => window.innerWidth < 1321;
+  const shouldAutoRotate = () => true;
 
   let autoTimer = null;
 
@@ -140,24 +147,21 @@ export default function decorate(block) {
     }, 2000);
   };
 
-  prev.addEventListener('click', () => {
-
-    wrapper.scrollBy({
-      left: -getStep(),
-      behavior: 'smooth'
+  indicators.forEach((indicator) => {
+    indicator.addEventListener('click', () => {
+      const targetIndex = Number(indicator.dataset.index || 0);
+      goToIndex(targetIndex);
+      startAutoRotate();
     });
-
-    startAutoRotate();
   });
 
-  next.addEventListener('click', () => {
-
-    moveNext();
-
-    startAutoRotate();
-  });
-
-  const slidesEl = block.querySelectorAll('.ram-slide');
+  wrapper.addEventListener('scroll', () => {
+    const scrolledIndex = getCurrentIndex();
+    if (scrolledIndex !== currentIndex) {
+      currentIndex = scrolledIndex;
+      setActiveIndicator(currentIndex);
+    }
+  }, { passive: true });
 
   slidesEl.forEach((slide) => {
 
@@ -184,6 +188,8 @@ export default function decorate(block) {
   });
 
   window.addEventListener('resize', startAutoRotate);
+
+  setActiveIndicator(currentIndex);
 
   startAutoRotate();
 }

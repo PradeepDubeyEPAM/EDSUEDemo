@@ -324,48 +324,44 @@
   }
 }
 
-@media (max-width: 1275px) {
-  .ram-offers-content p {
-    display: none;
-  }
-
+@media (max-width: 1275px) and (min-width: 992px) {
   .ram-offers-section {
-    padding: 0;
+    padding: 24px 0;
   }
 
   .ram-pattern {
     width: 100%;
-    height: calc(114px + 423px);
+    height: 100%;
     background-size: 500px auto;
   }
 
   .ram-offers-wrapper {
-    max-width: none;
+    max-width: 100%;
     width: 100%;
-    flex-direction: row;
+    flex-direction: column;
     gap: 0;
-    align-items: flex-start;
-    padding: 0 2.5%;
+    align-items: stretch;
+    padding: 0;
     box-sizing: border-box;
   }
 
   .ram-offers-content {
-    width: auto;
-    flex-shrink: 0;
-    padding-top: 24px;
-    padding-bottom: 24px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
-    padding-left: 0;
-    padding-right: 0;
+    width: 100%;
+    max-width: none;
+    flex-shrink: 1;
+    display: contents;
   }
 
   .ram-offers-content h2 {
+    order: 1;
+    width: 100%;
+    padding: 0 2.5%;
+    box-sizing: border-box;
     font-size: 32px;
     line-height: 40px;
     font-weight: 300;
+    margin-top: 0;
+    margin-bottom: 6px;
   }
 
   .ram-offers-content h2 strong {
@@ -373,22 +369,38 @@
   }
 
   .ram-offers-content p {
+    order: 1;
+    width: 100%;
+    padding: 0 2.5%;
+    box-sizing: border-box;
+    display: block;
     font-size: 20px;
     line-height: 28px;
     font-weight: 300;
+    margin-top: 0;
     margin-bottom: 0;
   }
 
   .ram-offers-btn {
-    display: none;
+    order: 3;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 24px;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    width: 95%;
+    max-width: none;
   }
 
   .ram-offers-cards {
-    width: auto;
-    flex: 1;
+    order: 2;
+    width: 100%;
+    flex: none;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     min-width: 0;
+    margin-top: 24px;
   }
 
   .ram-offer-card {
@@ -417,55 +429,78 @@
   }
 }
 
-@media (max-width: 991px) {
+@media (max-width: 991.99px) {
   .ram-offers-section {
-    padding: 24px 0 64px;
+    padding: 24px 0;
   }
 
   .ram-pattern {
     width: 100%;
-    height: calc(40px + 18rem);
+    height: 100%;
     background-size: 500px auto;
   }
 
   .ram-offers-wrapper {
     flex-direction: column;
-    gap: 24px;
-    align-items: center;
+    gap: 0;
+    align-items: stretch;
     padding: 0;
   }
 
   .ram-offers-content {
     width: 100%;
-    max-width: 370px;
-    padding-top: 0;
-    padding-bottom: 0;
-    padding-left: 2.5%;
-    padding-right: 2.5%;
-    box-sizing: border-box;
+    max-width: none;
+    flex-shrink: 1;
+    display: contents;
   }
 
   .ram-offers-content h2 {
-    font-size: 24px;
-    line-height: 32px;
+    order: 1;
+    width: 100%;
+    padding: 0 2.5%;
+    box-sizing: border-box;
+    font-size: 32px;
+    line-height: 40px;
     font-weight: 300;
+    margin-top: 0;
+    margin-bottom: 6px;
   }
 
   .ram-offers-content p {
-    font-size: 16px;
-    line-height: 22px;
+    order: 1;
+    width: 100%;
+    padding: 0 2.5%;
+    box-sizing: border-box;
+    display: block;
+    font-size: 20px;
+    line-height: 28px;
     font-weight: 300;
+    margin-top: 0;
     margin-bottom: 0;
   }
 
+  .ram-offers-btn {
+    order: 3;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 24px;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    width: 95%;
+    max-width: none;
+  }
+
   .ram-offers-cards {
+    order: 2;
     width: 100%;
     display: flex;
     justify-content: center;
+    margin-top: 24px;
   }
 
   .ram-offer-card {
-    width: min(100%, 271px);
+    width: min(100%, calc(43.75vw - 24px));
     border-radius: 0 14px 0 14px;
   }
 
@@ -492,12 +527,12 @@
 
 @media (max-width: 768px) {
   .ram-offers-section {
-    padding-top: 24px;
+    padding: 24px 0;
   }
 
   .ram-pattern {
     width: 100%;
-    height: calc(32px + 16rem);
+    height: 100%;
   }
 
   .ram-offers-wrapper {

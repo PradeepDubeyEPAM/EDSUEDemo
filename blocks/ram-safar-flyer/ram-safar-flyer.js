@@ -28,12 +28,18 @@ export default function decorate(block) {
           <ul class="ram-safar-list">
 
             <li>
-              Earn Miles on every flight or activity
-              with our airline and non-airline partners
+              <span class="ram-safar-list-icon" aria-hidden="true"></span>
+              <span>
+                <b>Earn</b> Miles on every flight or activity
+                with our airline and non-airline partners
+              </span>
             </li>
 
             <li>
-              Redeem your Miles for exclusive rewards
+              <span class="ram-safar-list-icon" aria-hidden="true"></span>
+              <span>
+                <b>Redeem</b> your Miles for exclusive rewards
+              </span>
             </li>
 
           </ul>

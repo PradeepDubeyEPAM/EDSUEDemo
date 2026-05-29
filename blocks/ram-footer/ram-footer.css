@@ -1,4 +1,29 @@
-.ram-footer {
+.section.ram-footer-container {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0;
+  overflow: hidden;
+  background: #1b1515;
+}
+
+.section.ram-footer-container>div,
+.section.ram-footer-container .ram-footer.block {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background: #1b1515;
+}
+
+.section.ram-footer-container>.ram-footer-wrapper {
+  width: 100%;
+  margin-left: 0;
+  overflow: hidden;
+}
+
+footer.ram-footer {
   --ram-footer-bg: #1b1515;
   --ram-footer-text: #fffaf4;
   --ram-footer-muted: rgba(255, 250, 244, 0.72);
@@ -6,9 +31,11 @@
   --ram-footer-accent: #c8102e;
 
   position: relative;
-  left: 50%;
-  width: 100vw;
-  margin-left: -50vw;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  margin-left: 0;
+  left: 0;
 
   box-sizing: border-box;
   background: var(--ram-footer-bg);
@@ -342,12 +369,12 @@
   font-size: 12px;
 }
 
-.ram-footer-legal a + a {
+.ram-footer-legal a+a {
   position: relative;
   padding-left: 16px;
 }
 
-.ram-footer-legal a + a::before {
+.ram-footer-legal a+a::before {
   content: '';
   position: absolute;
   left: 0;
@@ -371,19 +398,23 @@
     max-width: 65%;
   }
 }
-@media (max-width: 1440px)  {
-    .ram-footer {
-        margin-left: -50vw;
-    }
-    .ram-search-box {
-        width: 100%;
-        margin-right: 40px;
 
-    }
+@media (max-width: 1440px) {
+  .ram-search-box {
+    width: 100%;
+    margin-right: 40px;
+
+  }
 }
 
 @media (max-width: 768px) {
-  .ram-footer {
+  .section.ram-footer-container>.ram-footer-wrapper {
+    left: 0;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  footer.ram-footer {
     left: 0;
     width: 100%;
     margin-left: 0;
@@ -553,7 +584,7 @@
   .ram-footer-social {
     gap: 10px;
     padding-top: 0;
-    margin:0;
+    margin: 0;
     align-items: flex-start;
   }
 
@@ -564,7 +595,7 @@
   }
 
   .ram-footer-bottom {
-    display:flex;
+    display: flex;
     align-items: center;
     gap: 12px;
     padding-top: 14px;
@@ -593,7 +624,13 @@
 }
 
 @media (max-width: 767px) {
-  .ram-footer {
+  .section.ram-footer-container>.ram-footer-wrapper {
+    left: 0;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  footer.ram-footer {
     padding: 20px 18px 18px;
     left: 0;
     width: 100%;
@@ -790,11 +827,11 @@
     height: 18px;
   }
 
-  .ram-footer-legal a + a {
+  .ram-footer-legal a+a {
     padding-left: 0;
   }
 
-  .ram-footer-legal a + a::before {
+  .ram-footer-legal a+a::before {
     display: none;
   }
 
@@ -802,4 +839,3 @@
     white-space: normal;
   }
 }
- 
