@@ -72,6 +72,76 @@ function buildAutoBlocks() {
   }
 }
 
+function getRamBlockName(wrapper) {
+  if (!wrapper) return '';
+  const block = wrapper.querySelector(':scope > [class*="ram-"]');
+  if (!block) return '';
+  return [...block.classList].find((name) => name.startsWith('ram-') && name !== 'ram') || '';
+}
+
+function getSectionClass(blockNames) {
+  if (blockNames.includes('ram-footer')) {
+    return 'section ram-homepage-page-footer ram-footer-container footer-container';
+  }
+
+  if (blockNames.includes('ram-header') && blockNames.includes('ram-hero')) {
+    return 'section ram-header-container ram-hero-container';
+  }
+
+  if (blockNames.length === 1) {
+    return `section ram-homepage-page-content ${blockNames[0]}-container`;
+  }
+
+  return `section ram-homepage-page-content ${blockNames.map((name) => `${name}-container`).join(' ')}`;
+}
+
+function normalizeRamHomepageStructure(main) {
+  const sections = [...main.querySelectorAll(':scope > .section')];
+  if (sections.length !== 1) return;
+
+  const mergedSection = sections[0];
+  const wrappers = [...mergedSection.querySelectorAll(':scope > div')]
+    .filter((wrapper) => getRamBlockName(wrapper));
+
+  if (wrappers.length < 6) return;
+
+  const hasHeader = wrappers.some((wrapper) => getRamBlockName(wrapper) === 'ram-header');
+  const hasHero = wrappers.some((wrapper) => getRamBlockName(wrapper) === 'ram-hero');
+  const hasShortcuts = wrappers.some((wrapper) => getRamBlockName(wrapper) === 'ram-service-shortcuts');
+  if (!hasHeader || !hasHero || !hasShortcuts) return;
+
+  const normalizedSections = [];
+  for (let i = 0; i < wrappers.length; i += 1) {
+    const current = wrappers[i];
+    const currentBlock = getRamBlockName(current);
+    const next = wrappers[i + 1];
+    const nextBlock = getRamBlockName(next);
+
+    if (currentBlock === 'ram-header' && nextBlock === 'ram-hero') {
+      normalizedSections.push({
+        className: getSectionClass(['ram-header', 'ram-hero']),
+        wrappers: [current, next],
+      });
+      i += 1;
+    } else {
+      normalizedSections.push({
+        className: getSectionClass([currentBlock]),
+        wrappers: [current],
+      });
+    }
+  }
+
+  mergedSection.remove();
+  normalizedSections.forEach(({ className, wrappers: sectionWrappers }) => {
+    const section = document.createElement('div');
+    section.className = className;
+    sectionWrappers.forEach((wrapper) => {
+      section.appendChild(wrapper);
+    });
+    main.appendChild(section);
+  });
+}
+
 /**
  * Decorates the main element.
  * @param {Element} main The main element
@@ -83,6 +153,7 @@ export function decorateMain(main) {
   decorateIcons(main);
   buildAutoBlocks(main);
   decorateSections(main);
+  normalizeRamHomepageStructure(main);
   decorateBlocks(main);
 }
 
@@ -172,6 +243,7 @@ async function loadEager(doc) {
   if (main) {
     decorateMain(main);
     document.body.classList.add('appear');
+    document.body.classList.add('ram-homepage-page');
     // wait for atjs to finish loading
     await atjsPromise;
     // break up possible long tasks before showing the LCP block to reduce TBT
