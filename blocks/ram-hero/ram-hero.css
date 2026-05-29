@@ -466,6 +466,20 @@
   max-width: 350px;
 }
 
+.ram-homepage-page .hero-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: -43px;
+}
+
+.ram-homepage-page .hero-ram-chevron {
+  width: 33px;
+  height: 24px;
+  display: block;
+  margin-top: 10px;
+}
+
 .ram-homepage-page .eyebrow {
   display: block;
   margin-bottom: 14px;
@@ -475,7 +489,7 @@
 }
 
 .ram-homepage-page .hero-text h1 {
-  margin-bottom: 12px;
+  margin: 0;
   font-size: 2.5rem;
   line-height: 110%;
   letter-spacing: 0;
@@ -484,7 +498,7 @@
 
 .ram-homepage-page .hero-description {
   max-width: 350px;
-  margin-bottom: 8px;
+  margin: 0 0 8px;
   font-size: 1.5rem;
   line-height: 1.333;
   color: #fff;
@@ -996,6 +1010,20 @@
   .ram-homepage-page .hero-content {
     min-height: auto;
     padding: 96px 16px 40px;
+  }
+
+  .ram-homepage-page .hero-text {
+    max-width: 350px;
+  }
+
+  .ram-homepage-page .hero-title-row {
+    margin-left: -30px;
+  }
+
+  .ram-homepage-page .hero-ram-chevron {
+    width: 24px;
+    height: 18px;
+    margin-top: 8px;
   }
 
   .ram-homepage-page .hero-description {
