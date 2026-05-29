@@ -9,6 +9,16 @@
   background: #f4f4f1;
 }
 
+.ram-homepage-page .ram-safar-flyer {
+  padding-top: 72px;
+}
+
+@media (max-width: 992px) {
+  .ram-homepage-page .ram-safar-flyer {
+    padding-top: 56px;
+  }
+}
+
 /* PATTERN */
 
 .ram-safar-pattern {
@@ -331,5 +341,106 @@
   .ram-safar-btn {
 
     width: 100%;
+  }
+}
+
+/* =========================================
+   INT-EN HOMEPAGE OVERRIDES
+========================================= */
+
+.ram-homepage-page .section.ram-homepage-page-content.ram-safar-flyer-container {
+  max-width: none;
+  width: 100%;
+}
+
+.ram-homepage-page .ram-safar-flyer {
+  padding: 64px 0;
+}
+
+.ram-homepage-page .ram-safar-wrapper {
+  max-width: 1240px;
+  gap: 56px;
+}
+
+@media (max-width: 1240px) {
+  .ram-homepage-page .ram-safar-wrapper {
+    max-width: 100%;
+    width: 100%;
+    padding: 0 2.5%;
+    box-sizing: border-box;
+  }
+}
+
+.ram-homepage-page .ram-safar-content {
+  max-width: 560px;
+}
+
+.ram-homepage-page .ram-safar-content h2 {
+  margin-bottom: 20px;
+  font-size: 32px;
+  line-height: 40px;
+  letter-spacing: 0;
+}
+
+.ram-homepage-page .ram-safar-list {
+  margin-bottom: 24px;
+}
+
+.ram-homepage-page .ram-safar-list li {
+  margin-bottom: 12px;
+  padding-left: 24px;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.ram-homepage-page .ram-safar-list li::before {
+  width: 8px;
+  height: 8px;
+  top: 7px;
+}
+
+.ram-homepage-page .ram-safar-btn {
+  min-width: 220px;
+  height: 48px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.ram-homepage-page .ram-safar-image-wrapper {
+  max-width: 520px;
+}
+
+@media (max-width: 992px) {
+  .ram-homepage-page .ram-safar-flyer {
+    padding: 48px 0 56px;
+  }
+
+  .ram-homepage-page .ram-safar-wrapper {
+    max-width: 351px;
+    gap: 24px;
+  }
+
+  .ram-homepage-page .ram-safar-content h2 {
+    margin-bottom: 16px;
+    font-size: 24px;
+    line-height: 32px;
+  }
+
+  .ram-homepage-page .ram-safar-list {
+    margin-bottom: 24px;
+  }
+
+  .ram-homepage-page .ram-safar-list li {
+    margin-bottom: 10px;
+    padding-left: 20px;
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  .ram-homepage-page .ram-safar-btn {
+    width: 100%;
+    min-width: 0;
+    height: 44px;
   }
 }

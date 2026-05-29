@@ -309,60 +309,28 @@
 
 .ram-shortcut-nav {
 
-  width: 52px;
-  height: 52px;
+  width: 28px;
+  height: 28px;
 
   flex-shrink: 0;
 
-  border: none;
-  border-radius: 50%;
-
-  background: white;
-
-  box-shadow:
-    0 8px 24px rgba(0,0,0,0.08);
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
+  object-fit: contain;
 
   cursor: pointer;
 
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease,
-    background 0.3s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.ram-shortcut-nav.next {
+  transform: scaleX(-1);
 }
 
 .ram-shortcut-nav:hover {
-
-  transform: translateY(-2px);
-
-  box-shadow:
-    0 12px 30px rgba(0,0,0,0.12);
+  opacity: 0.7;
 }
 
-.ram-shortcut-nav .chevron {
 
-  display: inline-block;
-
-  width: 9px;
-  height: 9px;
-
-  border: solid #c8102e;
-  border-width: 0 2px 2px 0;
-
-  transform: rotate(135deg);
-}
-
-.ram-shortcut-nav.next .chevron {
-  transform: rotate(-45deg);
-}
-
-.ram-shortcut-nav.disabled {
-  opacity: 0.35;
-  pointer-events: none;
-}
 
 /* MOBILE */
 
@@ -396,8 +364,8 @@
 
   .ram-shortcut-nav {
 
-    width: 42px;
-    height: 42px;
+    width: 22px;
+    height: 22px;
   }
 }
 
@@ -429,7 +397,153 @@
 
   .ram-shortcut-nav {
 
-    width: 38px;
-    height: 38px;
+    width: 20px;
+    height: 20px;
   }
 }
+
+/* =========================================
+   INT-EN FIRST FOLD OVERRIDES
+========================================= */
+
+.ram-homepage-page .ram-shortcuts {
+  margin-top: 18px;
+  max-width: 1080px;
+  padding: 0;
+  gap: 0;
+}
+
+.ram-homepage-page .section.ram-homepage-page-content.ram-service-shortcuts-container {
+  max-width: none;
+  width: 100%;
+}
+
+.ram-homepage-page .ram-service-shortcuts-container > div,
+.ram-homepage-page .ram-service-shortcuts-container .ram-service-shortcuts.block {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+}
+
+.ram-homepage-page .ram-service-shortcuts-container {
+  background: #fff;
+  padding-top: 6px;
+}
+
+.ram-homepage-page .ram-shortcuts-wrapper {
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+}
+
+.ram-homepage-page .ram-shortcuts-track {
+  justify-content: center;
+  gap: 0;
+  padding: 8px 0;
+}
+
+.ram-homepage-page .ram-shortcut-item {
+  color: #c8102e;
+  font-size: 15px;
+  font-weight: 400;
+  gap: 8px;
+  flex: 1;
+  justify-content: center;
+  min-height: 36px;
+  padding: 6px 8px;
+}
+
+.ram-homepage-page .ram-shortcut-item::after {
+  display: none;
+}
+
+.ram-homepage-page .ram-shortcut-nav {
+  width: 22px;
+  height: 22px;
+  margin: 0 4px;
+}
+
+.ram-homepage-page .ram-shortcut-nav:hover {
+  opacity: 0.7;
+}
+
+@media (max-width: 1275px) {
+  .ram-homepage-page .ram-shortcuts {
+    max-width: 840px;
+  }
+}
+
+@media (max-width: 992px) {
+  .ram-homepage-page .ram-shortcuts {
+    margin-top: 18px;
+    max-width: 840px;
+    padding: 0;
+    gap: 0;
+  }
+
+  .ram-homepage-page .ram-shortcuts-wrapper {
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+  }
+
+  .ram-homepage-page .ram-shortcuts-track {
+    justify-content: center;
+    padding: 8px 0;
+    gap: 0;
+  }
+
+  .ram-homepage-page .ram-shortcut-item {
+    font-size: 15px;
+    font-weight: 400;
+    min-height: 36px;
+    padding: 6px 8px;
+  }
+}
+
+@media (max-width: 900px) {
+  .ram-homepage-page .ram-shortcuts {
+    max-width: none;
+    width: 100%;
+    padding: 0;
+    gap: 0;
+  }
+
+  .ram-homepage-page .ram-shortcuts-wrapper {
+    flex: 1;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+  }
+
+  .ram-homepage-page .ram-shortcuts-track {
+    justify-content: flex-start;
+    padding: 8px 0;
+    gap: 0;
+  }
+
+  .ram-homepage-page .ram-shortcut-item {
+    min-height: 50px;
+    padding: 6px 8px;
+    font-size: 14px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .ram-homepage-page .ram-shortcut-nav {
+    width: 24px;
+    height: 24px;
+    margin: 0 5px;
+  }
+}
+
+@media (max-width: 420px) {
+  .ram-homepage-page .ram-shortcut-item {
+    min-height: 68px;
+  }
+}
+
