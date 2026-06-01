@@ -1,5 +1,46 @@
 const WORKER_URL = 'https://gemini-proxy.jayabhishikthapuredla.workers.dev/stats';
 
+function renderRows() {
+  const tbody = document.getElementById('dash-tbody');
+  if (!tbody) return;
+
+  const filtered = (window.__dashProducts || []).filter(p => {
+    if (window.__dashFilter === 'verified') return p.verified;
+    if (window.__dashFilter === 'pending') return !p.verified;
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="4" class="dash-empty">No products found.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map((p, i) => `
+    <tr class="${i % 2 === 0 ? 'row-even' : 'row-odd'}">
+      <td class="cell-product">${p.productId}</td>
+      <td class="cell-status">
+        ${p.verified
+          ? '<span class="badge badge-verified">Verified</span>'
+          : '<span class="badge badge-pending">Pending</span>'}
+      </td>
+      <td class="cell-desc">
+        ${p.aiDescription
+          ? `<span class="desc-text">${p.aiDescription}</span>`
+          : '<em class="desc-empty">Not generated yet</em>'}
+      </td>
+      <td class="cell-date">${p.lastModified || '—'}</td>
+    </tr>
+  `).join('');
+}
+
+window.dashSetFilter = function (filter) {
+  window.__dashFilter = filter;
+  document.querySelectorAll('.dash-filter-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.id === `dash-btn-${filter}`);
+  });
+  renderRows();
+};
+
 export default async function decorate(block) {
   block.innerHTML = '<p class="dash-loading">Loading dashboard...</p>';
 
@@ -60,47 +101,5 @@ export default async function decorate(block) {
 
   window.__dashProducts = stats.products;
   window.__dashFilter = 'all';
-
-  window.dashSetFilter = function (filter) {
-    window.__dashFilter = filter;
-    document.querySelectorAll('.dash-filter-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.id === `dash-btn-${filter}`);
-    });
-    renderRows();
-  };
-
-  function renderRows() {
-    const tbody = document.getElementById('dash-tbody');
-    if (!tbody) return;
-
-    const filtered = window.__dashProducts.filter(p => {
-      if (window.__dashFilter === 'verified') return p.verified;
-      if (window.__dashFilter === 'pending') return !p.verified;
-      return true;
-    });
-
-    if (filtered.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="4" class="dash-empty">No products found.</td></tr>`;
-      return;
-    }
-
-    tbody.innerHTML = filtered.map((p, i) => `
-      <tr class="${i % 2 === 0 ? 'row-even' : 'row-odd'}">
-        <td class="cell-product">${p.productId}</td>
-        <td class="cell-status">
-          ${p.verified
-            ? '<span class="badge badge-verified">Verified</span>'
-            : '<span class="badge badge-pending">Pending</span>'}
-        </td>
-        <td class="cell-desc">
-          ${p.aiDescription
-            ? `<span class="desc-text">${p.aiDescription}</span>`
-            : '<em class="desc-empty">Not generated yet</em>'}
-        </td>
-        <td class="cell-date">${p.lastModified || '—'}</td>
-      </tr>
-    `).join('');
-  }
-
   renderRows();
 }
