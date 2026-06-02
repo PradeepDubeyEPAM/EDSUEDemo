@@ -152,12 +152,17 @@ export default function decorate(block) {
                 <div class="field-dropdown-wrap">
                   <div class="ram-booking-field-btn has-inline-search js-expand-trigger js-origin-toggle" role="button" tabindex="0" data-field="origin">
                     <span class="field-label">Select origin</span>
-                    <span class="field-value js-origin-value">Casablanca, Morocco</span>
+                    <span class="field-value js-origin-value">Paris Charles de Gaulle, France</span>
                     <input class="field-inline-search js-origin-search" type="text" placeholder="" hidden />
-                    <span class="field-code js-origin-code">CMN</span>
+                    <span class="field-code js-origin-code">CDG</span>
 
                     <div class="field-dropdown-panel location-panel origin-panel" hidden>
-                      <button type="button" class="location-option active" data-value="Casablanca, Morocco" data-code="CMN">
+                      <button type="button" class="location-option active" data-value="Paris Charles de Gaulle, France" data-code="CDG">
+                        <span class="loc-main">Paris Charles de Gaulle <span>France</span></span>
+                        <span class="loc-sub">Charles de Gaulle</span>
+                        <span class="loc-code">CDG</span>
+                      </button>
+                      <button type="button" class="location-option" data-value="Casablanca, Morocco" data-code="CMN">
                         <span class="loc-main">Casablanca <span>Morocco</span></span>
                         <span class="loc-sub">Mohammed V Intl</span>
                         <span class="loc-code">CMN</span>
@@ -201,6 +206,11 @@ export default function decorate(block) {
                     <span class="field-code js-destination-code"></span>
 
                     <div class="field-dropdown-panel location-panel destination-panel" hidden>
+                      <button type="button" class="location-option" data-value="Austin, United States" data-code="AUS">
+                        <span class="loc-main">Austin <span>United States</span></span>
+                        <span class="loc-sub">Austin-Bergstrom Intl</span>
+                        <span class="loc-code">AUS</span>
+                      </button>
                       <button type="button" class="location-option" data-value="Abidjan, Ivory Coast" data-code="ABJ">
                         <span class="loc-main">Abidjan <span>Ivory Coast</span></span>
                         <span class="loc-sub">Felix Houphouet-Boigny</span>
@@ -465,6 +475,9 @@ export default function decorate(block) {
   const destinationCode = block.querySelector('.js-destination-code');
   const originSearch = block.querySelector('.js-origin-search');
   const destinationSearch = block.querySelector('.js-destination-search');
+  const bookingSearchButton = block.querySelector('#flight .booking-footer-actions .search-flight-btn');
+
+  let selectedTripType = 'round-trip';
 
   const setInlineSearchState = (toggle, input, isActive) => {
     if (!toggle || !input) return;
@@ -504,9 +517,56 @@ export default function decorate(block) {
   const updateDateSummary = () => {
     const departure = formatDateText(departureInput?.value);
     const returns = formatDateText(returnInput?.value);
+    if (selectedTripType === 'one-way' && departure) {
+      dateSummary.textContent = departure;
+      return;
+    }
     if (departure && returns) {
       dateSummary.textContent = `${departure} - ${returns}`;
     }
+  };
+
+  const updateTripTypeDateUI = () => {
+    const isOneWay = selectedTripType === 'one-way';
+    const returnLabel = returnInput?.closest('label');
+    const datePanelGrid = datePanel?.querySelector('.date-panel-grid');
+    if (returnLabel) {
+      returnLabel.hidden = isOneWay;
+    }
+    if (returnInput) {
+      returnInput.disabled = isOneWay;
+    }
+    if (datePanelGrid) {
+      datePanelGrid.classList.toggle('is-one-way', isOneWay);
+    }
+    updateDateSummary();
+  };
+
+  const formatDateForApi = (value) => {
+    if (!value) return '';
+    const [year, month, day] = value.split('-');
+    if (!year || !month || !day) return '';
+    return `${day}-${month}-${year}`;
+  };
+
+  const buildFlightSearchUrl = () => {
+    const basePath = '/content/edsuedemo/us/en/ram/aem/booking/flight-search';
+    const params = new URLSearchParams();
+
+    const origin = originCode?.textContent?.trim();
+    const destination = destinationCode?.textContent?.trim();
+    const depDate = formatDateForApi(departureInput?.value);
+    const returnDate = formatDateForApi(returnInput?.value);
+
+    if (origin) params.set('origin', origin);
+    if (destination) params.set('destination', destination);
+    if (depDate) params.set('depDate', depDate);
+    if (selectedTripType !== 'one-way' && returnDate) {
+      params.set('returnDate', returnDate);
+    }
+
+    const query = params.toString();
+    return query ? `${basePath}?${query}` : basePath;
   };
 
   const closePanels = () => {
@@ -546,6 +606,9 @@ export default function decorate(block) {
     tripButton.addEventListener('click', () => {
       tripButtons.forEach((node) => node.classList.remove('active'));
       tripButton.classList.add('active');
+      const rawType = (tripButton.textContent || '').trim().toLowerCase();
+      selectedTripType = rawType === 'one-way' ? 'one-way' : rawType === 'multi-city' ? 'multi-city' : 'round-trip';
+      updateTripTypeDateUI();
       activateFocusState();
     });
   });
@@ -606,6 +669,14 @@ export default function decorate(block) {
 
   setupLocationSearch(originSearch, originPanel);
   setupLocationSearch(destinationSearch, destinationPanel);
+
+  if (bookingSearchButton) {
+    bookingSearchButton.addEventListener('click', (event) => {
+      event.preventDefault();
+      const searchUrl = buildFlightSearchUrl();
+      window.location.href = searchUrl;
+    });
+  }
 
   if (dateToggle && datePanel) {
     datePanel.addEventListener('click', (e) => e.stopPropagation());
@@ -674,7 +745,7 @@ export default function decorate(block) {
     radio.addEventListener('change', updatePassengersSummary);
   });
 
-  updateDateSummary();
+  updateTripTypeDateUI();
   updatePassengersSummary();
 
   // Simple CTA Events

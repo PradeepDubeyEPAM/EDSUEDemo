@@ -861,12 +861,20 @@
   margin-bottom: 12px;
 }
 
+.ram-homepage-page .date-panel-grid.is-one-way {
+  grid-template-columns: 1fr;
+}
+
 .ram-homepage-page .date-panel-grid label {
   display: flex;
   flex-direction: column;
   gap: 6px;
   font-size: 12px;
   color: #777;
+}
+
+.ram-homepage-page .date-panel-grid label[hidden] {
+  display: none;
 }
 
 .ram-homepage-page .date-panel-grid input {

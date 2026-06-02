@@ -1,4 +1,4 @@
-const WORKER_URL = 'https://gemini-proxy.jayabhishikthapureddy.workers.dev/stats';
+const WORKER_URL = 'https://aemstats.jayabhishikthapuredla.workers.dev/';
 
 function renderRows() {
   const tbody = document.getElementById('dash-tbody');
