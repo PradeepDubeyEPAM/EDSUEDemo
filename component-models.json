@@ -214,7 +214,7 @@
         "multi": false
       },
       {
-        "component": "title",
+        "component": "text",
         "valueType": "string",
         "value": " ",
         "name": "title",
