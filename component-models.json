@@ -214,8 +214,9 @@
         "multi": false
       },
       {
-        "component": "text",
+        "component": "title",
         "valueType": "string",
+        "value": " ",
         "name": "title",
         "label": "Title"
       },
