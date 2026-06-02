@@ -44,10 +44,16 @@ export async function addAIDescriptions(container) {
 
   await Promise.all(
     [...cards].map(async (body) => {
-      const titleEl = body.querySelector('h1,h2,h3,h4,h5,h6');
-      const title = titleEl?.textContent.trim();
-      if (!title) return;
+      let titleEl = body.querySelector('h1,h2,h3,h4,h5,h6,p');
+const title = titleEl?.textContent.trim();
+if (!title) return;
 
+if (titleEl.tagName === 'P') {
+  const h2 = document.createElement('h2');
+  h2.textContent = title;
+  titleEl.replaceWith(h2);
+  titleEl = h2;
+}
       const li = body.closest('li');
       const productId = li?.dataset?.productId?.trim();
 

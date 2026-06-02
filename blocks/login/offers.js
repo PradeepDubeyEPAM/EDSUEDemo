@@ -5,9 +5,9 @@ async function loadSingleOffer({ container, offerPath, titleKey, lang }) {
     fetch(`${window.location.origin}/placeholders.json`)
       .then((r) => (r.ok ? r.json() : null))
       .catch(() => null),
-    fetch(`${window.location.origin}${offerPath}.plain.html`)
-      .then((r) => (r.ok ? r.text() : null))
-      .catch(() => null),
+    fetch(`${window.location.origin}${offerPath}.plain.html?t=${Date.now()}`)
+  .then((r) => (r.ok ? r.text() : null))
+  .catch(() => null),
   ]);
 
   if (placeholderJson) {
