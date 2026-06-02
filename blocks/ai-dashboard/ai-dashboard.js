@@ -1,4 +1,4 @@
-const WORKER_URL = 'https://gemini-proxy.jayabhishikthapuredla.workers.dev/stats';
+const WORKER_URL = 'https://aemstats.jayabhishikthapuredla.workers.dev/';
 
 function renderRows() {
   const tbody = document.getElementById('dash-tbody');
@@ -33,13 +33,13 @@ function renderRows() {
   `).join('');
 }
 
-window.dashSetFilter = function (filter) {
+function dashSetFilter(filter) {
   window.__dashFilter = filter;
   document.querySelectorAll('.dash-filter-btn').forEach(btn => {
     btn.classList.toggle('active', btn.id === `dash-btn-${filter}`);
   });
   renderRows();
-};
+}
 
 export default async function decorate(block) {
   block.innerHTML = '<p class="dash-loading">Loading dashboard...</p>';
@@ -80,9 +80,9 @@ export default async function decorate(block) {
       </div>
 
       <div class="dash-filters">
-        <button id="dash-btn-all" class="dash-filter-btn active" onclick="dashSetFilter('all')">All (${stats.total})</button>
-        <button id="dash-btn-verified" class="dash-filter-btn" onclick="dashSetFilter('verified')">Verified (${stats.verified})</button>
-        <button id="dash-btn-pending" class="dash-filter-btn" onclick="dashSetFilter('pending')">Pending (${stats.pending})</button>
+        <button id="dash-btn-all" class="dash-filter-btn active">All (${stats.total})</button>
+        <button id="dash-btn-verified" class="dash-filter-btn">Verified (${stats.verified})</button>
+        <button id="dash-btn-pending" class="dash-filter-btn">Pending (${stats.pending})</button>
       </div>
 
       <table class="dash-table">
@@ -98,6 +98,13 @@ export default async function decorate(block) {
       </table>
     </div>
   `;
+
+  document.getElementById('dash-btn-all')
+    .addEventListener('click', () => dashSetFilter('all'));
+  document.getElementById('dash-btn-verified')
+    .addEventListener('click', () => dashSetFilter('verified'));
+  document.getElementById('dash-btn-pending')
+    .addEventListener('click', () => dashSetFilter('pending'));
 
   window.__dashProducts = stats.products;
   window.__dashFilter = 'all';
