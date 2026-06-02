@@ -5180,10 +5180,6 @@
     ]
   },
   {
-  "id": "ai-dashboard",
-  "fields": []
-},
-  {
     "id": "product-detail",
     "fields": []
   },
@@ -5281,6 +5277,67 @@
   {
     "id": "ram-offers",
     "fields": []
+  },
+  {
+    "id": "ram-our-fleet",
+    "fields": [
+      {
+        "component": "text",
+        "name": "heading",
+        "label": "Section Heading",
+        "valueType": "string"
+      },
+      {
+        "component": "container",
+        "name": "fleetItems",
+        "label": "Fleet Items",
+        "multi": true,
+        "fields": [
+          {
+            "component": "reference",
+            "name": "aircraftImage",
+            "label": "Aircraft Image",
+            "valueType": "string"
+          },
+          {
+            "component": "text",
+            "name": "imageAlt",
+            "label": "Image Alt Text",
+            "valueType": "string"
+          },
+          {
+            "component": "text",
+            "name": "aircraftName",
+            "label": "Aircraft Name",
+            "valueType": "string"
+          },
+          {
+            "component": "text",
+            "name": "seatCapacity",
+            "label": "Seat Capacity",
+            "valueType": "string"
+          },
+          {
+            "component": "text",
+            "name": "cruisingSpeed",
+            "label": "Cruising Speed",
+            "valueType": "string"
+          },
+          {
+            "component": "text",
+            "name": "cruisingAltitude",
+            "label": "Cruising Altitude",
+            "valueType": "string"
+          },
+          {
+            "component": "richtext",
+            "name": "description",
+            "label": "Description",
+            "valueType": "string"
+          }
+        ]
+      }
+    ]
   },
   {
     "id": "ram-safar-flyer",
