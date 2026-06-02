@@ -43,8 +43,7 @@
       "ram-offers-carousel",
       "ram-safar-flyer",
       "ram-service-shortcuts",
-      "ram-tabs",
-      "ram-tab-section"
+      "ai-dashboard"
     ]
   },
   {
@@ -108,18 +107,6 @@
     "id": "hero-banner",
     "components": [
       "custom-button"
-    ]
-  },
-  {
-    "id": "ram-tabs",
-    "components": [
-      "ram-tab-section"
-    ]
-  },
-  {
-    "id": "ram-tab-section",
-    "components": [
-      "text"
     ]
   }
 ]
