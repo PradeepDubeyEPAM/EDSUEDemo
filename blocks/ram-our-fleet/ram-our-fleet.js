@@ -1,36 +1,24 @@
 export default function decorate(block) {
   const rows = [...block.children];
 
+  const heading = rows.shift()?.textContent.trim() || '';
+
   const fleetContainer = document.createElement('div');
   fleetContainer.className = 'fleet-container';
-
-  let heading = '';
 
   rows.forEach((row) => {
     const cols = [...row.children];
 
-    if (cols.length < 2) {
+    if (cols.length < 6) {
       return;
     }
 
-    const key = cols[0].textContent.trim();
-    const value = cols[1];
-
-    if (key === 'heading') {
-      heading = value.textContent.trim();
-      return;
-    }
-
-    if (key !== 'fleetItems') {
-      return;
-    }
-
-    const image = value.querySelector('picture');
-    const aircraftName = value.dataset.aircraftName || '';
-    const seatCapacity = value.dataset.seatCapacity || '';
-    const cruisingSpeed = value.dataset.cruisingSpeed || '';
-    const cruisingAltitude = value.dataset.cruisingAltitude || '';
-    const description = value.dataset.description || '';
+    const image = cols[0].querySelector('picture');
+    const aircraftName = cols[1].textContent.trim();
+    const seatCapacity = cols[2].textContent.trim();
+    const cruisingSpeed = cols[3].textContent.trim();
+    const cruisingAltitude = cols[4].textContent.trim();
+    const description = cols[5].innerHTML;
 
     const card = document.createElement('div');
     card.className = 'fleet-card';
