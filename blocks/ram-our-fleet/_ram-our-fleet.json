@@ -52,26 +52,38 @@
             },
             {
               "component": "text",
+              "name": "numberOfAircrafts",
+              "label": "Number Of Aircrafts",
+              "valueType": "string"
+            },
+            {
+              "component": "text",
               "name": "seatCapacity",
               "label": "Seat Capacity",
               "valueType": "string"
             },
             {
               "component": "text",
-              "name": "cruisingSpeed",
-              "label": "Cruising Speed",
+              "name": "length",
+              "label": "Length (m)",
               "valueType": "string"
             },
             {
               "component": "text",
               "name": "cruisingAltitude",
-              "label": "Cruising Altitude",
+              "label": "Cruising Altitude (m)",
               "valueType": "string"
             },
             {
-              "component": "richtext",
-              "name": "description",
-              "label": "Description",
+              "component": "text",
+              "name": "cruisingSpeed",
+              "label": "Cruising Speed (km/h)",
+              "valueType": "string"
+            },
+            {
+              "component": "text",
+              "name": "fuelCapacity",
+              "label": "Fuel capacity (l)",
               "valueType": "string"
             }
           ]
