@@ -1,0 +1,67 @@
+.ram-tabs {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.ram-tabs-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  border-bottom: 1px solid #d9dfe5;
+  padding-bottom: 0.75rem;
+}
+
+.ram-tabs-button {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  background: #f3f5f7;
+  color: #243746;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0;
+  padding: 0.875rem 1.25rem;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ram-tabs-button:hover,
+.ram-tabs-button:focus-visible {
+  background: #dce4ea;
+  outline: none;
+}
+
+.ram-tabs-button.is-active {
+  background: #c8102e;
+  box-shadow: 0 10px 24px rgb(200 16 46 / 16%);
+  color: #fff;
+}
+
+.ram-tabs-panels {
+  min-width: 0;
+}
+
+.ram-tabs-panel {
+  display: block;
+}
+
+.ram-tabs-panel[hidden] {
+  display: none;
+}
+
+.ram-tabs-panel > div {
+  width: 100%;
+}
+
+@media (width <= 767px) {
+  .ram-tabs-list {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ram-tabs-button {
+    text-align: left;
+    width: 100%;
+  }
+}

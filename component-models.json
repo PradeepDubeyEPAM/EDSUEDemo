@@ -5291,6 +5291,17 @@
     "fields": []
   },
   {
+    "id": "ram-tab-section",
+    "fields": [
+      {
+        "component": "text",
+        "name": "title",
+        "label": "Tab Title",
+        "description": "The label shown for this tab"
+      }
+    ]
+  },
+  {
     "id": "recently-viewed-products",
     "fields": [
       {
