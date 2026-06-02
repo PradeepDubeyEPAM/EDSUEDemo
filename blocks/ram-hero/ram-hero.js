@@ -159,38 +159,53 @@ export default function decorate(block) {
                     <div class="field-dropdown-panel location-panel origin-panel" hidden>
                       <button type="button" class="location-option active" data-value="Paris Charles de Gaulle, France" data-code="CDG">
                         <span class="loc-main">Paris Charles de Gaulle <span>France</span></span>
-                        <span class="loc-sub">Charles de Gaulle</span>
+                        <span class="loc-sub">Charles de Gaulle Airport</span>
                         <span class="loc-code">CDG</span>
                       </button>
-                      <button type="button" class="location-option" data-value="Casablanca, Morocco" data-code="CMN">
-                        <span class="loc-main">Casablanca <span>Morocco</span></span>
-                        <span class="loc-sub">Mohammed V Intl</span>
-                        <span class="loc-code">CMN</span>
+                      <button type="button" class="location-option" data-value="Austin, United States" data-code="AUS">
+                        <span class="loc-main">Austin <span>United States</span></span>
+                        <span class="loc-sub">Austin-Bergstrom International Airport</span>
+                        <span class="loc-code">AUS</span>
                       </button>
-                      <button type="button" class="location-option" data-value="Santiago de Compostela, Spain" data-code="SCQ">
-                        <span class="loc-main">Santiago de Compostela <span>Spain</span></span>
-                        <span class="loc-sub">Santiago de Compostela</span>
-                        <span class="loc-code">SCQ</span>
+                      <button type="button" class="location-option" data-value="New York, United States" data-code="JFK">
+                        <span class="loc-main">New York <span>United States</span></span>
+                        <span class="loc-sub">John F. Kennedy International Airport</span>
+                        <span class="loc-code">JFK</span>
                       </button>
-                      <button type="button" class="location-option" data-value="Ottawa, Canada" data-code="YOW">
-                        <span class="loc-main">Ottawa <span>Canada</span></span>
-                        <span class="loc-sub">Ottawa Macdonald-Cartier Intl</span>
-                        <span class="loc-code">YOW</span>
+                      <button type="button" class="location-option" data-value="Los Angeles, United States" data-code="LAX">
+                        <span class="loc-main">Los Angeles <span>United States</span></span>
+                        <span class="loc-sub">Los Angeles International Airport</span>
+                        <span class="loc-code">LAX</span>
                       </button>
-                      <button type="button" class="location-option" data-value="Jacksonville, United States" data-code="JAX">
-                        <span class="loc-main">Jacksonville <span>United States</span></span>
-                        <span class="loc-sub">Jacksonville Intl</span>
-                        <span class="loc-code">JAX</span>
+                      <button type="button" class="location-option" data-value="London, United Kingdom" data-code="LHR">
+                        <span class="loc-main">London <span>United Kingdom</span></span>
+                        <span class="loc-sub">London Heathrow Airport</span>
+                        <span class="loc-code">LHR</span>
                       </button>
-                      <button type="button" class="location-option" data-value="Zagreb, Croatia" data-code="ZAG">
-                        <span class="loc-main">Zagreb <span>Croatia</span></span>
-                        <span class="loc-sub">Franjo Tudman</span>
-                        <span class="loc-code">ZAG</span>
+                      <button type="button" class="location-option" data-value="Dubai, United Arab Emirates" data-code="DXB">
+                        <span class="loc-main">Dubai <span>United Arab Emirates</span></span>
+                        <span class="loc-sub">Dubai International Airport</span>
+                        <span class="loc-code">DXB</span>
                       </button>
-                      <button type="button" class="location-option" data-value="Pamplona, Spain" data-code="PNA">
-                        <span class="loc-main">Pamplona <span>Spain</span></span>
-                        <span class="loc-sub">Pamplona</span>
-                        <span class="loc-code">PNA</span>
+                      <button type="button" class="location-option" data-value="Singapore, Singapore" data-code="SIN">
+                        <span class="loc-main">Singapore <span>Singapore</span></span>
+                        <span class="loc-sub">Singapore Changi Airport</span>
+                        <span class="loc-code">SIN</span>
+                      </button>
+                      <button type="button" class="location-option" data-value="Tokyo, Japan" data-code="HND">
+                        <span class="loc-main">Tokyo <span>Japan</span></span>
+                        <span class="loc-sub">Tokyo Haneda Airport</span>
+                        <span class="loc-code">HND</span>
+                      </button>
+                      <button type="button" class="location-option" data-value="Frankfurt, Germany" data-code="FRA">
+                        <span class="loc-main">Frankfurt <span>Germany</span></span>
+                        <span class="loc-sub">Frankfurt Airport</span>
+                        <span class="loc-code">FRA</span>
+                      </button>
+                      <button type="button" class="location-option" data-value="Amsterdam, Netherlands" data-code="AMS">
+                        <span class="loc-main">Amsterdam <span>Netherlands</span></span>
+                        <span class="loc-sub">Amsterdam Schiphol Airport</span>
+                        <span class="loc-code">AMS</span>
                       </button>
                     </div>
                   </div>
@@ -208,23 +223,53 @@ export default function decorate(block) {
                     <div class="field-dropdown-panel location-panel destination-panel" hidden>
                       <button type="button" class="location-option" data-value="Austin, United States" data-code="AUS">
                         <span class="loc-main">Austin <span>United States</span></span>
-                        <span class="loc-sub">Austin-Bergstrom Intl</span>
+                        <span class="loc-sub">Austin-Bergstrom International Airport</span>
                         <span class="loc-code">AUS</span>
                       </button>
-                      <button type="button" class="location-option" data-value="Abidjan, Ivory Coast" data-code="ABJ">
-                        <span class="loc-main">Abidjan <span>Ivory Coast</span></span>
-                        <span class="loc-sub">Felix Houphouet-Boigny</span>
-                        <span class="loc-code">ABJ</span>
+                      <button type="button" class="location-option" data-value="Paris Charles de Gaulle, France" data-code="CDG">
+                        <span class="loc-main">Paris Charles de Gaulle <span>France</span></span>
+                        <span class="loc-sub">Charles de Gaulle Airport</span>
+                        <span class="loc-code">CDG</span>
                       </button>
-                      <button type="button" class="location-option" data-value="Abu Dhabi, United Arab Emirates" data-code="AUH">
-                        <span class="loc-main">Abu Dhabi <span>United Arab Emirates</span></span>
-                        <span class="loc-sub">Abu Dhabi Intl</span>
-                        <span class="loc-code">AUH</span>
+                      <button type="button" class="location-option" data-value="New York, United States" data-code="JFK">
+                        <span class="loc-main">New York <span>United States</span></span>
+                        <span class="loc-sub">John F. Kennedy International Airport</span>
+                        <span class="loc-code">JFK</span>
                       </button>
-                      <button type="button" class="location-option" data-value="Accra, Ghana" data-code="ACC">
-                        <span class="loc-main">Accra <span>Ghana</span></span>
-                        <span class="loc-sub">Kotoka Intl</span>
-                        <span class="loc-code">ACC</span>
+                      <button type="button" class="location-option" data-value="Los Angeles, United States" data-code="LAX">
+                        <span class="loc-main">Los Angeles <span>United States</span></span>
+                        <span class="loc-sub">Los Angeles International Airport</span>
+                        <span class="loc-code">LAX</span>
+                      </button>
+                      <button type="button" class="location-option" data-value="London, United Kingdom" data-code="LHR">
+                        <span class="loc-main">London <span>United Kingdom</span></span>
+                        <span class="loc-sub">London Heathrow Airport</span>
+                        <span class="loc-code">LHR</span>
+                      </button>
+                      <button type="button" class="location-option" data-value="Dubai, United Arab Emirates" data-code="DXB">
+                        <span class="loc-main">Dubai <span>United Arab Emirates</span></span>
+                        <span class="loc-sub">Dubai International Airport</span>
+                        <span class="loc-code">DXB</span>
+                      </button>
+                      <button type="button" class="location-option" data-value="Singapore, Singapore" data-code="SIN">
+                        <span class="loc-main">Singapore <span>Singapore</span></span>
+                        <span class="loc-sub">Singapore Changi Airport</span>
+                        <span class="loc-code">SIN</span>
+                      </button>
+                      <button type="button" class="location-option" data-value="Tokyo, Japan" data-code="HND">
+                        <span class="loc-main">Tokyo <span>Japan</span></span>
+                        <span class="loc-sub">Tokyo Haneda Airport</span>
+                        <span class="loc-code">HND</span>
+                      </button>
+                      <button type="button" class="location-option" data-value="Frankfurt, Germany" data-code="FRA">
+                        <span class="loc-main">Frankfurt <span>Germany</span></span>
+                        <span class="loc-sub">Frankfurt Airport</span>
+                        <span class="loc-code">FRA</span>
+                      </button>
+                      <button type="button" class="location-option" data-value="Amsterdam, Netherlands" data-code="AMS">
+                        <span class="loc-main">Amsterdam <span>Netherlands</span></span>
+                        <span class="loc-sub">Amsterdam Schiphol Airport</span>
+                        <span class="loc-code">AMS</span>
                       </button>
                     </div>
                   </div>
@@ -544,9 +589,7 @@ export default function decorate(block) {
 
   const formatDateForApi = (value) => {
     if (!value) return '';
-    const [year, month, day] = value.split('-');
-    if (!year || !month || !day) return '';
-    return `${day}-${month}-${year}`;
+    return value;
   };
 
   const buildFlightSearchUrl = () => {

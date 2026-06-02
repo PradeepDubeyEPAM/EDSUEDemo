@@ -826,6 +826,10 @@
   background: #e7dcde;
 }
 
+.ram-homepage-page .location-option[hidden] {
+  display: none !important;
+}
+
 .ram-homepage-page .loc-main {
   font-size: 14px;
   color: #252525;
