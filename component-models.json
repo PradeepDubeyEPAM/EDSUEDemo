@@ -5180,6 +5180,10 @@
     ]
   },
   {
+  "id": "ai-dashboard",
+  "fields": []
+},
+  {
     "id": "product-detail",
     "fields": []
   },
