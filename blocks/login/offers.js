@@ -1,7 +1,5 @@
 import { addAIDescriptions } from '../cards/ai-descriptions.js';
 
-// ── LOAD A SINGLE OFFER BLOCK ──────────────────────────────
-
 async function loadSingleOffer({ container, offerPath, titleKey, lang }) {
   const [placeholderJson, offerHtml] = await Promise.all([
     fetch(`${window.location.origin}/placeholders.json`)
@@ -50,15 +48,11 @@ async function loadSingleOffer({ container, offerPath, titleKey, lang }) {
   }
 }
 
-// ── LOAD ALL OFFERS FOR USER ───────────────────────────────
-
-let _offersLoaded = false;
-
 export async function loadOffersOnPage(attributes = {}) {
   const path = window.location.pathname;
   if (path.includes('/nav') || path.includes('/footer')) return;
-  if (_offersLoaded) return;
-  _offersLoaded = true;
+
+  // ── REMOVED _offersLoaded flag entirely ──
 
   const urlLang = path.split('/')[2] || 'en';
   const lang = ['en', 'fr', 'de'].includes(urlLang) ? urlLang : 'en';
@@ -80,17 +74,14 @@ export async function loadOffersOnPage(attributes = {}) {
     const prevEl = block.previousElementSibling;
     if (prevEl && prevEl.classList.contains('offers-title')) prevEl.remove();
 
-    // eslint-disable-next-line no-await-in-loop
     await loadSingleOffer({ container: block, offerPath, titleKey, lang });
   }
 }
 
 export function removeOffers() {
-  _offersLoaded = false;
   document.querySelectorAll('.offers-title').forEach((t) => t.remove());
   document.querySelectorAll('[data-offer-base]').forEach((block) => {
     block.style.display = 'none';
     block.innerHTML = '';
   });
 }
-

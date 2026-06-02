@@ -214,11 +214,10 @@
         "multi": false
       },
       {
-        "component": "richtext",
-        "name": "text",
-        "value": "",
-        "label": "Text",
-        "valueType": "string"
+        "component": "text",
+        "valueType": "string",
+        "name": "title",
+        "label": "Title"
       },
       {
         "component": "text",
@@ -5179,10 +5178,6 @@
       }
     ]
   },
-  {
-  "id": "ai-dashboard",
-  "fields": []
-},
   {
     "id": "product-detail",
     "fields": []

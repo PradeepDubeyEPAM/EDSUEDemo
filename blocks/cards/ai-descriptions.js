@@ -20,6 +20,7 @@ async function getAIDescription(title, productId, defaultDescription) {
     const text = data?.text?.trim() || '';
     const source = data?.source || '';
 
+    // Only cache verified descriptions
     if (text && source === 'cf-verified') {
       sessionStorage.setItem(cacheKey, text);
     }
@@ -32,16 +33,19 @@ async function getAIDescription(title, productId, defaultDescription) {
 }
 
 export async function addAIDescriptions(container) {
-  await new Promise((resolve) => setTimeout(resolve, 0));
+  // Wait for decorateCards to finish setting data-product-id on <li> elements
+  await new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve, 50)));
 
   const cards = container.querySelectorAll('.cards-card-body');
-  if (!cards.length) return;
+  if (!cards.length) {
+    console.warn('[AI] No cards found in container');
+    return;
+  }
 
   await Promise.all(
     [...cards].map(async (body) => {
       const titleEl = body.querySelector('h1,h2,h3,h4,h5,h6');
       const title = titleEl?.textContent.trim();
-      console.log('[AI] using title:', title);
       if (!title) return;
 
       const li = body.closest('li');
