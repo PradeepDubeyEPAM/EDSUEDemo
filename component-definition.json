@@ -1039,6 +1039,35 @@
           }
         },
         {
+          "title": "Ram Tabs",
+          "id": "ram-tabs",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Ram Tabs",
+                  "filter": "ram-tabs"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Ram Tab",
+          "id": "ram-tab-section",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/section/v1/section",
+                "template": {
+                  "model": "ram-tab-section"
+                }
+              }
+            }
+          }
+        },
+        {
           "title": "Recently Viewed Products",
           "id": "recently-viewed-products",
           "plugins": {
@@ -1113,6 +1142,171 @@
                 "template": {
                   "name": "Product List",
                   "model": "productlist"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Product Listing",
+          "id": "product-list",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Product List",
+                  "model": "productlist"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Ram Download App",
+          "id": "ram-download-app",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Ram Download App",
+                  "model": "ram-download-app"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Ram Flying Benefits Cards",
+          "id": "ram-flying-benefits-cards",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Ram Flying Benefits Cards",
+                  "model": "ram-flying-benefits-cards"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Ram Footer",
+          "id": "ram-footer",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Ram Footer",
+                  "model": "ram-footer"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Ram Header",
+          "id": "ram-header",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Ram Header",
+                  "model": "ram-header"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Ram Hero",
+          "id": "ram-hero",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Ram Hero",
+                  "model": "ram-hero"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Ram Newsletter",
+          "id": "ram-news-letter",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Ram Newsletter",
+                  "model": "ram-news-letter"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Ram Offers",
+          "id": "ram-offers",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Ram Offers",
+                  "model": "ram-offers"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Ram Offers Carousel",
+          "id": "ram-offers-carousel",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Ram Offers Carousel",
+                  "model": "ram-offers-carousel"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Ram Safar Flyer",
+          "id": "ram-safar-flyer",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Ram Safar Flyer",
+                  "model": "ram-safar-flyer"
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "Ram Service Shortcuts",
+          "id": "ram-service-shortcuts",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Ram Service Shortcuts",
+                  "model": "ram-service-shortcuts"
                 }
               }
             }

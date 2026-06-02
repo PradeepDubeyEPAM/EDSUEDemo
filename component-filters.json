@@ -25,24 +25,7 @@
       "tile",
       "language-navigation",
       "login",
-      "hero-section",
-      "product",
-      "product-list",
-      "feature-section",
-      "api-mesh-data",
-      "product-detail",
-      "related-products",
-      "recently-viewed-products",
-      "ram-download-app",
-      "ram-flying-benefits-cards",
-      "ram-footer",
-      "ram-header",
-      "ram-hero",
-      "ram-news-letter",
-      "ram-offers",
-      "ram-offers-carousel",
-      "ram-safar-flyer",
-      "ram-service-shortcuts"
+      "hero-section"
     ]
   },
   {
@@ -106,6 +89,18 @@
     "id": "hero-banner",
     "components": [
       "custom-button"
+    ]
+  },
+  {
+    "id": "ram-tabs",
+    "components": [
+      "ram-tab-section"
+    ]
+  },
+  {
+    "id": "ram-tab-section",
+    "components": [
+      "text"
     ]
   }
 ]
