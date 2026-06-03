@@ -30,6 +30,7 @@
           "component": "container",
           "name": "fleetItems",
           "label": "Fleet Items",
+          "collectionName": "fleetItems",
           "multi": true,
           "fields": [
             {

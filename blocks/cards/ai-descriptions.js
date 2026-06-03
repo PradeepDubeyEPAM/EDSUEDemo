@@ -32,16 +32,17 @@ async function getAIDescription(title, productId, defaultDescription) {
 }
 
 export async function addAIDescriptions(container) {
-  await new Promise((resolve) => setTimeout(resolve, 0));
+  await new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve, 50)));
 
   const cards = container.querySelectorAll('.cards-card-body');
-  if (!cards.length) return;
+  if (!cards.length) {
+    console.warn('[AI] No cards found in container');
+    return;
+  }
 
   await Promise.all(
     [...cards].map(async (body) => {
-      const titleEl = body.querySelector('h1,h2,h3,h4,h5,h6');
-      const title = titleEl?.textContent.trim();
-      console.log('[AI] using title:', title);
+      const title = body.textContent?.trim();
       if (!title) return;
 
       const li = body.closest('li');

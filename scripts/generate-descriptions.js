@@ -88,8 +88,8 @@ async function main() {
 
   for (const product of products) {
     const productId    = product.productId?.trim();
-    const productTitle = product.productTitle?.trim();
-
+    const productTitle = product['productTitle (AI input)']?.trim();
+    
     if (!productId || !productTitle) { skipped++; continue; }
 
     console.log(`\nProcessing: ${productId}`);

@@ -214,11 +214,11 @@
         "multi": false
       },
       {
-        "component": "richtext",
-        "name": "text",
-        "value": "",
-        "label": "Text",
-        "valueType": "string"
+        "component": "text",
+        "valueType": "string",
+        "value": " ",
+        "name": "title",
+        "label": "Title"
       },
       {
         "component": "text",
@@ -5291,6 +5291,7 @@
         "component": "container",
         "name": "fleetItems",
         "label": "Fleet Items",
+        "collectionName": "fleetItems",
         "multi": true,
         "fields": [
           {
