@@ -72,6 +72,12 @@
         },
         {
           "...": "../blocks/ram-service-shortcuts/_ram-service-shortcuts.json#/definitions"
+        },
+        {
+          "...": "../blocks/ram-network-accordion/_ram-network-accordion.json#/definitions"
+        },
+        {
+          "...": "../blocks/ram-alliance-accordion/_ram-alliance-accordion.json#/definitions"
         }
       ]
     }

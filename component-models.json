@@ -5180,10 +5180,6 @@
     ]
   },
   {
-  "id": "ai-dashboard",
-  "fields": []
-},
-  {
     "id": "product-detail",
     "fields": []
   },
@@ -5220,6 +5216,10 @@
         "valueType": "string"
       }
     ]
+  },
+  {
+    "id": "ram-alliance-accordion",
+    "fields": []
   },
   {
     "id": "ram-download-app",
@@ -5269,6 +5269,10 @@
         "valueType": "string"
       }
     ]
+  },
+  {
+    "id": "ram-network-accordion",
+    "fields": []
   },
   {
     "id": "ram-news-letter",
