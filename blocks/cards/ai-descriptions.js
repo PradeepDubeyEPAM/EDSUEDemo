@@ -3,7 +3,13 @@ const GEMINI_PROXY_URL = 'https://gemini-proxy.jayabhishikthapuredla.workers.dev
 async function getAIDescription(title, productId, defaultDescription) {
   const cacheKey = `card-desc-${productId}`;
   const cached = sessionStorage.getItem(cacheKey);
-  if (cached) return cached;
+
+  if (cached) {
+    const { text, timestamp } = JSON.parse(cached);
+    const twelveHours = 12 * 60 * 60 * 1000;
+    if (Date.now() - timestamp < twelveHours) return text;
+    sessionStorage.removeItem(cacheKey); 
+  }
 
   try {
     const response = await fetch(GEMINI_PROXY_URL, {
@@ -20,8 +26,9 @@ async function getAIDescription(title, productId, defaultDescription) {
     const text = data?.text?.trim() || '';
     const source = data?.source || '';
 
+    // Only cache verified descriptions with 12hr TTL
     if (text && source === 'cf-verified') {
-      sessionStorage.setItem(cacheKey, text);
+      sessionStorage.setItem(cacheKey, JSON.stringify({ text, timestamp: Date.now() }));
     }
 
     return text || defaultDescription || '';
