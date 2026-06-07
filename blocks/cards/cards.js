@@ -12,16 +12,20 @@ export default function decorate(block) {
 
     const children = [...li.children];
 
-    // assign image/body classes safely
+    
     children.forEach((div) => {
-      if (div.querySelector('picture')) {
-        div.className = 'cards-card-image';
-      } else {
-        div.className = 'cards-card-body';
+  if (div.querySelector('picture')) {
+    div.className = 'cards-card-image';
+  } else {
+    div.className = 'cards-card-body';
+    const rawTitle = div.textContent.trim();
+    if (rawTitle) {
+      div.innerHTML = `<p class="cards-card-title">${rawTitle}</p>`;
+    }
       }
-    });
+});
 
-    // last column = productId
+    //product id
     const last = children[children.length - 1];
     if (last && !last.querySelector('picture')) {
       const productId = last.textContent.trim();

@@ -1,6 +1,6 @@
 const GEMINI_PROXY_URL = 'https://gemini-proxy.jayabhishikthapuredla.workers.dev';
 
-async function getAIDescription(title, productId, defaultDescription) {
+async function getAIDescription(title, productId) {
   const cacheKey = `card-desc-${productId}`;
   const cached = sessionStorage.getItem(cacheKey);
 
@@ -8,17 +8,17 @@ async function getAIDescription(title, productId, defaultDescription) {
     const { text, timestamp } = JSON.parse(cached);
     const twelveHours = 12 * 60 * 60 * 1000;
     if (Date.now() - timestamp < twelveHours) return text;
-    sessionStorage.removeItem(cacheKey); 
+    sessionStorage.removeItem(cacheKey);
   }
 
   try {
     const response = await fetch(GEMINI_PROXY_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, productId, defaultDescription }),
+      body: JSON.stringify({ title, productId }),
     });
 
-    if (!response.ok) return defaultDescription || '';
+    if (!response.ok) return '';
 
     const data = await response.json();
     console.log('[AI] Worker response:', data);
@@ -26,15 +26,14 @@ async function getAIDescription(title, productId, defaultDescription) {
     const text = data?.text?.trim() || '';
     const source = data?.source || '';
 
-    // Only cache verified descriptions with 12hr TTL
     if (text && source === 'cf-verified') {
       sessionStorage.setItem(cacheKey, JSON.stringify({ text, timestamp: Date.now() }));
     }
 
-    return text || defaultDescription || '';
+    return text || '';
   } catch (err) {
     console.error('[AI] Worker call failed:', err);
-    return defaultDescription || '';
+    return '';
   }
 }
 
@@ -65,7 +64,7 @@ export async function addAIDescriptions(container) {
       p.textContent = 'Loading description…';
       body.appendChild(p);
 
-      const text = await getAIDescription(title, productId, '');
+      const text = await getAIDescription(title, productId);
       if (text) {
         p.innerHTML = text;
         p.classList.remove('loading');
