@@ -44,7 +44,7 @@ export function initializeEventTracking(block, componentName) {
              eventData.passenger_type = passengerType;
              eventData.counter_value = counterValue;
              pushToDataLayer(`${componentName}_button_click`, eventData);
-           }, 100);
+           }, 1000);
          } else {
            pushToDataLayer(`${componentName}_button_click`, eventData);
          }
