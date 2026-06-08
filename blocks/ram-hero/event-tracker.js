@@ -51,5 +51,15 @@ export function initializeEventTracking(block, componentName) {
       };
       pushToDataLayer(`${componentName}_date_change`, eventData);
     }
+    if (e.target.tagName === 'SELECT' || e.target.type === 'select-one') {
+      const eventData = {
+        component: componentName,
+        element_id: e.target.id || 'unknown',
+        element_name: e.target.name,
+        selected_value: e.target.value,
+        selected_text: e.target.options[e.target.selectedIndex]?.text || 'unknown',
+      };
+      pushToDataLayer(`${componentName}_dropdown_change`, eventData);
+    }
   }, true);
 }
