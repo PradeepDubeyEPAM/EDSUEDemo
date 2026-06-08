@@ -17,19 +17,30 @@ export function initializeEventTracking(block, componentName) {
     return;
   }
 
-  // Track button clicks
-  block.addEventListener('click', (e) => {
-    const button = e.target.closest('button');
-    if (button) {
-      const eventData = {
-        component: componentName,
-        element_id: button.id || 'unknown',
-        element_text: button.textContent?.trim().substring(0, 100),
-        element_class: button.className,
-      };
-      pushToDataLayer(`${componentName}_button_click`, eventData);
-    }
-  }, true);
+   // Track button clicks
+   block.addEventListener('click', (e) => {
+     const button = e.target.closest('button');
+     if (button) {
+       const eventData = {
+         component: componentName,
+         element_id: button.id || 'unknown',
+         element_text: button.textContent?.trim().substring(0, 100),
+         element_class: button.className,
+       };
+       pushToDataLayer(`${componentName}_button_click`, eventData);
+     }
+
+     // Track dropdown clicks
+     const dropdown = e.target.closest('select');
+     if (dropdown) {
+       const eventData = {
+         component: componentName,
+         element_id: dropdown.id || 'unknown',
+         element_name: dropdown.name,
+       };
+       pushToDataLayer(`${componentName}_dropdown_click`, eventData);
+     }
+   }, true);
 
   // Track text and date input changes
   block.addEventListener('change', (e) => {
