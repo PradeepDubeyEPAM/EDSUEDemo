@@ -52,4 +52,6 @@ export function initializeEventTracking(block, componentName) {
       pushToDataLayer(`${componentName}_date_change`, eventData);
     }
   }, true);
+
+  //console.log(`✅ Event Tracking Initialized for ${componentName}`);
 }
