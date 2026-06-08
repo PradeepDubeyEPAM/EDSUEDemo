@@ -1,5 +1,6 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
+import { initializeEventTracking } from './event-tracker.js';
 
 function parseFields(block) {
   const fields = {};
@@ -808,4 +809,5 @@ export default function decorate(block) {
       }, 1200);
     });
   });
+  initializeEventTracking(block, 'ram-hero');
 }
