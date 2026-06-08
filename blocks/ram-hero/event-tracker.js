@@ -17,42 +17,58 @@ export function initializeEventTracking(block, componentName) {
     return;
   }
 
-   // Track button clicks
+   // Track button clicks (
    block.addEventListener('click', (e) => {
-     const button = e.target.closest('button');
-     if (button) {
-       const eventData = {
-         component: componentName,
-         element_id: button.id || 'unknown',
-         element_text: button.textContent?.trim().substring(0, 100),
-         element_class: button.className,
-       };
-       pushToDataLayer(`${componentName}_button_click`, eventData);
-     }
+      const button = e.target.closest('button');
+      if (button) {
+        const eventData = {
+          component: componentName,
+          element_id: button.id || 'unknown',
+          element_text: button.textContent?.trim().substring(0, 100),
+          element_class: button.className,
+        };
 
-     // Track dropdown clicks
-     const dropdown = e.target.closest('select');
-     if (dropdown) {
-       const eventData = {
-         component: componentName,
-         element_id: dropdown.id || 'unknown',
-         element_name: dropdown.name,
-       };
-       pushToDataLayer(`${componentName}_dropdown_click`, eventData);
-     }
+        // Add location data if it's a location-option button (destination/origin)
+        if (button.classList.contains('location-option')) {
+          eventData.location_code = button.getAttribute('data-code');
+          eventData.location_value = button.getAttribute('data-value');
+        }
+
+        // Add passenger count if it's a counter button (adult, child, infant)
+        const counterRow = button.closest('.counter-row');
+        if (counterRow) {
+          const passengerType = counterRow.getAttribute('data-type');
+          const counterValue = counterRow.querySelector('.counter-value')?.textContent?.trim() || '0';
+          eventData.passenger_type = passengerType;
+          eventData.counter_value = counterValue;
+          eventData.button_type = button.classList.contains('js-plus') ? 'increment' : 'decrement';
+        }
+
+        pushToDataLayer(`${componentName}_button_click`, eventData);
+      }
+
+      // Track dropdown arrow click (div with data-field attribute)
+      // including the dropdown direction
+      const dropdownDiv = e.target.closest('[data-field]');
+      if (dropdownDiv && dropdownDiv.classList.contains('ram-booking-field-btn')) {
+        const fieldType = dropdownDiv.getAttribute('data-field');
+        const dropdownPanel = dropdownDiv.querySelector('.field-dropdown-panel');
+        const isOpen = dropdownPanel && !dropdownPanel.hasAttribute('hidden');
+        const arrowDirection = isOpen ? 'up' : 'down';
+
+        const eventData = {
+          component: componentName,
+          field_type: fieldType,
+          field_class: dropdownDiv.className,
+          arrow_direction: arrowDirection,
+          action: 'dropdown_arrow_click',
+        };
+        pushToDataLayer(`${componentName}_dropdown_arrow_click`, eventData);
+      }
    }, true);
 
-  // Track text and date input changes
+  // Track date input changes
   block.addEventListener('change', (e) => {
-    if (e.target.type === 'text' || e.target.type === 'search') {
-      const eventData = {
-        component: componentName,
-        element_id: e.target.id || 'unknown',
-        element_name: e.target.name,
-        value_length: e.target.value?.length || 0,
-      };
-      pushToDataLayer(`${componentName}_text_input_change`, eventData);
-    }
     if (e.target.type === 'date' || e.target.type === 'datetime-local') {
       const eventData = {
         component: componentName,
@@ -61,16 +77,6 @@ export function initializeEventTracking(block, componentName) {
         date_value: e.target.value,
       };
       pushToDataLayer(`${componentName}_date_change`, eventData);
-    }
-    if (e.target.tagName === 'SELECT' || e.target.type === 'select-one') {
-      const eventData = {
-        component: componentName,
-        element_id: e.target.id || 'unknown',
-        element_name: e.target.name,
-        selected_value: e.target.value,
-        selected_text: e.target.options[e.target.selectedIndex]?.text || 'unknown',
-      };
-      pushToDataLayer(`${componentName}_dropdown_change`, eventData);
     }
   }, true);
 }
