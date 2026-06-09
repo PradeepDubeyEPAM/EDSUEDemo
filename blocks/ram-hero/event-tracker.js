@@ -34,17 +34,20 @@ export function initializeEventTracking(block, componentName) {
           eventData.location_value = button.getAttribute('data-value');
         }
 
-        // Add passenger count if it's a counter button (adult, child, infant)
-        const counterRow = button.closest('.counter-row');
-        if (counterRow) {
-          const passengerType = counterRow.getAttribute('data-type');
-          const counterValue = counterRow.querySelector('.counter-value')?.textContent?.trim() || '0';
-          eventData.passenger_type = passengerType;
-          eventData.counter_value = counterValue;
-          eventData.button_type = button.classList.contains('js-plus') ? 'increment' : 'decrement';
-        }
-
-        pushToDataLayer(`${componentName}_button_click`, eventData);
+         // Add passenger count if it's a counter button (adult, child, infant)
+         const counterRow = button.closest('.counter-row');
+         if (counterRow) {
+           eventData.button_type = button.classList.contains('js-plus') ? 'increment' : 'decrement';
+           setTimeout(() => {
+             const passengerType = counterRow.getAttribute('data-type');
+             const counterValue = counterRow.querySelector('.counter-value')?.textContent?.trim() || '0';
+             eventData.passenger_type = passengerType;
+             eventData.counter_value = counterValue;
+             pushToDataLayer(`${componentName}_button_click`, eventData);
+           }, 1000);
+         } else {
+           pushToDataLayer(`${componentName}_button_click`, eventData);
+         }
       }
 
       // Track dropdown arrow click (div with data-field attribute)

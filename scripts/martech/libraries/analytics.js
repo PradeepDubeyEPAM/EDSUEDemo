@@ -15,10 +15,12 @@ export default function firePageLoadEvent() {
   };
   window.adobeDataLayer.push(dataLayerObject);
   console.log('Page data pushed to adobeDataLayer:', dataLayerObject);
-  if (window._satellite && typeof window._satellite.track === 'function') {
-    _satellite.track(dataLayerObject.event, window.adobeDataLayer);
-    console.log('_satellite.track() sent successfully');
-  }
+  setTimeout(() => {
+    if (window._satellite && typeof window._satellite.track === 'function') {
+      _satellite.track(dataLayerObject.event, window.adobeDataLayer);
+      console.log('_satellite.track() sent successfully');
+    }
+  }, 500);
 }
 
 firePageLoadEvent();
