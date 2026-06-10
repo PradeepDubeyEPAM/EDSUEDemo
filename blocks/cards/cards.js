@@ -1,5 +1,6 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
+import { addAIDescriptions } from './ai-descriptions.js';  
 
 export default function decorate(block) {
   const ul = document.createElement('ul');
@@ -50,4 +51,5 @@ export default function decorate(block) {
   });
 
   block.replaceChildren(ul);
+  addAIDescriptions(block);
 }
