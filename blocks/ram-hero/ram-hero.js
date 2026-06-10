@@ -809,5 +809,5 @@ export default function decorate(block) {
       }, 1200);
     });
   });
-  initializeEventTracking(block, 'ram-hero');
+  initializeEventTracking(block);
 }
