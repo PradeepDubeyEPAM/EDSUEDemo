@@ -5196,6 +5196,18 @@
     "fields": []
   },
   {
+    "id": "ram-assistant-tab",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "title",
+        "label": "Title",
+        "value": ""
+      }
+    ]
+  },
+  {
     "id": "ram-download-app",
     "fields": []
   },
@@ -5247,6 +5259,18 @@
   {
     "id": "ram-network-accordion",
     "fields": []
+  },
+  {
+    "id": "ram-network-tab",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "title",
+        "label": "Title",
+        "value": ""
+      }
+    ]
   },
   {
     "id": "ram-news-letter",
