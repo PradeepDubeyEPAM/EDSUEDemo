@@ -5121,6 +5121,32 @@
     ]
   },
   {
+    "id": "hero",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Image",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Alt",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "text",
+        "value": "",
+        "label": "Text",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
     "id": "login",
     "fields": [
       {
@@ -5196,18 +5222,6 @@
     "fields": []
   },
   {
-    "id": "ram-assistant-tab",
-    "fields": [
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "title",
-        "label": "Title",
-        "value": ""
-      }
-    ]
-  },
-  {
     "id": "ram-download-app",
     "fields": []
   },
@@ -5259,18 +5273,6 @@
   {
     "id": "ram-network-accordion",
     "fields": []
-  },
-  {
-    "id": "ram-network-tab",
-    "fields": [
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "title",
-        "label": "Title",
-        "value": ""
-      }
-    ]
   },
   {
     "id": "ram-news-letter",
