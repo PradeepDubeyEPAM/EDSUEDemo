@@ -90,17 +90,5 @@
     "components": [
       "custom-button"
     ]
-  },
-  {
-    "id": "ram-tabs",
-    "components": [
-      "ram-tab-section"
-    ]
-  },
-  {
-    "id": "ram-tab-section",
-    "components": [
-      "text"
-    ]
   }
 ]

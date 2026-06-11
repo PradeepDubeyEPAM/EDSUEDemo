@@ -1,47 +1,71 @@
-const GEMINI_PROXY_URL = 'https://gemini-proxy.jayabhishikthapuredla.workers.dev';
+const PUBLISH_HOST = 'https://publish-p24103-e71623.adobeaemcloud.com';
 
-async function getAIDescription(title, productId, defaultDescription) {
-  const cacheKey = `card-desc-${productId}`;
-  const cached = sessionStorage.getItem(cacheKey);
-  if (cached) return cached;
-
+async function fetchCFFromPublish(productId) {
+  const url = `${PUBLISH_HOST}/api/assets/edsuedemo/descriptions/${productId}.json`;
+  
   try {
-    const response = await fetch(GEMINI_PROXY_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, productId, defaultDescription }),
-    });
-
-    if (!response.ok) return defaultDescription || '';
-
+    const response = await fetch(url);
+    if (!response.ok) return null;
+    
     const data = await response.json();
-    console.log('[AI] Worker response:', data);
+    const elements = data?.properties?.elements;
+    if (!elements) return null;
 
-    const text = data?.text?.trim() || '';
-    const source = data?.source || '';
-
-    if (text && source === 'cf-verified') {
-      sessionStorage.setItem(cacheKey, text);
-    }
-
-    return text || defaultDescription || '';
+    return {
+      aiDescription: elements.aiDescription?.value?.trim() || '',
+      verified:      elements.verified?.value === true,
+      productId:     elements.productId?.value?.trim() || '',
+      defaultDescription: elements.defaultDescription?.value?.trim() || '',
+    };
   } catch (err) {
-    console.error('[AI] Worker call failed:', err);
-    return defaultDescription || '';
+    console.error('[AI] Publish fetch failed:', err);
+    return null;
   }
 }
 
+async function getAIDescription(productId) {
+  const cacheKey = `card-desc-${productId}`;
+  const cached = sessionStorage.getItem(cacheKey);
+
+  if (cached) {
+    const { text, timestamp } = JSON.parse(cached);
+    const twelveHours = 12 * 60 * 60 * 1000;
+    if (Date.now() - timestamp < twelveHours) return text;
+    sessionStorage.removeItem(cacheKey);
+  }
+
+  const cf = await fetchCFFromPublish(productId);
+  if (!cf) return '';
+
+  // Only surface aiDescription if verified by author
+  const text = cf.verified && cf.aiDescription 
+    ? cf.aiDescription 
+    : cf.defaultDescription || '';
+
+  // Only cache verified AI descriptions (12hr TTL)
+  // Unverified: never cache so author approvals reflect immediately
+  if (cf.verified && cf.aiDescription) {
+    sessionStorage.setItem(cacheKey, JSON.stringify({ 
+      text, 
+      timestamp: Date.now() 
+    }));
+  }
+
+  return text;
+}
+
 export async function addAIDescriptions(container) {
-  await new Promise((resolve) => setTimeout(resolve, 0));
+  await new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve, 50)));
 
   const cards = container.querySelectorAll('.cards-card-body');
-  if (!cards.length) return;
+  if (!cards.length) {
+    console.warn('[AI] No cards found in container');
+    return;
+  }
 
   await Promise.all(
     [...cards].map(async (body) => {
-      const titleEl = body.querySelector('h1,h2,h3,h4,h5,h6');
-      const title = titleEl?.textContent.trim();
-      console.log('[AI] using title:', title);
+      const title = body.textContent?.trim();
       if (!title) return;
 
       const li = body.closest('li');
@@ -57,7 +81,7 @@ export async function addAIDescriptions(container) {
       p.textContent = 'Loading description…';
       body.appendChild(p);
 
-      const text = await getAIDescription(title, productId, '');
+      const text = await getAIDescription(productId);
       if (text) {
         p.innerHTML = text;
         p.classList.remove('loading');

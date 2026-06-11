@@ -1,15 +1,15 @@
 {
   "definitions": [
     {
-      "title": "Ram Alliance Accordion",
-      "id": "ram-alliance-accordion",
+      "title": "Ram Network Accordion",
+      "id": "ram-network-accordion",
       "plugins": {
         "xwalk": {
           "page": {
             "resourceType": "core/franklin/components/block/v1/block",
             "template": {
-              "name": "Ram Alliance Accordion",
-              "model": "ram-alliance-accordion"
+              "name": "Ram Network Accordion",
+              "model": "ram-network-accordion"
             }
           }
         }
@@ -18,7 +18,7 @@
   ],
   "models": [
     {
-      "id": "ram-alliance-accordion",
+      "id": "ram-network-accordion",
       "fields": []
     }
   ],

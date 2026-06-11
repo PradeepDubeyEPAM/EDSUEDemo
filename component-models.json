@@ -214,11 +214,11 @@
         "multi": false
       },
       {
-        "component": "richtext",
-        "name": "text",
-        "value": "",
-        "label": "Text",
-        "valueType": "string"
+        "component": "text",
+        "valueType": "string",
+        "value": " ",
+        "name": "title",
+        "label": "Title"
       },
       {
         "component": "text",
@@ -5275,6 +5275,10 @@
     "fields": []
   },
   {
+    "id": "ram-network-accordion",
+    "fields": []
+  },
+  {
     "id": "ram-news-letter",
     "fields": []
   },
@@ -5293,17 +5297,6 @@
   {
     "id": "ram-service-shortcuts",
     "fields": []
-  },
-  {
-    "id": "ram-tab-section",
-    "fields": [
-      {
-        "component": "text",
-        "name": "title",
-        "label": "Tab Title",
-        "description": "The label shown for this tab"
-      }
-    ]
   },
   {
     "id": "recently-viewed-products",

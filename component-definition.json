@@ -896,7 +896,7 @@
               "page": {
                 "resourceType": "core/franklin/components/block/v1/block",
                 "template": {
-                  "name": "Ram Alliance  Accordion",
+                  "name": "Ram Alliance Accordion",
                   "model": "ram-alliance-accordion"
                 }
               }
@@ -994,6 +994,21 @@
           }
         },
         {
+          "title": "Ram Network Accordion",
+          "id": "ram-network-accordion",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Ram Network Accordion",
+                  "model": "ram-network-accordion"
+                }
+              }
+            }
+          }
+        },
+        {
           "title": "Ram Newsletter",
           "id": "ram-news-letter",
           "plugins": {
@@ -1063,35 +1078,6 @@
                 "template": {
                   "name": "Ram Service Shortcuts",
                   "model": "ram-service-shortcuts"
-                }
-              }
-            }
-          }
-        },
-        {
-          "title": "Ram Tabs",
-          "id": "ram-tabs",
-          "plugins": {
-            "xwalk": {
-              "page": {
-                "resourceType": "core/franklin/components/block/v1/block",
-                "template": {
-                  "name": "Ram Tabs",
-                  "filter": "ram-tabs"
-                }
-              }
-            }
-          }
-        },
-        {
-          "title": "Ram Tab",
-          "id": "ram-tab-section",
-          "plugins": {
-            "xwalk": {
-              "page": {
-                "resourceType": "core/franklin/components/section/v1/section",
-                "template": {
-                  "model": "ram-tab-section"
                 }
               }
             }
@@ -1365,7 +1351,7 @@
               "page": {
                 "resourceType": "core/franklin/components/block/v1/block",
                 "template": {
-                  "name": "Ram Alliance  Accordion",
+                  "name": "Ram Alliance Accordion",
                   "model": "ram-alliance-accordion"
                 }
               }
