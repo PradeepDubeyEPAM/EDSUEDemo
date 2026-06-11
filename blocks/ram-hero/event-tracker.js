@@ -2,7 +2,7 @@ function pushToDataLayer(eventName, eventData) {
   window.adobeDataLayer = window.adobeDataLayer || [];
   const dataLayerObject = {
     event: eventName,
-    eventInfo: eventData,
+    data: eventData,
   };
   window.adobeDataLayer.push(dataLayerObject);
 
@@ -11,75 +11,172 @@ function pushToDataLayer(eventName, eventData) {
   }
 }
 
-export function initializeEventTracking(block, componentName) {
+export function capturePageLoadDefaults(block) {
+  const defaultData = {
+    action_type: 'booking',
+    trip_type: block.querySelector('.trip-btn.active')?.textContent?.trim().toLowerCase() || 'round-trip',
+    origin_value: block.querySelector('.js-origin-value')?.textContent?.trim() || '',
+    origin_code: block.querySelector('.js-origin-code')?.textContent?.trim() || '',
+    destination_value: block.querySelector('.js-destination-value')?.textContent?.trim() || '',
+    destination_code: block.querySelector('.js-destination-code')?.textContent?.trim() || '',
+    departure_date: block.querySelector('.js-departure')?.value || '',
+    return_date: block.querySelector('.js-return')?.value || '',
+    adults: block.querySelector('.counter-row[data-type="adult"] .counter-value')?.textContent?.trim() || '1',
+    children: block.querySelector('.counter-row[data-type="child"] .counter-value')?.textContent?.trim() || '0',
+    infants: block.querySelector('.counter-row[data-type="infant"] .counter-value')?.textContent?.trim() || '0'
+  };
+
+  pushToDataLayer('page_load_defaults', defaultData);
+}
+
+export function initializeEventTracking(block) {
   if (!block) {
     console.warn('Event tracking requires block element');
     return;
   }
 
-   // Track button clicks (
-   block.addEventListener('click', (e) => {
-      const button = e.target.closest('button');
-      if (button) {
-        const eventData = {
-          component: componentName,
-          element_id: button.id || 'unknown',
-          element_text: button.textContent?.trim().substring(0, 100),
-          element_class: button.className,
-        };
+  capturePageLoadDefaults(block);
 
-        // Add location data if it's a location-option button (destination/origin)
-        if (button.classList.contains('location-option')) {
-          eventData.location_code = button.getAttribute('data-code');
-          eventData.location_value = button.getAttribute('data-value');
-        }
+  // Map data-tab values to action_type
+  const tabActionTypeMap = {
+    flight: 'booking',
+    checkin: 'check_in',
+    status: 'flight_status'
+  };
 
-         // Add passenger count if it's a counter button (adult, child, infant)
-         const counterRow = button.closest('.counter-row');
-         if (counterRow) {
-           eventData.button_type = button.classList.contains('js-plus') ? 'increment' : 'decrement';
-           setTimeout(() => {
-             const passengerType = counterRow.getAttribute('data-type');
-             const counterValue = counterRow.querySelector('.counter-value')?.textContent?.trim() || '0';
-             eventData.passenger_type = passengerType;
-             eventData.counter_value = counterValue;
-             pushToDataLayer(`${componentName}_button_click`, eventData);
-           }, 1000);
-         } else {
-           pushToDataLayer(`${componentName}_button_click`, eventData);
-         }
-      }
-
-      // Track dropdown arrow click (div with data-field attribute)
-      // including the dropdown direction
-      const dropdownDiv = e.target.closest('[data-field]');
-      if (dropdownDiv && dropdownDiv.classList.contains('ram-booking-field-btn')) {
-        const fieldType = dropdownDiv.getAttribute('data-field');
-        const dropdownPanel = dropdownDiv.querySelector('.field-dropdown-panel');
-        const isOpen = dropdownPanel && !dropdownPanel.hasAttribute('hidden');
-        const arrowDirection = isOpen ? 'up' : 'down';
-
-        const eventData = {
-          component: componentName,
-          field_type: fieldType,
-          field_class: dropdownDiv.className,
-          arrow_direction: arrowDirection,
-          action: 'dropdown_arrow_click',
-        };
-        pushToDataLayer(`${componentName}_dropdown_arrow_click`, eventData);
-      }
-   }, true);
-
-  // Track date input changes
-  block.addEventListener('change', (e) => {
-    if (e.target.type === 'date' || e.target.type === 'datetime-local') {
+  // Track tab changes (action_type: booking, check_in, flight_status)
+  const bookingTabs = block.querySelectorAll('.tab');
+  bookingTabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      const tabType = tab.getAttribute('data-tab');
       const eventData = {
-        component: componentName,
-        element_id: e.target.id || 'unknown',
-        element_name: e.target.name,
-        date_value: e.target.value,
+        action_type: tabActionTypeMap[tabType] || 'booking',
       };
-      pushToDataLayer(`${componentName}_date_change`, eventData);
+      pushToDataLayer('action_type', eventData);
+    });
+  });
+
+  // Track trip type changes (round-trip, one-way, multi-city)
+  const tripButtons = block.querySelectorAll('.trip-btn');
+  tripButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const eventData = {
+        action_type: 'booking',
+        trip_type: btn.textContent?.trim().toLowerCase(),
+      };
+      pushToDataLayer('trip_type', eventData);
+    });
+  });
+
+  // Track location selection (origin/destination) -
+  const locationPanels = {
+    origin: block.querySelector('.origin-panel'),
+    destination: block.querySelector('.destination-panel'),
+  };
+
+  Object.entries(locationPanels).forEach(([fieldType, panel]) => {
+    if (panel) {
+      const locationButtons = panel.querySelectorAll('.location-option');
+      locationButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const eventData = {
+            [fieldType]: btn.getAttribute('data-value'),
+            [`${fieldType}_code`]: btn.getAttribute('data-code'),
+          };
+          pushToDataLayer(`${fieldType}_select`, eventData);
+        });
+      });
     }
-  }, true);
+  });
+
+  // Track dropdown arrow clicks (origin/destination)
+  const locationDropdowns = block.querySelectorAll('[data-field]');
+  locationDropdowns.forEach((dropdown) => {
+    dropdown.addEventListener('click', (e) => {
+      if (!e.target.classList.contains('location-option')) {
+        const fieldType = dropdown.getAttribute('data-field');
+        const dropdownPanel = dropdown.querySelector('.field-dropdown-panel');
+        const isOpen = dropdownPanel && !dropdownPanel.hasAttribute('hidden');
+        const dropdownDirection = isOpen ? 'up' : 'down';
+
+        const eventData = {
+          dropdown_direction: dropdownDirection,
+        };
+        pushToDataLayer(`${fieldType}_dropdown`, eventData);
+      }
+    });
+  });
+
+  // Track date changes (departure_date, return_date)
+  const dateInputs = block.querySelectorAll('.js-departure, .js-return');
+  dateInputs.forEach((input) => {
+    input.addEventListener('change', () => {
+      const dateType = input.classList.contains('js-departure') ? 'departure_date' : 'return_date';
+      const eventData = {
+        [dateType]: input.value,
+      };
+      pushToDataLayer(`${dateType}_select`, eventData);
+    });
+  });
+
+  // Track passenger count changes (adult, child, infant)
+  const counterButtons = block.querySelectorAll('.counter-btn');
+  counterButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+
+      setTimeout(() => {
+        const adultCount = block.querySelector('.counter-row[data-type="adult"] .counter-value')?.textContent?.trim() || '1';
+        const childCount = block.querySelector('.counter-row[data-type="child"] .counter-value')?.textContent?.trim() || '0';
+        const infantCount = block.querySelector('.counter-row[data-type="infant"] .counter-value')?.textContent?.trim() || '0';
+
+        const eventData = {
+          passenger_count: {
+            adult_count: adultCount,
+            child_count: childCount,
+            infant_count: infantCount,
+          },
+        };
+        pushToDataLayer('passenger_count_change', eventData);
+      }, 100);
+    });
+  });
+
+  // Track cabin class selection (Business/Economy radio buttons)
+  const cabinRadios = block.querySelectorAll('.cabin-options input[type="radio"]');
+  cabinRadios.forEach((radio) => {
+    radio.addEventListener('change', () => {
+      if (radio.checked) {
+        const eventData = {
+          class: radio.value,
+        };
+        pushToDataLayer('cabin_select', eventData);
+      }
+    });
+  });
+
+  // Track search button click
+  const searchBtn = block.querySelector('.search-flight-btn');
+  if (searchBtn) {
+    searchBtn.addEventListener('click', () => {
+      const activeTab = block.querySelector('.tab.active')?.getAttribute('data-tab') || 'flight';
+      const eventData = {
+        submitted: true,
+        action_type: tabActionTypeMap[activeTab] || 'booking',
+        trip_type: block.querySelector('.trip-btn.active')?.textContent?.trim().toLowerCase() || 'round-trip',
+        origin: block.querySelector('.js-origin-value')?.textContent?.trim() || '',
+        origin_code: block.querySelector('.js-origin-code')?.textContent?.trim() || '',
+        destination: block.querySelector('.js-destination-value')?.textContent?.trim() || '',
+        destination_code: block.querySelector('.js-destination-code')?.textContent?.trim() || '',
+        departure_date: block.querySelector('.js-departure')?.value || '',
+        return_date: block.querySelector('.js-return')?.value || '',
+        passenger_count: {
+          adult_count: block.querySelector('.counter-row[data-type="adult"] .counter-value')?.textContent?.trim() || '1',
+          child_count: block.querySelector('.counter-row[data-type="child"] .counter-value')?.textContent?.trim() || '0',
+          infant_count: block.querySelector('.counter-row[data-type="infant"] .counter-value')?.textContent?.trim() || '0'
+        },
+        cabin_class: block.querySelector('.cabin-options input[type="radio"]:checked')?.value || 'economy'
+      };
+      pushToDataLayer('search_flight', eventData);
+    });
+  }
 }

@@ -5218,6 +5218,14 @@
     ]
   },
   {
+    "id": "ram-alliance-accordion",
+    "fields": []
+  },
+  {
+    "id": "ram-assistant-tab",
+    "fields": []
+  },
+  {
     "id": "ram-download-app",
     "fields": []
   },
@@ -5265,6 +5273,14 @@
         "valueType": "string"
       }
     ]
+  },
+  {
+    "id": "ram-network-accordion",
+    "fields": []
+  },
+  {
+    "id": "ram-network-tab",
+    "fields": []
   },
   {
     "id": "ram-news-letter",
