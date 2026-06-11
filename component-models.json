@@ -5121,32 +5121,6 @@
     ]
   },
   {
-    "id": "hero",
-    "fields": [
-      {
-        "component": "reference",
-        "valueType": "string",
-        "name": "image",
-        "label": "Image",
-        "multi": false
-      },
-      {
-        "component": "text",
-        "valueType": "string",
-        "name": "imageAlt",
-        "label": "Alt",
-        "value": ""
-      },
-      {
-        "component": "richtext",
-        "name": "text",
-        "value": "",
-        "label": "Text",
-        "valueType": "string"
-      }
-    ]
-  },
-  {
     "id": "login",
     "fields": [
       {
@@ -5218,6 +5192,10 @@
     ]
   },
   {
+    "id": "ram-alliance-accordion",
+    "fields": []
+  },
+  {
     "id": "ram-download-app",
     "fields": []
   },
@@ -5265,6 +5243,10 @@
         "valueType": "string"
       }
     ]
+  },
+  {
+    "id": "ram-network-accordion",
+    "fields": []
   },
   {
     "id": "ram-news-letter",
