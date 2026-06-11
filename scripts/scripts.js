@@ -12,7 +12,6 @@ import {
   loadCSS,
   getMetadata,
 } from './aem.js';
-import './martech/libraries/analytics.js';
 //import { hello } from "./utils.js";
 /**
  * Moves all the attributes from a given elmenet to another given element.
@@ -293,17 +292,17 @@ async function loadLazy(doc) {
  * Loads everything that happens a lot later,
  * without impacting the user experience.
  */
-// function loadDelayed() {
-//   // eslint-disable-next-line import/no-cycle
-//   console.log("Load delayed function called - script.js")
-//   window.setTimeout(() => import('./delayed.js'), 3000);
-//   // load anything that can be postponed to the latest here
-// }
+function loadDelayed() {
+  // eslint-disable-next-line import/no-cycle
+  console.log("Load delayed function called - script.js")
+  window.setTimeout(() => import('./delayed.js'), 3000);
+  // load anything that can be postponed to the latest here
+}
 
 async function loadPage() {
   await loadEager(document);
   await loadLazy(document);
-  //loadDelayed();
+  loadDelayed();
 }
 
 loadPage();

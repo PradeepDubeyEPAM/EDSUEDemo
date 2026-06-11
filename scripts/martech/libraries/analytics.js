@@ -1,7 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-undef */
 export default function firePageLoadEvent() {
-  console.log('firePageLoadEvent() triggered - analytics.js');
   window.adobeDataLayer = window.adobeDataLayer || [];
   const dataLayerObject = {
     event: 'page-load',
@@ -14,13 +13,9 @@ export default function firePageLoadEvent() {
     },
   };
   window.adobeDataLayer.push(dataLayerObject);
-  console.log('Page data pushed to adobeDataLayer:', dataLayerObject);
-  setTimeout(() => {
-    if (window._satellite && typeof window._satellite.track === 'function') {
-      _satellite.track(dataLayerObject.event, window.adobeDataLayer);
-      console.log('_satellite.track() sent successfully');
-    }
-  }, 500);
+  if (window._satellite && typeof window._satellite.track === 'function') {
+    _satellite.track(dataLayerObject.event, window.adobeDataLayer);
+  }
 }
 
 firePageLoadEvent();
