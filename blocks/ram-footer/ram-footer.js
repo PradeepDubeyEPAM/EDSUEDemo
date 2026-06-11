@@ -15,7 +15,7 @@ export default function decorate(block) {
         },
         {
           label: 'Our Partners',
-          href: '/content/edsuedemo/us/en/ram/eds/about-us/our-partners',
+          href: '/content/edsuedemo/us/en/ram/eds/about-us/alliance-partnerships',
         },
         {
           label: 'Dreamliner',
