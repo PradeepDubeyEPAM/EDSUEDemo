@@ -1,0 +1,283 @@
+.ram-tab-component {
+	width: 100%;
+}
+
+.ram-homepage-page .section.ram-homepage-page-content.ram-network-tab-container {
+	width: 100%;
+	max-width: none;
+	margin: 0;
+}
+
+.ram-homepage-page .ram-network-tab-container > div,
+.ram-homepage-page .ram-network-tab-container .ram-network-tab.block {
+	width: 100%;
+	max-width: none;
+	margin: 0;
+}
+
+.ram-homepage-page .ram-network-tab-container .ram-tab-component.block {
+	width: 100%;
+	max-width: none;
+	margin: 0;
+}
+
+.ram-tab-component-shell {
+	--ram-tab-inline-padding: clamp(16px, 2.5vw, 24px);
+	--ram-tab-top-padding: 18px;
+	--ram-tab-bottom-padding: 24px;
+
+	width: min(1260px, calc(100% - 80px));
+	max-width: none;
+	margin: 0 auto;
+	padding: var(--ram-tab-top-padding) var(--ram-tab-inline-padding) var(--ram-tab-bottom-padding);
+	box-sizing: border-box;
+}
+
+.ram-tab-list {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 20px;
+	flex-wrap: wrap;
+}
+
+.ram-tab-selector {
+	margin-bottom: 3rem;
+}
+
+.ram-tab-mobile-trigger {
+	display: none;
+}
+
+.ram-tab-button {
+	position: relative;
+	appearance: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: auto;
+	margin: 0;
+	border: 0;
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
+	color: #111;
+	padding: 0 28px 14px;
+	font: inherit;
+	font-size: 18px;
+	font-weight: 400;
+	line-height: 1.25;
+	text-align: center;
+	white-space: nowrap;
+	cursor: pointer;
+	transform: none;
+}
+
+.ram-tab-button::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 2px;
+	background: #c8102e;
+	transform: scaleX(0);
+	transform-origin: center;
+	transition: transform 0.2s ease;
+}
+
+.ram-tab-button:hover,
+.ram-tab-button:focus,
+.ram-tab-button:focus-visible {
+	background: transparent;
+	box-shadow: none;
+	color: #111;
+	outline: none;
+	transform: none;
+}
+
+.ram-tab-button.is-active::after {
+	transform: scaleX(1);
+}
+
+.ram-tab-button.is-active {
+	color: #294b6c;
+	font-weight: 500;
+}
+
+.ram-tab-panels {
+	max-width: 100%;
+	margin: 0 auto;
+}
+
+.ram-tab-panel {
+	min-height: 0;
+}
+
+.ram-tab-panel-copy {
+	max-width: none;
+	margin: 0;
+	color: #111;
+	font-size: 18px;
+	line-height: 1.45;
+}
+
+@media (width >= 640px) {
+	.ram-tab-mobile-trigger {
+		display: none;
+	}
+
+	.ram-tab-list-wrapper {
+		display: block;
+		margin-top: 0;
+		border: 0;
+		background: transparent;
+	}
+
+	.ram-tab-list {
+		display: flex;
+		flex-flow: row wrap;
+		align-items: center;
+		justify-content: center;
+		gap: 20px;
+	}
+
+	.ram-tab-button {
+		width: auto;
+		justify-content: center;
+		padding: 0 28px 14px;
+		font-size: 18px;
+		text-align: center;
+		white-space: nowrap;
+	}
+
+	.ram-tab-button::after {
+		display: block;
+	}
+
+	.ram-tab-button + .ram-tab-button {
+		border-top: 0;
+	}
+
+	.ram-tab-button.is-active {
+		color: #294b6c;
+		font-weight: 500;
+	}
+}
+
+@media (width < 640px) {
+	.ram-tab-component-shell {
+		--ram-tab-inline-padding: 20px;
+		--ram-tab-top-padding: 40px;
+		--ram-tab-bottom-padding: 56px;
+		width: 100%;
+	}
+
+	.ram-tab-selector {
+		margin-bottom: 3rem;
+	}
+
+	.ram-tab-mobile-trigger {
+		appearance: none;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		align-items: center;
+		column-gap: 12px;
+		width: 100%;
+		margin: 0;
+		padding: 0 8px 12px 0;
+		border: 0;
+		border-bottom: 2px solid #c8102e;
+		border-radius: 0;
+		background: transparent;
+		box-shadow: none;
+		color: #111;
+		font: inherit;
+		font-size: 18px;
+		font-weight: 400;
+		line-height: 1.35;
+		text-align: left;
+		white-space: normal;
+		overflow: visible;
+	}
+
+	.ram-tab-mobile-value {
+		display: block;
+		flex: 1 1 auto;
+		min-width: 0;
+	}
+
+	.ram-tab-mobile-trigger:hover,
+	.ram-tab-mobile-trigger:focus,
+	.ram-tab-mobile-trigger:focus-visible {
+		background: transparent;
+		box-shadow: none;
+		color: #111;
+		outline: none;
+	}
+
+	.ram-tab-mobile-icon {
+		width: 14px;
+		height: 14px;
+		border-right: 2px solid currentcolor;
+		border-bottom: 2px solid currentcolor;
+		transform: rotate(45deg) translateY(-2px);
+		transform-origin: center;
+		transition: transform 0.2s ease;
+		flex: 0 0 auto;
+		margin-top: 0;
+		justify-self: end;
+	}
+
+	.ram-tab-component.is-mobile-open .ram-tab-mobile-icon {
+		transform: rotate(-135deg) translateY(2px);
+	}
+
+	.ram-tab-list-wrapper {
+		display: none;
+		margin-top: 8px;
+		border: 1px solid #d9d9d9;
+		background: #fff;
+	}
+
+	.ram-tab-component.is-mobile-open .ram-tab-list-wrapper {
+		display: block;
+	}
+
+	.ram-tab-list {
+		flex-flow: column nowrap;
+		align-items: stretch;
+		justify-content: flex-start;
+		gap: 0;
+	}
+
+	.ram-tab-button {
+		width: 100%;
+		justify-content: center;
+		padding: 18px 20px;
+		font-size: 17px;
+		text-align: center;
+		white-space: normal;
+	}
+
+	.ram-tab-button::after {
+		display: none;
+	}
+
+	.ram-tab-button + .ram-tab-button {
+		border-top: 1px solid #ececec;
+	}
+
+	.ram-tab-button.is-active {
+		color: #111;
+		font-weight: 400;
+	}
+
+	.ram-tab-panel {
+		min-height: 0;
+	}
+
+	.ram-tab-panel-copy {
+		font-size: 16px;
+	}
+}
