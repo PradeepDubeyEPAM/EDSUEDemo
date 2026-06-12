@@ -5,12 +5,19 @@ function getHost() {
 }
 
 async function fetchCFFromPublish(productId) {
-const url =`${getHost()}/api/assets/edsuedemo/descriptions/${productId}.json`;
-  
+  const isAuthor = window.location.hostname.includes('author-');
+  const host = getHost();
+
+  // On author: try DAM content path first (same-origin, no CORS)
+  // On publish: use API endpoint
+  const url = isAuthor
+    ? `${host}/content/dam/edsuedemo/descriptions/${productId}.json`
+    : `${host}/api/assets/edsuedemo/descriptions/${productId}.json`;
+
   try {
     const response = await fetch(url, { credentials: 'include' });
     if (!response.ok) return null;
-    
+
     const data = await response.json();
     const elements = data?.properties?.elements;
     if (!elements) return null;
@@ -22,7 +29,7 @@ const url =`${getHost()}/api/assets/edsuedemo/descriptions/${productId}.json`;
       defaultDescription: elements.defaultDescription?.value?.trim() || '',
     };
   } catch (err) {
-    console.error('[AI] Publish fetch failed:', err);
+    console.error('[AI] Fetch failed:', err);
     return null;
   }
 }
