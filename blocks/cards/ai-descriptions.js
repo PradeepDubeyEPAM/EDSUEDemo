@@ -1,10 +1,14 @@
-const PUBLISH_HOST = 'https://publish-p24103-e71623.adobeaemcloud.com';
+function getHost() {
+  const host = window.location.hostname;
+  if (host.includes('author-')) return `https://${host}`;
+  return 'https://publish-p24103-e71623.adobeaemcloud.com';
+}
 
 async function fetchCFFromPublish(productId) {
-  const url = `${PUBLISH_HOST}/api/assets/edsuedemo/descriptions/${productId}.json`;
+const url =`${getHost()}/api/assets/edsuedemo/descriptions/${productId}.json`;
   
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, { credentials: 'include' });
     if (!response.ok) return null;
     
     const data = await response.json();
