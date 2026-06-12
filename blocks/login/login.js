@@ -15,6 +15,7 @@ function clearSession() {
 
 // ── NAV UI ─────────────────────────────────────────────────
 export function showLoggedInUI(username) {
+  
   const existing = document.getElementById('nav-user-wrapper');
   if (existing) existing.remove();
 

@@ -1,18 +1,6 @@
-function getHost() {
-  const host = window.location.hostname;
-  if (host.includes('author-')) return `https://${host}`;
-  return 'https://publish-p24103-e71623.adobeaemcloud.com';
-}
-
 async function fetchCFFromPublish(productId) {
-  const isAuthor = window.location.hostname.includes('author-');
-  const host = getHost();
-
-  // On author: try DAM content path first (same-origin, no CORS)
-  // On publish: use API endpoint
-  const url = isAuthor
-    ? `${host}/content/dam/edsuedemo/descriptions/${productId}.json`
-    : `${host}/api/assets/edsuedemo/descriptions/${productId}.json`;
+  // Always fetch from publish tier API (works once CORS is configured)
+  const url = `https://publish-p24103-e71623.adobeaemcloud.com/api/assets/edsuedemo/descriptions/${productId}.json`;
 
   try {
     const response = await fetch(url, { credentials: 'include' });
