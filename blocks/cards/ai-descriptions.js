@@ -1,27 +1,40 @@
 async function fetchCFFromPublish(productId) {
-  // Always fetch from publish tier API (works once CORS is configured)
-  const url = `https://publish-p24103-e71623.adobeaemcloud.com/api/assets/edsuedemo/descriptions/${productId}.json`;
+  const isAuthor = window.location.hostname.includes('author-');
+  
+  const url = isAuthor
+    ? `https://${window.location.hostname}/adobe/sites/cf/fragments?path=/content/dam/edsuedemo/descriptions/${productId}`
+    : `https://publish-p24103-e71623.adobeaemcloud.com/api/assets/edsuedemo/descriptions/${productId}.json`;
 
   try {
     const response = await fetch(url, { credentials: 'include' });
     if (!response.ok) return null;
-
     const data = await response.json();
+
+    if (isAuthor) {
+      const fields = {};
+      data.items?.[0]?.fields?.forEach(f => { fields[f.name] = f.values?.[0]; });
+      return {
+        aiDescription:      fields.aiDescription?.trim() || '',
+        verified:           fields.verified === true,
+        productId:          fields.productId?.trim() || '',
+        defaultDescription: fields.defaultDescription?.trim() || '',
+      };
+    }
+
     const elements = data?.properties?.elements;
     if (!elements) return null;
-
     return {
-      aiDescription: elements.aiDescription?.value?.trim() || '',
-      verified:      elements.verified?.value === true,
-      productId:     elements.productId?.value?.trim() || '',
+      aiDescription:      elements.aiDescription?.value?.trim() || '',
+      verified:           elements.verified?.value === true,
+      productId:          elements.productId?.value?.trim() || '',
       defaultDescription: elements.defaultDescription?.value?.trim() || '',
     };
+
   } catch (err) {
     console.error('[AI] Fetch failed:', err);
     return null;
   }
 }
-
 async function getAIDescription(productId) {
   const cacheKey = `card-desc-${productId}`;
   const cached = sessionStorage.getItem(cacheKey);
