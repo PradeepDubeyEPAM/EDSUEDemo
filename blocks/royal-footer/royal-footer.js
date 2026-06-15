@@ -8,7 +8,7 @@ import { loadFragment } from '../fragment/fragment.js';
 export default async function decorate(block) {
   try {
     // Get AEM XF path from metadata or use default
-    const xfPath = ' /content/experience-fragments/aem-cloud-poc/us/en/site/footer-xf/master';
+    const xfPath = '/content/experience-fragments/aem-cloud-poc/us/en/site/footer-xf/master';
     // Load the Experience Fragment
     const fragment = await loadFragment(xfPath);
     // eslint-disable-next-line no-console
