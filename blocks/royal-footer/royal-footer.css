@@ -1,0 +1,14 @@
+/* Royal Footer - AEM Experience Fragment Integration */
+
+.royal-footer {
+  width: 100%;
+}
+
+.royal-footer-container {
+  width: 100%;
+}
+
+.royal-footer-container > * {
+  max-width: 100%;
+}
+

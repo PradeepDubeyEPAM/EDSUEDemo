@@ -1,0 +1,27 @@
+{
+  "definitions": [
+    {
+      "title": "Royal Footer",
+      "id": "royal-footer",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/royal-footer/v1/royal-footer",
+            "template": {
+              "model": "royal-footer"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "royal-footer",
+      "fields": []
+    }
+  ],
+  "filters": []
+}
+
+
