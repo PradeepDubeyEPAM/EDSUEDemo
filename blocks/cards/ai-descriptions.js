@@ -1,15 +1,25 @@
 async function fetchCFFromPublish(productId) {
-const host = window.location.hostname.includes('author-')
-  ? `https://${window.location.hostname}`
-  : 'https://publish-p24103-e71623.adobeaemcloud.com';
+const isAuthor = window.location.hostname.includes('author-');
 
-const url = `${host}/api/assets/edsuedemo/descriptions/${productId}.json`;
+const url = isAuthor
+  ? `https://${window.location.hostname}/adobe/sites/cf/fragments?path=/content/dam/edsuedemo/descriptions/${productId}`
+  : `https://publish-p24103-e71623.adobeaemcloud.com/api/assets/edsuedemo/descriptions/${productId}.json`;
 
   try {
     const response = await fetch(url);
     if (!response.ok) return null;
     const data = await response.json();
 
+   if (isAuthor) {
+      const fields = {};
+      data.items?.[0]?.fields?.forEach(f => { fields[f.name] = f.values?.[0]; });
+      return {
+        aiDescription:      fields.aiDescription?.trim() || '',
+        verified:           fields.verified === true,
+        productId:          fields.productId?.trim() || '',
+        defaultDescription: fields.defaultDescription?.trim() || '',
+      };
+    }
 
     const elements = data?.properties?.elements;
     if (!elements) return null;
