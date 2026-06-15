@@ -11,6 +11,8 @@ export default async function decorate(block) {
     const xfPath = ' /content/experience-fragments/aem-cloud-poc/us/en/site/footer-xf/master';
     // Load the Experience Fragment
     const fragment = await loadFragment(xfPath);
+    // eslint-disable-next-line no-console
+    console.log('Fragment loaded:', fragment);
 
     if (fragment) {
       // Clear existing content
@@ -21,6 +23,8 @@ export default async function decorate(block) {
       footerContainer.classList.add('royal-footer-container');
 
       // Append all content from the fragment
+      // eslint-disable-next-line no-console
+      console.log('Start of block generation', fragment);
       while (fragment.firstElementChild) {
         footerContainer.append(fragment.firstElementChild);
       }

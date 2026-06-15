@@ -72,6 +72,9 @@
         },
         {
           "...": "../blocks/ram-service-shortcuts/_ram-service-shortcuts.json#/definitions"
+        },
+        {
+          "...": "../blocks/royal-footer/_royal-footer.json#/definitions"
         }
       ]
     }
