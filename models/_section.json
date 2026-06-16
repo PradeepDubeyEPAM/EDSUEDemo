@@ -67,8 +67,24 @@
         "external-data-table",
          "tile",
         "language-navigation",
-         "login",
-        "hero-section"
+        "login",
+        "hero-section",
+        "ram-alliance-accordion",
+        "ram-assistant-tab",
+        "ram-download-app",
+        "ram-flying-benefits-cards",
+        "ram-footer",
+        "ram-header",
+        "ram-hero",
+        "ram-network-accordion",
+        "ram-network-tab",
+        "ram-news-letter",
+        "ram-offers-carousel",
+        "ram-offers",
+        "ram-safar-flyer",
+        "ram-service-shortcuts",
+        "royal-footer",
+        "royal-header"
       ]
     }
   ]
