@@ -75,6 +75,9 @@
         },
         {
           "...": "../blocks/royal-footer/_royal-footer.json#/definitions"
+        },
+                {
+          "...": "../blocks/royal-header/_royal-header.json#/definitions"
         }
       ]
     }
