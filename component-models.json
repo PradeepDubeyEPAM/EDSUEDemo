@@ -5222,10 +5222,6 @@
     "fields": []
   },
   {
-    "id": "ram-assistant-tab",
-    "fields": []
-  },
-  {
     "id": "ram-download-app",
     "fields": []
   },
@@ -5279,7 +5275,7 @@
     "fields": []
   },
   {
-    "id": "ram-network-tab",
+    "id": "ram-network-accordion",
     "fields": []
   },
   {
@@ -5333,6 +5329,10 @@
   },
   {
     "id": "royal-footer",
+    "fields": []
+  },
+  {
+    "id": "royal-header",
     "fields": []
   },
   {
