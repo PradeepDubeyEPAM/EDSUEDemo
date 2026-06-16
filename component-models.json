@@ -5222,6 +5222,10 @@
     "fields": []
   },
   {
+    "id": "ram-assistant-tab",
+    "fields": []
+  },
+  {
     "id": "ram-download-app",
     "fields": []
   },
@@ -5275,7 +5279,7 @@
     "fields": []
   },
   {
-    "id": "ram-network-accordion",
+    "id": "ram-network-tab",
     "fields": []
   },
   {
@@ -5296,6 +5300,10 @@
   },
   {
     "id": "ram-service-shortcuts",
+    "fields": []
+  },
+    {
+    "id": "royal-header",
     "fields": []
   },
   {
@@ -5329,10 +5337,6 @@
   },
   {
     "id": "royal-footer",
-    "fields": []
-  },
-  {
-    "id": "royal-header",
     "fields": []
   },
   {
