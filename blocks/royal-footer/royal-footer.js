@@ -401,8 +401,10 @@ export default async function decorate(block) {
     const data = await resp.json();
     console.log('Fetched model.json:', data);
 
-    // Extract props from model.json
-    const props = data || {};
+    // Extract props from nested structure: :items > root > :items > footer_cmp
+    const props = data?.[':items']?.root?.[':items']?.footer_cmp || {};
+    console.log('Extracted props:', props);
+
     const {
       dropdownItems = [],
       searchBarText,
