@@ -1,4 +1,6 @@
 /* eslint-disable */
+import { loadCSS } from '../../scripts/aem.js';
+
 // Utility functions
 const getImageSrc = (imagePath) => imagePath || '';
 
@@ -390,6 +392,14 @@ const setupToggleInteraction = (footer) => {
 export default async function decorate(block) {
   try {
     const xfPath = '/content/experience-fragments/aem-cloud-poc/us/en/site/footer-xf/master';
+
+    // Load AEM React clientlib CSS directly
+    // AEM serves non-hashed path that automatically resolves to current hashed version
+    const clientlibCSSPath = '/etc.clientlibs/aem-cloud-poc/clientlibs/clientlib-react.css';
+
+    await loadCSS(clientlibCSSPath);
+    console.log('AEM clientlib CSS loaded from:', clientlibCSSPath);
+
 
     // Fetch model.json
     const resp = await fetch(`${xfPath}.model.json`);
