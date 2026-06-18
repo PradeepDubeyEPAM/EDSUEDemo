@@ -393,40 +393,13 @@ export default async function decorate(block) {
   try {
     const xfPath = '/content/experience-fragments/aem-cloud-poc/us/en/site/footer-xf/master';
 
-    // Fetch the XF HTML to extract clientlib CSS URLs dynamically
-    const htmlResp = await fetch(`${xfPath}.html`);
-    const clientlibCSSPaths = [];
+    // Load AEM React clientlib CSS directly
+    // AEM serves non-hashed path that automatically resolves to current hashed version
+    const clientlibCSSPath = '/etc.clientlibs/aem-cloud-poc/clientlibs/clientlib-react.css';
 
-    if (htmlResp.ok) {
-      const htmlText = await htmlResp.text();
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = htmlText;
+    await loadCSS(clientlibCSSPath);
+    console.log('AEM clientlib CSS loaded from:', clientlibCSSPath);
 
-
-      // Filter CSS files matching our pattern
-      const linkElements = tempDiv.querySelectorAll('link[rel="stylesheet"]');
-
-      linkElements.forEach((link) => {
-        const href = link.getAttribute('href');
-        if (href && href.includes('/etc.clientlibs/aem-cloud-poc/clientlibs/')) {
-          if (href.includes('clientlib-react.lc-')) {
-            clientlibCSSPaths.push(href);
-          }
-        }
-      });
-
-      console.log('Found AEM clientlib CSS paths:', clientlibCSSPaths);
-
-      // Load all extracted clientlib CSS files
-      if (clientlibCSSPaths.length > 0) {
-        await Promise.all(clientlibCSSPaths.map(path => loadCSS(path)));
-        console.log('AEM clientlib CSS loaded successfully');
-      } else {
-        console.warn('No AEM clientlib CSS found in XF HTML');
-      }
-    } else {
-      console.warn('Failed to fetch XF HTML for CSS extraction');
-    }
 
     // Fetch model.json
     const resp = await fetch(`${xfPath}.model.json`);
