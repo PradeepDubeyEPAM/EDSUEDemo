@@ -1,0 +1,23 @@
+/* Royal Footer - Reset EDS default spacing to remove left/right space */
+
+footer {
+  margin: 0;
+  padding: 0;
+}
+
+/* EDS wraps block in .royal-footer-wrapper - reset its defaults */
+footer .royal-footer-wrapper {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Reset the block element itself */
+footer .royal-footer.block {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
