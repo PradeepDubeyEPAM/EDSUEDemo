@@ -1,4 +1,6 @@
 /* eslint-disable */
+import { loadCSS } from '../../scripts/aem.js';
+
 // Utility functions
 const getImageSrc = (imagePath) => imagePath || '';
 
@@ -391,6 +393,14 @@ export default async function decorate(block) {
   try {
     const xfPath = '/content/experience-fragments/aem-cloud-poc/us/en/site/footer-xf/master';
 
+    // Load AEM SPA React clientlib CSS
+    const clientlibCSSPaths = [
+      '/etc.clientlibs/aem-cloud-poc/clientlibs/clientlib-react.css',
+    ];
+
+    // Load all clientlib CSS files
+    await Promise.all(clientlibCSSPaths.map(path => loadCSS(path)));
+    console.log('AEM clientlib CSS loaded');
     // Fetch model.json
     const resp = await fetch(`${xfPath}.model.json`);
 
