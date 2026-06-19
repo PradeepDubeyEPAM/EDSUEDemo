@@ -1,14 +1,13 @@
-async function sendMessageToGroq(userMessage) {
+async function sendMessageToGroq(userMessage, products) {
   try {
     const endpoint = 'https://26272-aemcloudpocapimesh-develop.adobeio-static.net/api/v1/web/api-mesh-proxy/groq-chat';
 
     const response = await fetch(endpoint, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         question: userMessage,
+        products,
       }),
     });
 
@@ -26,7 +25,7 @@ async function sendMessageToGroq(userMessage) {
 
 function createChatbotUI() {
   const container = document.createElement('div');
-  container.className = 'chatbot-container';
+  container.className = 'chatbot-widget-container';
 
   // Toggle button
   const toggleBtn = document.createElement('button');
@@ -174,7 +173,7 @@ export default function decorate(block) {
     const loadingEl = showLoadingIndicator(messagesContainer);
 
     // Send to Groq API
-    const response = await sendMessageToGroq(message);
+    const response = await sendMessageToGroq(message, pageProducts);
 
     // Remove loading indicator
     loadingEl.remove();
