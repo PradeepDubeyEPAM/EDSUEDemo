@@ -4,21 +4,19 @@
   margin: 0;
   padding-left: 0;
   padding-right: 0;
-  overflow: hidden;
-  background: #1b1515;
 }
 
-.section.ram-footer-container>div,
-.section.ram-footer-container .ram-footer.block {
+.section.ram-footer-container > .ram-footer-wrapper,
+.section.ram-footer-container > .ram-footer-wrapper > .ram-footer.block {
   max-width: none;
   width: 100%;
   margin: 0;
   padding: 0;
-  background: #1b1515;
 }
 
-.section.ram-footer-container>.ram-footer-wrapper {
+.section.ram-footer-container > .ram-footer-wrapper {
   width: 100%;
+  background: #1b1515;
   margin-left: 0;
   overflow: hidden;
 }

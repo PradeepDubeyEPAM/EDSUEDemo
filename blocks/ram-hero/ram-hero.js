@@ -5,10 +5,9 @@ import { initializeEventTracking } from './event-tracker.js';
 function parseFields(block) {
   const fields = {};
   const rows = [...block.children];
-  const modelOrder = ['image', 'imageAlt', 'headingText', 'description'];
-  const fallbackOrder = ['image', 'headingText', 'description'];
+  const modelOrder = ['image', 'imageAlt', 'headingText', 'description', 'searchFlightHref'];
 
-  rows.forEach((row, index) => {
+  rows.forEach((row) => {
     const attributedCell = row.matches('[data-aue-prop], [data-richtext-prop]')
       ? row
       : row.querySelector('[data-aue-prop], [data-richtext-prop]');
@@ -26,14 +25,44 @@ function parseFields(block) {
       return;
     }
 
-    const fallbackProp = fallbackOrder[index];
     const fallbackCell = row.firstElementChild || row;
-    if (fallbackProp && fallbackCell && !fields[fallbackProp]) {
-      fields[fallbackProp] = fallbackCell;
+    if (!fallbackCell) return;
+
+    const hasImage = !!fallbackCell.querySelector('picture, img') || fallbackCell.matches('picture, img');
+    if (hasImage && !fields.image) {
+      fields.image = fallbackCell;
+      return;
+    }
+
+    const rawValue = getFieldValue(fallbackCell);
+    if (isUrlLike(rawValue) && !fields.searchFlightHref) {
+      fields.searchFlightHref = fallbackCell;
+      return;
+    }
+
+    if (!fields.headingText) {
+      fields.headingText = fallbackCell;
+      return;
+    }
+
+    if (!fields.description) {
+      fields.description = fallbackCell;
     }
   });
 
   return fields;
+}
+
+function getFieldValue(field) {
+  if (!field) return '';
+  const link = field.matches('a') ? field : field.querySelector('a');
+  return link?.getAttribute('href')?.trim() || field.textContent?.trim() || '';
+}
+
+function isUrlLike(value) {
+  if (!value) return false;
+  const text = value.trim();
+  return /^(https?:\/\/|\/)/.test(text);
 }
 
 function buildHeroBackground(fields) {
@@ -96,8 +125,26 @@ function buildHeroBackground(fields) {
 
 export default function decorate(block) {
   const fields = parseFields(block);
+  // console.log('Parsed fields for RAM Hero:', fields);
   const headingText = fields.headingText?.textContent?.trim() || 'Uncover the Magic of Marrakech';
-  const descriptionHtml = fields.description?.innerHTML?.trim();
+  let descriptionHtml = fields.description?.innerHTML?.trim();
+  const descriptionText = fields.description?.textContent?.trim() || '';
+  let searchFlightHref = getFieldValue(fields.searchFlightHref);
+  // console.log('Initial Search Flight Href:', searchFlightHref);
+
+  if (!searchFlightHref && isUrlLike(descriptionText)) {
+    searchFlightHref = descriptionText;
+    descriptionHtml = '';
+  }
+
+  if (!searchFlightHref) {
+    const fallbackUrlRow = [...block.children]
+      .map((row) => getFieldValue(row))
+      .find((value) => isUrlLike(value));
+    searchFlightHref = fallbackUrlRow || '';
+  }
+
+  // console.log('Search Flight URL:', searchFlightHref);
 
   block.innerHTML = `
     <section class="ram-hero">
@@ -594,9 +641,8 @@ export default function decorate(block) {
   };
 
   const buildFlightSearchUrl = () => {
-    const basePath = '/content/edsuedemo/us/en/ram/aem/booking/flight-search';
+    const basePath = searchFlightHref || '/content/edsuedemo/us/en/ram/aem/booking/flight-search';
     const params = new URLSearchParams();
-
     const origin = originCode?.textContent?.trim();
     const destination = destinationCode?.textContent?.trim();
     const depDate = formatDateForApi(departureInput?.value);

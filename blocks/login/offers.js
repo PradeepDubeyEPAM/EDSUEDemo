@@ -1,4 +1,4 @@
-import { addAIDescriptions } from '../cards/ai-descriptions.js';
+//import { addAIDescriptions } from '../cards/ai-descriptions.js';
 
 async function loadSingleOffer({ container, offerPath, titleKey, lang }) {
   const [placeholderJson, offerHtml] = await Promise.all([
@@ -41,7 +41,7 @@ async function loadSingleOffer({ container, offerPath, titleKey, lang }) {
       }
       const { default: decorateCards } = await import('../cards/cards.js');
       await Promise.all([...cardsBlocks].map((card) => decorateCards(card)));
-      await addAIDescriptions(container);
+      // await addAIDescriptions(container);
     }
   } else {
     container.innerHTML = '<p style="font-family:sans-serif;padding:1rem;">Offers coming soon.</p>';

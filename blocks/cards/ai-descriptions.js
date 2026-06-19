@@ -1,6 +1,41 @@
-const GEMINI_PROXY_URL = 'https://gemini-proxy.jayabhishikthapuredla.workers.dev';
+async function fetchCFFromPublish(productId) {
+const isAuthor = window.location.hostname.includes('author-');
 
-async function getAIDescription(title, productId) {
+const url = isAuthor
+  ? `https://${window.location.hostname}/adobe/sites/cf/fragments?path=/content/dam/edsuedemo/descriptions/${productId}`
+  : `https://publish-p24103-e71623.adobeaemcloud.com/api/assets/edsuedemo/descriptions/${productId}.json`;
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) return null;
+    const data = await response.json();
+
+   if (isAuthor) {
+      const fields = {};
+      data.items?.[0]?.fields?.forEach(f => { fields[f.name] = f.values?.[0]; });
+      return {
+        aiDescription:      fields.aiDescription?.trim() || '',
+        verified:           fields.verified === true,
+        productId:          fields.productId?.trim() || '',
+        defaultDescription: fields.defaultDescription?.trim() || '',
+      };
+    }
+
+    const elements = data?.properties?.elements;
+    if (!elements) return null;
+    return {
+      aiDescription:      elements.aiDescription?.value?.trim() || '',
+      verified:           elements.verified?.value === true,
+      productId:          elements.productId?.value?.trim() || '',
+      defaultDescription: elements.defaultDescription?.value?.trim() || '',
+    };
+
+  } catch (err) {
+    console.error('[AI] Fetch failed:', err);
+    return null;
+  }
+}
+async function getAIDescription(productId) {
   const cacheKey = `card-desc-${productId}`;
   const cached = sessionStorage.getItem(cacheKey);
 
@@ -11,30 +46,24 @@ async function getAIDescription(title, productId) {
     sessionStorage.removeItem(cacheKey);
   }
 
-  try {
-    const response = await fetch(GEMINI_PROXY_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, productId }),
-    });
+  const cf = await fetchCFFromPublish(productId);
+  if (!cf) return '';
 
-    if (!response.ok) return '';
+  // Only surface aiDescription if verified by author
+  const text = cf.verified && cf.aiDescription 
+    ? cf.aiDescription 
+    : cf.defaultDescription || '';
 
-    const data = await response.json();
-    console.log('[AI] Worker response:', data);
-
-    const text = data?.text?.trim() || '';
-    const source = data?.source || '';
-
-    if (text && source === 'cf-verified') {
-      sessionStorage.setItem(cacheKey, JSON.stringify({ text, timestamp: Date.now() }));
-    }
-
-    return text || '';
-  } catch (err) {
-    console.error('[AI] Worker call failed:', err);
-    return '';
+  // Only cache verified AI descriptions (12hr TTL)
+  // Unverified: never cache so author approvals reflect immediately
+  if (cf.verified && cf.aiDescription) {
+    sessionStorage.setItem(cacheKey, JSON.stringify({ 
+      text, 
+      timestamp: Date.now() 
+    }));
   }
+
+  return text;
 }
 
 export async function addAIDescriptions(container) {
@@ -64,7 +93,7 @@ export async function addAIDescriptions(container) {
       p.textContent = 'Loading description…';
       body.appendChild(p);
 
-      const text = await getAIDescription(title, productId);
+      const text = await getAIDescription(productId);
       if (text) {
         p.innerHTML = text;
         p.classList.remove('loading');
