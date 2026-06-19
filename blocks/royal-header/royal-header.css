@@ -1,0 +1,31 @@
+/* Royal Header - Reset EDS default spacing to remove left/right space */
+
+header {
+  margin: 0;
+  padding: 0;
+}
+
+/* EDS wraps the block in .royal-header-wrapper inside a .section div - reset all defaults */
+header .royal-header-wrapper {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Reset the block element itself - EDS adds default padding/max-width here */
+header .royal-header.block {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Also target via section container class - mirrors ram-header pattern */
+.section.royal-header-container > div,
+.section.royal-header-container .royal-header.block {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
