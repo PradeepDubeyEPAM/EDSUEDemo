@@ -229,6 +229,10 @@
     ]
   },
   {
+    "id": "chatbot",
+    "fields": []
+  },
+  {
     "id": "columns",
     "fields": [
       {
@@ -5273,6 +5277,10 @@
         "valueType": "string"
       }
     ]
+  },
+  {
+    "id": "ram-network-accordion",
+    "fields": []
   },
   {
     "id": "ram-network-accordion",

@@ -197,7 +197,11 @@ export default function decorate(block) {
   // Restore session on page load
   const session = getSession();
   if (session) {
-    showLoggedInUI(session.username);
+    // Wait a tick to ensure DOM/nav-tools is fully settled before swapping UI
+    requestAnimationFrame(() => {
+      showLoggedInUI(session.username);
+    });
+
     let attempts = 0;
     const tryLoad = setInterval(() => {
       attempts++;
@@ -209,3 +213,5 @@ export default function decorate(block) {
     }, 100);
   }
 }
+
+  
