@@ -73,6 +73,8 @@
 
 body {
   display: none;
+  flex-direction: column;
+  min-height: 100vh;
   margin: 0;
   background-color: var(--background-color);
   color: var(--text-color);
@@ -82,20 +84,30 @@ body {
 }
 
 body.appear {
-  display: block;
+  display: flex;
+}
+
+
+main {
+  flex: 1 0 auto;
 }
 
 header {
-  height: var(--nav-height);
+  height: auto;
 }
 
+/* hide until block is loaded - supports both default and royal blocks */
 header .header,
-footer .footer {
+footer .footer,
+header .royal-header,
+footer .royal-footer {
   visibility: hidden;
 }
 
 header .header[data-block-status="loaded"],
-footer .footer[data-block-status="loaded"] {
+footer .footer[data-block-status="loaded"],
+header .royal-header[data-block-status="loaded"],
+footer .royal-footer[data-block-status="loaded"] {
   visibility: visible;
 }
 
@@ -313,7 +325,7 @@ html[data-lang="fr"] .fr-section {
 }
 
 .review-card {
-  border-bottom: 1px solid #ddd;
-  padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
 }
 

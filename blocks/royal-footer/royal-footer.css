@@ -1,11 +1,13 @@
-/* Royal Footer - Reset EDS default spacing to remove left/right space */
+/* Royal Footer - sits inside <footer> element, must be full width at bottom */
 
 footer {
+  width: 100%;
   margin: 0;
   padding: 0;
+  flex-shrink: 0;
 }
 
-/* EDS wraps block in .royal-footer-wrapper - reset its defaults */
+/* Reset the wrapper div EDS creates */
 footer .royal-footer-wrapper {
   max-width: none;
   width: 100%;
@@ -21,3 +23,9 @@ footer .royal-footer.block {
   padding: 0;
 }
 
+/* The <footer> element created by JS inside the block */
+footer .royal-footer.block footer.ram-footer {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}

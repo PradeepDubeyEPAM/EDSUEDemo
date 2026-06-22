@@ -291,17 +291,12 @@ header img {
    pages are affected.
 ========================================= */
 
-/* 1. Kill the 64px header height reservation —
-      the page uses ram-header block inside <main> */
+/* 1. No overflow on homepage */
 .ram-homepage-page,
 .ram-homepage-page main {
   overflow-x: hidden;
 }
 
-.ram-homepage-page header {
-  height: 0 !important;
-  min-height: 0 !important;
-}
 
 /* 2. Remove section margins & padding added by styles.css.
       Each RAM block manages its own spacing internally. */
