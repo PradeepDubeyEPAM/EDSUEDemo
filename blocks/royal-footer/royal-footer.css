@@ -1,31 +1,78 @@
-/* Royal Footer - sits inside <footer> element, must be full width at bottom */
-
+/* ================================================
+   FOOTER — anchored to bottom, full width
+   ================================================ */
 footer {
   width: 100%;
-  margin: 0;
-  padding: 0;
   flex-shrink: 0;
-}
-
-/* Reset the wrapper div EDS creates */
-footer .royal-footer-wrapper {
-  max-width: none;
-  width: 100%;
   margin: 0;
   padding: 0;
+  /* overflow visible so accordion panels expand downward correctly */
+  overflow: visible;
 }
 
-/* Reset the block element itself */
+/* Reset EDS wrapper max-width constraints */
+footer .royal-footer-wrapper,
 footer .royal-footer.block {
-  max-width: none;
+  max-width: none !important;
   width: 100%;
-  margin: 0;
-  padding: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible;
 }
 
-/* The <footer> element created by JS inside the block */
-footer .royal-footer.block footer.ram-footer {
+/* ================================================
+   RESET GLOBAL BUTTON OVERRIDES inside footer
+   Prevents blue bg / border-radius on toggle buttons
+   ================================================ */
+footer button {
+  display: inline-flex;
   margin: 0;
   padding: 0;
-  width: 100%;
+  border: none;
+  border-radius: 0;
+  background: transparent !important;
+  background-color: transparent !important;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  overflow: visible;
+  white-space: normal;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+footer button:hover,
+footer button:focus {
+  background: transparent !important;
+  background-color: transparent !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Reset global link-color override inside footer */
+footer a,
+footer a:any-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: none;
+}
+
+/* ================================================
+   FIX ACCORDION DROPDOWN — expands downward
+   Global overflow:hidden on wrappers clips panels
+   ================================================ */
+footer .ram-footer {
+  overflow: visible;
+}
+
+footer .ram-footer-panels {
+  overflow: hidden; /* intentional: controls accordion animation */
+  position: relative;
+}
+
+footer .ram-footer-panels.has-active-panel {
+  overflow: visible;
 }
