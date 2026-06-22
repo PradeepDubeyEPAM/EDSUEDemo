@@ -1,13 +1,12 @@
 async function sendMessageToGroq(userMessage, products) {
   try {
-    const endpoint = 'https://26272-aemcloudpocapimesh-develop.adobeio-static.net/api/v1/web/api-mesh-proxy/groq-chat';
-
+    const endpoint = 'http://localhost:9080/api/v1/web/api-mesh-proxy/groq-chat';
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         question: userMessage,
-        products,
+        products: products || [], 
       }),
     });
 
@@ -16,11 +15,56 @@ async function sendMessageToGroq(userMessage, products) {
     }
 
     const data = await response.json();
+
+    if (data.error) {
+      // eslint-disable-next-line no-console
+      console.error('Groq action returned an error:', data.error);
+      return 'Sorry, the chatbot service hit an error. Please try again.';
+    }
+
     return data.answer || 'Sorry, I could not process your message.';
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Groq API error:', error);
     return 'Error connecting to the chatbot service. Please try again.';
   }
+}
+
+/**
+ * Reads product/offer info from the page DOM so the chatbot has real
+ * context instead of hallucinating generic retail copy.
+ * Called once per chat session (on first panel open) and cached.
+ */
+function getPageContext() {
+  const products = [];
+
+  // Adjust these selectors to match your actual EDS block markup.
+  // Default EDS "cards" block markup uses .cards-card-body for the text wrapper.
+  // Add any other block classes your offer/product cards actually use.
+  const cardSelectors = [
+    '.cards-card-body',
+    '.offers-card-body',
+    '.offer-card',
+  ];
+
+  const cards = document.querySelectorAll(cardSelectors.join(', '));
+
+  cards.forEach((card) => {
+    const titleEl = card.querySelector('h1, h2, h3, h4, h5, strong');
+    const descEl = card.querySelector('p');
+
+    const title = titleEl?.textContent?.trim();
+    const description = descEl?.textContent?.trim();
+
+    if (title) {
+      products.push({ title, description: description || '' });
+    }
+  });
+
+  // eslint-disable-next-line no-console
+  console.log('[chatbot] page context collected:', products);
+
+  return products;
 }
 
 function createChatbotUI() {
@@ -121,7 +165,6 @@ function showLoadingIndicator(container) {
 export default function decorate(block) {
   if (!block.classList.contains('chatbot')) return;
 
-  // Create and inject the chatbot UI
   const ui = createChatbotUI();
   block.appendChild(ui.container);
 
@@ -134,12 +177,16 @@ export default function decorate(block) {
   } = ui;
 
   let isLoading = false;
+  let pageProducts = null; // cache for session
 
   // Toggle chat window
   toggleBtn.addEventListener('click', () => {
     chatWindow.classList.toggle('hidden');
     if (!chatWindow.classList.contains('hidden')) {
       textarea.focus();
+      if (!pageProducts) {
+        pageProducts = getPageContext(); // read DOM only once per session
+      }
     }
   });
 
@@ -171,6 +218,11 @@ export default function decorate(block) {
 
     // Show loading indicator
     const loadingEl = showLoadingIndicator(messagesContainer);
+
+    // Make sure we have context even if the panel was already open on first send
+    if (!pageProducts) {
+      pageProducts = getPageContext();
+    }
 
     // Send to Groq API
     const response = await sendMessageToGroq(message, pageProducts);
