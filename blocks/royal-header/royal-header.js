@@ -53,13 +53,16 @@ const createLogoSection = (logos) => {
     img.src = primaryLogo.imagePath;
     img.alt = primaryLogo.altText || 'Header logo';
 
+    // Handle image load errors
     img.addEventListener('error', () => {
+      console.error('Logo image failed to load:', primaryLogo.imagePath);
       logoSection.classList.add('logo-missing');
+      const fallback = document.createElement('span');
+      fallback.className = 'logo-fallback';
+      fallback.textContent = 'RAM';
+      a.innerHTML = '';
+      a.appendChild(fallback);
     });
-
-    if (img.complete && img.naturalWidth === 0) {
-      logoSection.classList.add('logo-missing');
-    }
 
     a.appendChild(img);
     logoSection.appendChild(a);
@@ -75,6 +78,11 @@ const createLogoSection = (logos) => {
     img.className = 'header__oneworld__img';
     img.src = secondaryLogo.imagePath;
     img.alt = secondaryLogo.altText || 'Header logo';
+
+    // Handle image load errors for secondary logo
+    img.addEventListener('error', () => {
+      a.style.display = 'none';
+    });
 
     a.appendChild(img);
     logoSection.appendChild(a);
@@ -174,35 +182,35 @@ const createLanguageSelector = (isMobile = false) => {
 
 // Create Navigation from menuItems array
 const createNavigation = (menuItems, loginButtonText, loginButtonUrl) => {
-  if (!menuItems || menuItems.length === 0) return null;
-
   const nav = document.createElement('nav');
   nav.className = 'main-nav';
   nav.setAttribute('aria-label', 'Primary navigation');
 
   const ul = document.createElement('ul');
 
-  menuItems.forEach((item, index) => {
-    const li = document.createElement('li');
-    li.dataset.index = index;
+  if (menuItems && menuItems.length > 0) {
+    menuItems.forEach((item, index) => {
+      const li = document.createElement('li');
+      li.dataset.index = index;
 
-    const hasLinks = item.links && item.links.length > 0;
-    if (hasLinks) {
-      li.className = 'has-dropdown';
-    }
+      const hasLinks = item.links && item.links.length > 0;
+      if (hasLinks) {
+        li.className = 'has-dropdown';
+      }
 
-    const a = document.createElement('a');
-    a.href = item.url || '#';
-    a.textContent = item.title;
-    li.appendChild(a);
+      const a = document.createElement('a');
+      a.href = item.url || '#';
+      a.textContent = item.title;
+      li.appendChild(a);
 
-    if (hasLinks) {
-      const megaMenu = createMegaMenu(item.links, item.title);
-      if (megaMenu) li.appendChild(megaMenu);
-    }
+      if (hasLinks) {
+        const megaMenu = createMegaMenu(item.links, item.title);
+        if (megaMenu) li.appendChild(megaMenu);
+      }
 
-    ul.appendChild(li);
-  });
+      ul.appendChild(li);
+    });
+  }
 
   nav.appendChild(ul);
 
@@ -238,6 +246,16 @@ const createSearchButton = () => {
   img.alt = '';
   img.setAttribute('aria-hidden', 'true');
   img.className = 'search-icon-img';
+
+  // Fallback if image fails to load
+  img.addEventListener('error', () => {
+    searchBtn.innerHTML = `
+      <svg class="search-icon-img" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+    `;
+  });
 
   searchBtn.appendChild(img);
   return searchBtn;
@@ -281,6 +299,51 @@ const createMobileToggle = () => {
   return toggle;
 };
 
+// Detect if page has hero background
+const detectHeroBackground = (header) => {
+  // Check if we're on homepage
+  const isHomepage = document.body.classList.contains('ram-homepage-page') ||
+    window.location.pathname === '/' ||
+    window.location.pathname === '/index.html';
+
+  if (!isHomepage) {
+    // Not homepage - always show dark text
+    document.body.classList.add('ram-no-hero-background');
+    header.classList.add('no-hero-background');
+    return;
+  }
+
+  // Check if there's a hero section
+  const heroSection = document.querySelector('.hero, .banner, [class*="hero"]');
+
+  if (!heroSection) {
+    // No hero found - use dark text
+    document.body.classList.add('ram-no-hero-background');
+    header.classList.add('no-hero-background');
+  } else {
+    // Has hero - start with light text, check on scroll
+    document.body.classList.remove('ram-no-hero-background');
+    header.classList.remove('no-hero-background');
+
+    // Monitor scroll to toggle colors
+    const checkScroll = () => {
+      const heroBottom = heroSection.getBoundingClientRect().bottom;
+      if (heroBottom < 80) {
+        // Past hero - use dark text
+        document.body.classList.add('ram-no-hero-background');
+        header.classList.add('no-hero-background');
+      } else {
+        // Still on hero - use light text
+        document.body.classList.remove('ram-no-hero-background');
+        header.classList.remove('no-hero-background');
+      }
+    };
+
+    window.addEventListener('scroll', checkScroll);
+    checkScroll(); // Initial check
+  }
+};
+
 // Setup all interactions
 const setupInteractions = (block, header) => {
   const mobileToggle = header.querySelector('.mobile-menu-toggle');
@@ -291,6 +354,9 @@ const setupInteractions = (block, header) => {
 
   // Check if desktop
   const isDesktop = () => window.innerWidth > 992;
+
+  // Detect and apply hero background logic
+  detectHeroBackground(header);
 
   // Update header classes
   const updateHeaderClasses = () => {
@@ -382,13 +448,12 @@ const setupInteractions = (block, header) => {
     const trigger = selector.querySelector('.lang-selector-trigger');
     const menu = selector.querySelector('.lang-menu');
     const options = selector.querySelectorAll('.lang-option');
-    const label = selector.querySelector('.lang-label');
 
     if (trigger && menu) {
       trigger.addEventListener('click', (e) => {
         e.stopPropagation();
         const isOpen = selector.classList.contains('is-open');
-        
+
         // Close other language selectors
         langSelectors.forEach((other) => {
           if (other !== selector) {
@@ -408,7 +473,7 @@ const setupInteractions = (block, header) => {
       options.forEach((option) => {
         option.addEventListener('click', () => {
           const selectedLang = option.textContent;
-          
+
           // Update all language selectors
           langSelectors.forEach((sel) => {
             const lbl = sel.querySelector('.lang-label');
@@ -478,14 +543,21 @@ const setupInteractions = (block, header) => {
 
 export default async function decorate(block) {
   try {
-    const xfPath = '/content/experience-fragments/aem-cloud-poc/us/en/site/global/header/master';
+    const xfPath = 'http://localhost:4502/content/experience-fragments/aem-cloud-poc/us/en/site/global/header/master';
 
     // Load AEM React clientlib CSS
-    const clientlibCSSPath = '/etc.clientlibs/aem-cloud-poc/clientlibs/clientlib-react.css';
+    const clientlibCSSPath = 'http://localhost:4502/etc.clientlibs/aem-cloud-poc/clientlibs/clientlib-react.css';
     await loadCSS(clientlibCSSPath);
 
-    // Fetch model.json
-    const resp = await fetch(`${xfPath}.model.json`);
+    // Fetch model.json with Basic Auth
+    const credentials = btoa('admin:admin');
+    const resp = await fetch(`${xfPath}.model.json`, {
+      headers: {
+        'Authorization': `Basic ${credentials}`
+      },
+      credentials: 'include'
+    });
+
     if (!resp.ok) {
       throw new Error(`Failed to fetch model.json: ${resp.status}`);
     }
@@ -493,7 +565,7 @@ export default async function decorate(block) {
     const data = await resp.json();
     console.log('Fetched header model.json:', data);
 
-    // Extract props: :items > root > :items > header_copy_copy
+    // Extract props from the CORRECT path
     const props = data?.[':items']?.root?.[':items']?.header_copy_copy || {};
     console.log('Extracted header props:', props);
 
@@ -504,9 +576,17 @@ export default async function decorate(block) {
       loginButtonUrl,
     } = props;
 
+    console.log('Menu Items:', menuItems);
+    console.log('Logos:', logos);
+
     // Create header element
     const header = document.createElement('header');
     header.className = 'ram-header';
+
+    // CRITICAL: Add default visibility classes immediately
+    // This ensures menu items are visible on load
+    header.classList.add('no-hero-background');
+    document.body.classList.add('ram-no-hero-background');
 
     // Alert bar
     header.appendChild(createAlertBar());
