@@ -161,12 +161,12 @@ const createLanguageSelector = (isMobile = false) => {
   menu.setAttribute('aria-label', 'Language options');
   menu.style.display = 'none';
 
-  LANGUAGE_OPTIONS.forEach((lang) => {
+  LANGUAGE_OPTIONS.forEach((lang, index) => {
     const li = document.createElement('li');
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'lang-option';
-    if (lang === LANGUAGE_OPTIONS[0]) {
+    if (index === 0) {
       btn.classList.add('is-active');
     }
     btn.textContent = lang;
@@ -281,7 +281,8 @@ const createHeaderActions = (loginButtonText, loginButtonUrl) => {
   actions.appendChild(createSearchButton());
 
   // Language selector (desktop)
-  actions.appendChild(createLanguageSelector(false));
+  const langSelector = createLanguageSelector(false);
+  if (langSelector) actions.appendChild(langSelector);
 
   // Login button
   const loginBtn = createLoginButton(loginButtonText, loginButtonUrl);
@@ -306,41 +307,58 @@ const detectHeroBackground = (header) => {
     window.location.pathname === '/' ||
     window.location.pathname === '/index.html';
 
+  const applyNoHeroMode = (enabled) => {
+    header.classList.toggle('no-hero-background', enabled);
+    document.body.classList.toggle('ram-no-hero-background', enabled);
+  };
+
+  const hasVisualBackground = (heroSection) => {
+    if (!heroSection) return false;
+
+    const heroBackground = heroSection.matches('.hero-background')
+      ? heroSection
+      : heroSection.querySelector('.hero-background');
+
+    const mediaPresent = heroSection.querySelector('img[src], picture source[srcset], video[src]')
+      || heroBackground?.querySelector('img[src], picture source[srcset], video[src]');
+
+    if (mediaPresent) return true;
+
+    return [heroSection, heroBackground]
+      .filter(Boolean)
+      .some((node) => window.getComputedStyle(node).backgroundImage !== 'none');
+  };
+
   if (!isHomepage) {
     // Not homepage - always show dark text
-    document.body.classList.add('ram-no-hero-background');
-    header.classList.add('no-hero-background');
+    applyNoHeroMode(true);
     return;
   }
 
   // Check if there's a hero section
-  const heroSection = document.querySelector('.hero, .banner, [class*="hero"]');
+  const heroSection = document.querySelector('.ram-hero, .hero-banner, .hero-section, .hero, .banner');
 
-  if (!heroSection) {
-    // No hero found - use dark text
-    document.body.classList.add('ram-no-hero-background');
-    header.classList.add('no-hero-background');
+  if (!heroSection || !hasVisualBackground(heroSection)) {
+    // No visual hero background found - use dark text
+    applyNoHeroMode(true);
   } else {
     // Has hero - start with light text, check on scroll
-    document.body.classList.remove('ram-no-hero-background');
-    header.classList.remove('no-hero-background');
+    applyNoHeroMode(false);
 
     // Monitor scroll to toggle colors
     const checkScroll = () => {
       const heroBottom = heroSection.getBoundingClientRect().bottom;
       if (heroBottom < 80) {
         // Past hero - use dark text
-        document.body.classList.add('ram-no-hero-background');
-        header.classList.add('no-hero-background');
+        applyNoHeroMode(true);
       } else {
         // Still on hero - use light text
-        document.body.classList.remove('ram-no-hero-background');
-        header.classList.remove('no-hero-background');
+        applyNoHeroMode(false);
       }
     };
 
-    window.addEventListener('scroll', checkScroll);
-    checkScroll(); // Initial check
+    window.addEventListener('scroll', checkScroll, { passive: true });
+    checkScroll();
   }
 };
 

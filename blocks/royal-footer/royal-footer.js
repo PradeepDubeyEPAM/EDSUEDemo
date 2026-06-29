@@ -338,6 +338,21 @@ const createBottomSection = (portletContent, copyrightInfo) => {
 const setupToggleInteraction = (footer) => {
   let expandedIndex = null;
 
+  const setMainLayoutFreeze = (shouldFreeze) => {
+    const main = document.querySelector('main');
+    if (!main) return;
+
+    if (shouldFreeze) {
+      const currentMainHeight = Math.ceil(main.getBoundingClientRect().height);
+      main.style.setProperty('min-height', `${currentMainHeight}px`, 'important');
+      main.style.setProperty('flex', '0 0 auto', 'important');
+      return;
+    }
+
+    main.style.removeProperty('min-height');
+    main.style.removeProperty('flex');
+  };
+
   const handleToggle = (index, isDesktop) => {
     const prefix = isDesktop ? 'desktop' : 'mobile';
     const navItems = footer.querySelectorAll(`.ram-footer-${isDesktop ? 'nav-item' : 'mobile-item'}`);
@@ -355,7 +370,12 @@ const setupToggleInteraction = (footer) => {
       if (panelsContainer) panelsContainer.classList.remove('has-active-panel');
 
       expandedIndex = null;
+      if (isDesktop) setMainLayoutFreeze(false);
     } else {
+      if (isDesktop && expandedIndex === null) {
+        setMainLayoutFreeze(true);
+      }
+
       // Close all panels
       navItems.forEach((item) => item.classList.remove('is-active'));
       panels.forEach((panel) => { panel.hidden = true; });
