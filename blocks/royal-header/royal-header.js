@@ -53,13 +53,16 @@ const createLogoSection = (logos) => {
     img.src = primaryLogo.imagePath;
     img.alt = primaryLogo.altText || 'Header logo';
 
+    // Handle image load errors
     img.addEventListener('error', () => {
+      console.error('Logo image failed to load:', primaryLogo.imagePath);
       logoSection.classList.add('logo-missing');
+      const fallback = document.createElement('span');
+      fallback.className = 'logo-fallback';
+      fallback.textContent = 'RAM';
+      a.innerHTML = '';
+      a.appendChild(fallback);
     });
-
-    if (img.complete && img.naturalWidth === 0) {
-      logoSection.classList.add('logo-missing');
-    }
 
     a.appendChild(img);
     logoSection.appendChild(a);
@@ -75,6 +78,11 @@ const createLogoSection = (logos) => {
     img.className = 'header__oneworld__img';
     img.src = secondaryLogo.imagePath;
     img.alt = secondaryLogo.altText || 'Header logo';
+
+    // Handle image load errors for secondary logo
+    img.addEventListener('error', () => {
+      a.style.display = 'none';
+    });
 
     a.appendChild(img);
     logoSection.appendChild(a);
@@ -153,12 +161,12 @@ const createLanguageSelector = (isMobile = false) => {
   menu.setAttribute('aria-label', 'Language options');
   menu.style.display = 'none';
 
-  LANGUAGE_OPTIONS.forEach((lang) => {
+  LANGUAGE_OPTIONS.forEach((lang, index) => {
     const li = document.createElement('li');
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'lang-option';
-    if (lang === LANGUAGE_OPTIONS[0]) {
+    if (index === 0) {
       btn.classList.add('is-active');
     }
     btn.textContent = lang;
@@ -174,35 +182,35 @@ const createLanguageSelector = (isMobile = false) => {
 
 // Create Navigation from menuItems array
 const createNavigation = (menuItems, loginButtonText, loginButtonUrl) => {
-  if (!menuItems || menuItems.length === 0) return null;
-
   const nav = document.createElement('nav');
   nav.className = 'main-nav';
   nav.setAttribute('aria-label', 'Primary navigation');
 
   const ul = document.createElement('ul');
 
-  menuItems.forEach((item, index) => {
-    const li = document.createElement('li');
-    li.dataset.index = index;
+  if (menuItems && menuItems.length > 0) {
+    menuItems.forEach((item, index) => {
+      const li = document.createElement('li');
+      li.dataset.index = index;
 
-    const hasLinks = item.links && item.links.length > 0;
-    if (hasLinks) {
-      li.className = 'has-dropdown';
-    }
+      const hasLinks = item.links && item.links.length > 0;
+      if (hasLinks) {
+        li.className = 'has-dropdown';
+      }
 
-    const a = document.createElement('a');
-    a.href = item.url || '#';
-    a.textContent = item.title;
-    li.appendChild(a);
+      const a = document.createElement('a');
+      a.href = item.url || '#';
+      a.textContent = item.title;
+      li.appendChild(a);
 
-    if (hasLinks) {
-      const megaMenu = createMegaMenu(item.links, item.title);
-      if (megaMenu) li.appendChild(megaMenu);
-    }
+      if (hasLinks) {
+        const megaMenu = createMegaMenu(item.links, item.title);
+        if (megaMenu) li.appendChild(megaMenu);
+      }
 
-    ul.appendChild(li);
-  });
+      ul.appendChild(li);
+    });
+  }
 
   nav.appendChild(ul);
 
@@ -239,6 +247,16 @@ const createSearchButton = () => {
   img.setAttribute('aria-hidden', 'true');
   img.className = 'search-icon-img';
 
+  // Fallback if image fails to load
+  img.addEventListener('error', () => {
+    searchBtn.innerHTML = `
+      <svg class="search-icon-img" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+    `;
+  });
+
   searchBtn.appendChild(img);
   return searchBtn;
 };
@@ -263,7 +281,8 @@ const createHeaderActions = (loginButtonText, loginButtonUrl) => {
   actions.appendChild(createSearchButton());
 
   // Language selector (desktop)
-  actions.appendChild(createLanguageSelector(false));
+  const langSelector = createLanguageSelector(false);
+  if (langSelector) actions.appendChild(langSelector);
 
   // Login button
   const loginBtn = createLoginButton(loginButtonText, loginButtonUrl);
@@ -281,6 +300,68 @@ const createMobileToggle = () => {
   return toggle;
 };
 
+// Detect if page has hero background
+const detectHeroBackground = (header) => {
+  // Check if we're on homepage
+  const isHomepage = document.body.classList.contains('ram-homepage-page') ||
+    window.location.pathname === '/' ||
+    window.location.pathname === '/index.html';
+
+  const applyNoHeroMode = (enabled) => {
+    header.classList.toggle('no-hero-background', enabled);
+    document.body.classList.toggle('ram-no-hero-background', enabled);
+  };
+
+  const hasVisualBackground = (heroSection) => {
+    if (!heroSection) return false;
+
+    const heroBackground = heroSection.matches('.hero-background')
+      ? heroSection
+      : heroSection.querySelector('.hero-background');
+
+    const mediaPresent = heroSection.querySelector('img[src], picture source[srcset], video[src]')
+      || heroBackground?.querySelector('img[src], picture source[srcset], video[src]');
+
+    if (mediaPresent) return true;
+
+    return [heroSection, heroBackground]
+      .filter(Boolean)
+      .some((node) => window.getComputedStyle(node).backgroundImage !== 'none');
+  };
+
+  if (!isHomepage) {
+    // Not homepage - always show dark text
+    applyNoHeroMode(true);
+    return;
+  }
+
+  // Check if there's a hero section
+  const heroSection = document.querySelector('.ram-hero, .hero-banner, .hero-section, .hero, .banner');
+
+  if (!heroSection || !hasVisualBackground(heroSection)) {
+    // No visual hero background found - use dark text
+    applyNoHeroMode(true);
+  } else {
+    // Has hero - start with light text, check on scroll
+    applyNoHeroMode(false);
+
+    // Monitor scroll to toggle colors
+    const checkScroll = () => {
+      const heroBottom = heroSection.getBoundingClientRect().bottom;
+      if (heroBottom < 80) {
+        // Past hero - use dark text
+        applyNoHeroMode(true);
+      } else {
+        // Still on hero - use light text
+        applyNoHeroMode(false);
+      }
+    };
+
+    window.addEventListener('scroll', checkScroll, { passive: true });
+    checkScroll();
+  }
+};
+
 // Setup all interactions
 const setupInteractions = (block, header) => {
   const mobileToggle = header.querySelector('.mobile-menu-toggle');
@@ -291,6 +372,9 @@ const setupInteractions = (block, header) => {
 
   // Check if desktop
   const isDesktop = () => window.innerWidth > 992;
+
+  // Detect and apply hero background logic
+  detectHeroBackground(header);
 
   // Update header classes
   const updateHeaderClasses = () => {
@@ -382,13 +466,12 @@ const setupInteractions = (block, header) => {
     const trigger = selector.querySelector('.lang-selector-trigger');
     const menu = selector.querySelector('.lang-menu');
     const options = selector.querySelectorAll('.lang-option');
-    const label = selector.querySelector('.lang-label');
 
     if (trigger && menu) {
       trigger.addEventListener('click', (e) => {
         e.stopPropagation();
         const isOpen = selector.classList.contains('is-open');
-        
+
         // Close other language selectors
         langSelectors.forEach((other) => {
           if (other !== selector) {
@@ -408,7 +491,7 @@ const setupInteractions = (block, header) => {
       options.forEach((option) => {
         option.addEventListener('click', () => {
           const selectedLang = option.textContent;
-          
+
           // Update all language selectors
           langSelectors.forEach((sel) => {
             const lbl = sel.querySelector('.lang-label');
@@ -486,6 +569,7 @@ export default async function decorate(block) {
 
     // Fetch model.json
     const resp = await fetch(`${xfPath}.model.json`);
+
     if (!resp.ok) {
       throw new Error(`Failed to fetch model.json: ${resp.status}`);
     }
@@ -493,7 +577,7 @@ export default async function decorate(block) {
     const data = await resp.json();
     console.log('Fetched header model.json:', data);
 
-    // Extract props: :items > root > :items > header_copy_copy
+    // Extract props from the CORRECT path
     const props = data?.[':items']?.root?.[':items']?.header_copy_copy || {};
     console.log('Extracted header props:', props);
 
@@ -504,9 +588,17 @@ export default async function decorate(block) {
       loginButtonUrl,
     } = props;
 
+    console.log('Menu Items:', menuItems);
+    console.log('Logos:', logos);
+
     // Create header element
     const header = document.createElement('header');
     header.className = 'ram-header';
+
+    // CRITICAL: Add default visibility classes immediately
+    // This ensures menu items are visible on load
+    header.classList.add('no-hero-background');
+    document.body.classList.add('ram-no-hero-background');
 
     // Alert bar
     header.appendChild(createAlertBar());
