@@ -561,20 +561,14 @@ const setupInteractions = (block, header) => {
 
 export default async function decorate(block) {
   try {
-    const xfPath = 'http://localhost:4502/content/experience-fragments/aem-cloud-poc/us/en/site/global/header/master';
+    const xfPath = '/content/experience-fragments/aem-cloud-poc/us/en/site/global/header/master';
 
     // Load AEM React clientlib CSS
-    const clientlibCSSPath = 'http://localhost:4502/etc.clientlibs/aem-cloud-poc/clientlibs/clientlib-react.css';
+    const clientlibCSSPath = '/etc.clientlibs/aem-cloud-poc/clientlibs/clientlib-react.css';
     await loadCSS(clientlibCSSPath);
 
     // Fetch model.json with Basic Auth
-    const credentials = btoa('admin:admin');
-    const resp = await fetch(`${xfPath}.model.json`, {
-      headers: {
-        'Authorization': `Basic ${credentials}`
-      },
-      credentials: 'include'
-    });
+    const resp = await fetch(`${xfPath}.model.json`);
 
     if (!resp.ok) {
       throw new Error(`Failed to fetch model.json: ${resp.status}`);

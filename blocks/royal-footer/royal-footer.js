@@ -411,24 +411,18 @@ const setupToggleInteraction = (footer) => {
 
 export default async function decorate(block) {
   try {
-    const xfPath = 'http://localhost:4502/content/experience-fragments/aem-cloud-poc/us/en/site/footer-xf/master';
+    const xfPath = '/content/experience-fragments/aem-cloud-poc/us/en/site/footer-xf/master';
 
     // Load AEM React clientlib CSS directly
     // AEM serves non-hashed path that automatically resolves to current hashed version
-    const clientlibCSSPath = 'http://localhost:4502/etc.clientlibs/aem-cloud-poc/clientlibs/clientlib-react.css';
+    const clientlibCSSPath = '/etc.clientlibs/aem-cloud-poc/clientlibs/clientlib-react.css';
 
     await loadCSS(clientlibCSSPath);
     console.log('AEM clientlib CSS loaded from:', clientlibCSSPath);
 
 
     // Fetch model.json with Basic Auth
-    const credentials = btoa('admin:admin'); // Change username:password if needed
-    const resp = await fetch(`${xfPath}.model.json`, {
-      headers: {
-        'Authorization': `Basic ${credentials}`
-      },
-      credentials: 'include'
-    });
+    const resp = await fetch(`${xfPath}.model.json`);
 
     if (!resp.ok) {
       throw new Error(`Failed to fetch model.json: ${resp.status}`);
