@@ -414,14 +414,13 @@ export default async function decorate(block) {
     const xfPath = '/content/experience-fragments/aem-cloud-poc/us/en/site/footer-xf/master';
 
     // Load AEM React clientlib CSS directly
-    // AEM serves non-hashed path that automatically resolves to current hashed version
     const clientlibCSSPath = '/etc.clientlibs/aem-cloud-poc/clientlibs/clientlib-react.css';
 
     await loadCSS(clientlibCSSPath);
     console.log('AEM clientlib CSS loaded from:', clientlibCSSPath);
 
 
-    // Fetch model.json with Basic Auth
+    // Fetch model.json
     const resp = await fetch(`${xfPath}.model.json`);
 
     if (!resp.ok) {

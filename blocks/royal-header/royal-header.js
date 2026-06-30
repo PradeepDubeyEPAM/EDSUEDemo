@@ -567,7 +567,7 @@ export default async function decorate(block) {
     const clientlibCSSPath = '/etc.clientlibs/aem-cloud-poc/clientlibs/clientlib-react.css';
     await loadCSS(clientlibCSSPath);
 
-    // Fetch model.json with Basic Auth
+    // Fetch model.json
     const resp = await fetch(`${xfPath}.model.json`);
 
     if (!resp.ok) {
