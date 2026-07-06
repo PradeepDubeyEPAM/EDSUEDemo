@@ -124,6 +124,17 @@
   line-height: 1.5;
   word-wrap: break-word;
 }
+.chatbot-product-link {
+  color: #0066cc !important;
+  text-decoration: underline !important;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 600;
+}
+
+.chatbot-product-link:hover {
+  color: #004499;
+}
 
 .chatbot-message.user .chatbot-message-content {
   background: #1a1a2e;
