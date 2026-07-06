@@ -1,5 +1,5 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
-import { fetchCFFromPublish } from '../ai-descriptions/ai-descriptions.js';
+import { fetchCFFromPublish } from '../cards/ai-descriptions.js';
 
 export default async function decorate(block) {
   const params = new URLSearchParams(window.location.search);
