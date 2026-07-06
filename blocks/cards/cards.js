@@ -26,15 +26,22 @@ export default function decorate(block) {
       }
 });
 
-    //product id
-    const last = children[children.length - 1];
-    if (last && !last.querySelector('picture')) {
-      const productId = last.textContent.trim();
-      if (productId) {
-        li.dataset.productId = productId;
-        last.remove(); // hide from UI
-      }
-    }
+  
+  //product id
+const last = children[children.length - 1];
+if (last && !last.querySelector('picture')) {
+  const productId = last.textContent.trim();
+  if (productId) {
+    li.dataset.productId = productId;
+    last.remove(); // hide from UI
+
+    const link = document.createElement('a');
+    link.href = `/us/en/offer-products/product-detail?id=${encodeURIComponent(productId)}`;
+    link.className = 'cards-card-link';
+    while (li.firstChild) link.append(li.firstChild);
+    li.append(link);
+  }
+}
 
     ul.append(li);
   });

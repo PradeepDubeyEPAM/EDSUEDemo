@@ -14,7 +14,7 @@ const CHATBOT_ENDPOINT = 'https://26272-aemcloudpocapimesh-develop.adobeio-stati
 
 // ── CONVERSATION HISTORY ──────────────────────────────────────────
 const conversationHistory = [];
-const HISTORY_LIMIT = 6;
+const HISTORY_LIMIT = 4;
 // ─────────────────────────────────────────────────────────────────
 
 /**
@@ -150,13 +150,17 @@ function createChatbotUI() {
 
 function formatBotMessage(message) {
   return message
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
+    .replace(
+      /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g,
+      '<a href="$2" target="_blank" rel="noopener noreferrer" class="chatbot-product-link">$1</a>',
+    )
+    .replace(
+      /(?<!\()(?<!")(https?:\/\/[^\s<"]+)/g,
+      '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>',
+    )
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
     .replace(/\n/g, '<br>');
 }
-
 function addMessage(container, message, sender) {
   const messageEl = document.createElement('div');
   messageEl.className = `chatbot-message ${sender}`;
@@ -167,8 +171,9 @@ function addMessage(container, message, sender) {
   // Bot messages: render line breaks and basic markdown (bold)
   // User messages: plain text only for XSS safety
   if (sender === 'bot') {
-    content.innerHTML = formatBotMessage(message);
-  } else {
+const formatted = formatBotMessage(message);
+console.log(formatted);
+content.innerHTML = formatted;  } else {
     content.textContent = message;
   }
 
@@ -250,6 +255,7 @@ export default function decorate(block) {
     console.log(`[chatbot] sending to: ${CHATBOT_ENDPOINT}`);
 
     const reply = await sendMessage(message);
+    console.log(reply);
 
     typingEl.remove();
     addMessage(messagesContainer, reply, 'bot');
