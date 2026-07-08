@@ -648,12 +648,23 @@ export default function decorate(block) {
     const depDate = formatDateForApi(departureInput?.value);
     const returnDate = formatDateForApi(returnInput?.value);
 
+    // Passengers / cabin
+    const adults = Number(block.querySelector('.counter-row[data-type="adult"] [data-value]')?.textContent || 1);
+    const children = Number(block.querySelector('.counter-row[data-type="child"] [data-value]')?.textContent || 0);
+    const infants = Number(block.querySelector('.counter-row[data-type="infant"] [data-value]')?.textContent || 0);
+    const cabin = (block.querySelector('input[name="cabin"]:checked')?.value || 'Economy').toLowerCase();
+
     if (origin) params.set('origin', origin);
     if (destination) params.set('destination', destination);
     if (depDate) params.set('depDate', depDate);
     if (selectedTripType !== 'one-way' && returnDate) {
       params.set('returnDate', returnDate);
     }
+
+    params.set('adults', String(Number.isFinite(adults) && adults > 0 ? adults : 1));
+    params.set('children', String(Number.isFinite(children) && children >= 0 ? children : 0));
+    params.set('infants', String(Number.isFinite(infants) && infants >= 0 ? infants : 0));
+    params.set('cabin', cabin === 'business' ? 'business' : 'economy');
 
     const query = params.toString();
     return query ? `${basePath}?${query}` : basePath;
