@@ -105,10 +105,9 @@ function normalizeRamHomepageStructure(main) {
 
   if (wrappers.length < 6) return;
 
-  const hasHeader = wrappers.some((wrapper) => getRamBlockName(wrapper) === 'ram-header');
   const hasHero = wrappers.some((wrapper) => getRamBlockName(wrapper) === 'ram-hero');
   const hasShortcuts = wrappers.some((wrapper) => getRamBlockName(wrapper) === 'ram-service-shortcuts');
-  if (!hasHeader || !hasHero || !hasShortcuts) return;
+  if (!hasHero || !hasShortcuts) return;
 
   const normalizedSections = [];
   for (let i = 0; i < wrappers.length; i += 1) {
@@ -123,6 +122,11 @@ function normalizeRamHomepageStructure(main) {
         wrappers: [current, next],
       });
       i += 1;
+    } else if (currentBlock === 'ram-hero') {
+      normalizedSections.push({
+        className: getSectionClass(['ram-header', 'ram-hero']),
+        wrappers: [current],
+      });
     } else {
       normalizedSections.push({
         className: getSectionClass([currentBlock]),
