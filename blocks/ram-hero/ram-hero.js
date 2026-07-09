@@ -551,6 +551,32 @@ export default function decorate(block) {
   const datePanel = block.querySelector('.date-panel');
   const departureInput = block.querySelector('.js-departure');
   const returnInput = block.querySelector('.js-return');
+
+  // Align EDS date behaviour with AEM Cloud booking page:
+  // - always start from current date
+  // - disallow selecting past dates
+  const todayIso = (() => {
+    const now = new Date();
+    const local = new Date(now.getTime() - (now.getTimezoneOffset() * 60000));
+    return local.toISOString().split('T')[0];
+  })();
+
+  const clampDateToToday = (value) => {
+    if (!value) return todayIso;
+    return value < todayIso ? todayIso : value;
+  };
+
+  if (departureInput) {
+    departureInput.min = todayIso;
+    departureInput.value = clampDateToToday(departureInput.value);
+  }
+
+  if (returnInput) {
+    returnInput.min = departureInput?.value || todayIso;
+    if (returnInput.value && departureInput?.value && returnInput.value < departureInput.value) {
+      returnInput.value = departureInput.value;
+    }
+  }
   const dateSummary = block.querySelector('.js-date-summary');
   const dateConfirm = block.querySelector('.js-date-confirm');
 
@@ -608,6 +634,19 @@ export default function decorate(block) {
   };
 
   const updateDateSummary = () => {
+    // Keep date inputs valid (no past dates; return >= departure)
+    if (departureInput) {
+      departureInput.min = todayIso;
+      departureInput.value = clampDateToToday(departureInput.value);
+    }
+
+    if (returnInput) {
+      returnInput.min = departureInput?.value || todayIso;
+      if (returnInput.value && departureInput?.value && returnInput.value < departureInput.value) {
+        returnInput.value = departureInput.value;
+      }
+    }
+
     const departure = formatDateText(departureInput?.value);
     const returns = formatDateText(returnInput?.value);
     if (selectedTripType === 'one-way' && departure) {
