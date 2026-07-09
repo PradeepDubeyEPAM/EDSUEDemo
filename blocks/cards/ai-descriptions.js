@@ -18,6 +18,7 @@ const url = isAuthor
         verified:           fields.verified === true,
         productId:          fields.productId?.trim() || '',
         defaultDescription: fields.defaultDescription?.trim() || '',
+        image: fields.image?.trim() || ''
       };
     }
 
@@ -28,6 +29,7 @@ const url = isAuthor
       verified:           elements.verified?.value === true,
       productId:          elements.productId?.value?.trim() || '',
       defaultDescription: elements.defaultDescription?.value?.trim() || '',
+      image: elements.image?.value?.trim() || ''
     };
 
   } catch (err) {
