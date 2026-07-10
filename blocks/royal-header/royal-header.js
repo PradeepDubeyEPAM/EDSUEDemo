@@ -3,10 +3,6 @@ import { loadCSS } from '../../scripts/aem.js';
 
 const LANGUAGE_OPTIONS = ['EN', 'FR', 'DE'];
 
-/**
- * Builds a new path with the target language replacing the current language segment.
- * Handles both EDS (/us/en/...) and AEM (/content/edsuedemo/us/en/...) paths.
- */
 function buildLangPath(targetLang) {
   const { pathname } = window.location;
   return pathname.replace(
