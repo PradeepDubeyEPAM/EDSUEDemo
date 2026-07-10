@@ -65,11 +65,28 @@ function isUrlLike(value) {
   return /^(https?:\/\/|\/)/.test(text);
 }
 
+const DEFAULT_HERO_IMAGE = '/icons/hero.png';
+const DEFAULT_HERO_IMAGE_MOBILE = '/icons/hero-mobile.png';
+
+function buildDefaultHeroPicture() {
+  const picture = document.createElement('picture');
+  const source = document.createElement('source');
+  source.media = '(max-width: 768px)';
+  source.srcset = DEFAULT_HERO_IMAGE_MOBILE;
+  const img = document.createElement('img');
+  img.src = DEFAULT_HERO_IMAGE;
+  img.alt = '';
+  picture.append(source, img);
+  return picture;
+}
+
 function buildHeroBackground(fields) {
   const background = document.createElement('div');
   background.className = 'hero-background';
 
   if (!fields.image) {
+    // No author-provided image — fall back to the default hero image
+    background.append(buildDefaultHeroPicture());
     return background;
   }
 
