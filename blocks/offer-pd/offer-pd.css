@@ -1,31 +1,42 @@
+/* No max-width on the outer block itself */
 .product-detail {
-  max-width: 900px;
-  margin: 0 auto;
+  width: 100%;
+}
+.section.offer-pd-container {
+  max-width: none;
+  padding: 0;
+}
+
+.offer-pd-wrapper {
+  max-width: none;
+  padding: 0;
 }
 
 .product-detail-banner {
   width: 100%;
-  max-width: 960px;
-  margin: 0 auto 24px;
+  height: 700px;
+  overflow: hidden;
 }
 
 .product-detail-banner img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
   display: block;
 }
 
+/* Constrain ONLY the text elements, not the banner */
 .product-detail-title {
-  font-size: 32px;
-  font-weight: 600;
-  margin: 0 16px 16px;
+  max-width: 900px;
+  margin: 24px 0 16px 40px; /* left margin instead of auto, adjust 40px to match your padding */
+  padding: 0 16px;
 }
 
 .product-detail-description {
-  font-size: 16px;
-  line-height: 1.6;
-  margin: 0 16px 16px;
-  color: var(--text-color, #333);
+  max-width: 900px;
+  margin: 0 0 16px 40px;
+  padding: 0 16px;
 }
 
 .product-detail-not-found {

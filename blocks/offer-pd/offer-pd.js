@@ -20,9 +20,13 @@ export default async function decorate(block) {
   `;
 
   const banner = block.querySelector('.product-detail-banner');
+
   if (cf.image) {
     const bannerImgUrl = `${AEM_PUBLISH_ORIGIN}${cf.image}/jcr:content/renditions/pdp-portrait.jpeg`;
-    banner.innerHTML = `<img src="${bannerImgUrl}" alt="${cf.productId || productId}">`;
+    const img = document.createElement('img');
+    img.src = bannerImgUrl;
+    img.alt = cf.productId || productId;
+    banner.appendChild(img);
   } else {
     banner.remove();
   }
