@@ -152,6 +152,11 @@ const createLanguageSelector = (isMobile = false) => {
   const langSelector = document.createElement('div');
   langSelector.className = isMobile ? 'lang-selector lang-selector--mobile' : 'lang-selector';
 
+  const currentLang = (window.location.pathname.match(
+    /(?:\/content\/[^/]+)?\/[a-z]{2}\/([a-z]{2})(?:\/|$)/i,
+  )?.[1] || 'en').toUpperCase();
+  const activeLabel = LANGUAGE_OPTIONS.includes(currentLang) ? currentLang : LANGUAGE_OPTIONS[0];
+
   const trigger = document.createElement('button');
   trigger.type = 'button';
   trigger.className = 'lang-selector-trigger';
@@ -159,7 +164,7 @@ const createLanguageSelector = (isMobile = false) => {
   trigger.setAttribute('aria-label', 'Select language');
   trigger.innerHTML = `
     <span class="lang-globe">🌐</span>
-    <span class="lang-label">${LANGUAGE_OPTIONS[0]}</span>
+    <span class="lang-label">${activeLabel}</span>
     <span class="lang-caret">▾</span>
   `;
 
@@ -169,12 +174,12 @@ const createLanguageSelector = (isMobile = false) => {
   menu.setAttribute('aria-label', 'Language options');
   menu.style.display = 'none';
 
-  LANGUAGE_OPTIONS.forEach((lang, index) => {
+  LANGUAGE_OPTIONS.forEach((lang) => {
     const li = document.createElement('li');
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'lang-option';
-    if (index === 0) {
+    if (lang === activeLabel) {
       btn.classList.add('is-active');
     }
     btn.textContent = lang;
