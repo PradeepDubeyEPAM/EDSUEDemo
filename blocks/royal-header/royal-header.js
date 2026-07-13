@@ -3,6 +3,14 @@ import { loadCSS } from '../../scripts/aem.js';
 
 const LANGUAGE_OPTIONS = ['EN', 'FR', 'DE'];
 
+function buildLangPath(targetLang) {
+  const { pathname } = window.location;
+  return pathname.replace(
+    /((?:\/content\/[^/]+)?\/[a-z]{2}\/)[a-z]{2}(\/|$)/i,
+    `$1${targetLang.toLowerCase()}$2`,
+  );
+}
+
 // Utility: Chunk array into groups
 const chunkArray = (array, chunkSize) => {
   if (!Array.isArray(array) || array.length === 0 || chunkSize <= 0) {
@@ -490,22 +498,7 @@ const setupInteractions = (block, header) => {
 
       options.forEach((option) => {
         option.addEventListener('click', () => {
-          const selectedLang = option.textContent;
-
-          // Update all language selectors
-          langSelectors.forEach((sel) => {
-            const lbl = sel.querySelector('.lang-label');
-            const opts = sel.querySelectorAll('.lang-option');
-            if (lbl) lbl.textContent = selectedLang;
-            opts.forEach((opt) => {
-              opt.classList.toggle('is-active', opt.textContent === selectedLang);
-            });
-            sel.classList.remove('is-open');
-            const mnu = sel.querySelector('.lang-menu');
-            const trg = sel.querySelector('.lang-selector-trigger');
-            if (mnu) mnu.style.display = 'none';
-            if (trg) trg.setAttribute('aria-expanded', 'false');
-          });
+          window.location.href = buildLangPath(option.textContent.trim());
         });
       });
     }
