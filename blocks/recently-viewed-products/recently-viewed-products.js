@@ -81,7 +81,7 @@ export default async function decorate(block) {
              );
 
              const sortedProducts = arr
-               .map(sku => products.find(p => p.sku === sku))
+               .map(sku => formattedProducts.find(p => p.sku === sku))
                .filter(Boolean);
 
             //  Render
