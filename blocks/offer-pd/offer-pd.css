@@ -35,16 +35,15 @@
   text-align: center;
 }
 
-/* Description narrower so it wraps to ~2 lines instead of 4 */
+
 .product-detail-description {
-  max-width: 700px;
+  max-width: 900px;
   margin: 0 auto 16px auto;
   padding: 0 24px;
   text-align: center;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  font-size: 15px;      
+  line-height: 1.6;
+   text-wrap: balance;
 }
 
 .product-detail-not-found {
