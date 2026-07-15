@@ -1,65 +1,167 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
+import { initializeEventTracking } from './event-tracker.js';
 
 function parseFields(block) {
   const fields = {};
   const rows = [...block.children];
-  const modelOrder = ['image', 'imageAlt', 'headingText', 'description'];
-  const fallbackOrder = ['image', 'headingText', 'description'];
 
-  rows.forEach((row, index) => {
-    const attributedCell = row.matches('[data-aue-prop], [data-richtext-prop]')
-      ? row
-      : row.querySelector('[data-aue-prop], [data-richtext-prop]');
-    if (attributedCell) {
-      const prop = attributedCell.getAttribute('data-aue-prop')
-        || attributedCell.getAttribute('data-richtext-prop');
-      if (prop) fields[prop] = attributedCell;
-      return;
-    }
-
-    const [keyCell, valueCell] = [...row.children];
-    const key = keyCell?.textContent?.trim();
-    if (key && valueCell && modelOrder.includes(key)) {
-      fields[key] = valueCell;
-      return;
-    }
-
-    const fallbackProp = fallbackOrder[index];
-    const fallbackCell = row.firstElementChild || row;
-    if (fallbackProp && fallbackCell && !fields[fallbackProp]) {
-      fields[fallbackProp] = fallbackCell;
+  rows.forEach((row) => {
+    const cell = row.querySelector('[data-aue-prop], [data-richtext-prop]');
+    if (cell) {
+      const prop = cell.getAttribute('data-aue-prop') || cell.getAttribute('data-richtext-prop');
+      if (prop) fields[prop] = cell;
     }
   });
 
+  if (Object.keys(fields).length > 0) return fields;
+
+  const nonImageRows = rows.filter((row) => {
+    const cell = row.firstElementChild || row;
+    return !getImageAssetValue(cell);
+  });
+
+  // Image row: first row with an image asset
+  const imageRow = rows.find((row) => getImageAssetValue(row.firstElementChild || row));
+  if (imageRow) fields.image = imageRow.firstElementChild || imageRow;
+
+  // Description: always the last row in the model
+  const lastRow = nonImageRows[nonImageRows.length - 1];
+  if (lastRow) fields.description = lastRow.firstElementChild || lastRow;
+
+  // HeadingText: second-to-last non-image row
+  const headingRow = nonImageRows[nonImageRows.length - 2];
+  if (headingRow) fields.headingText = headingRow.firstElementChild || headingRow;
+
   return fields;
+}
+
+function isUrlLike(value) {
+  if (!value) return false;
+  const text = value.trim();
+  return /^(https?:\/\/|\/)/.test(text);
+}
+
+function createFallbackHeroPicture(altText) {
+  const picture = document.createElement('picture');
+
+  const mobileSource = document.createElement('source');
+  mobileSource.setAttribute('media', '(max-width: 768px)');
+  mobileSource.setAttribute('srcset', '/icons/hero-mobile.png');
+
+  const img = document.createElement('img');
+  img.src = '/icons/hero.png';
+  img.alt = altText;
+
+  picture.append(mobileSource, img);
+  return picture;
+}
+
+function findAssetUrlInAttributes(node) {
+  if (!node) return '';
+
+  const candidates = [node, ...node.querySelectorAll('*')];
+  const assetPattern = /(https?:\/\/[^\s"']+|\/content\/dam\/[^\s"']+|\/[^\s"']+\.(?:png|jpe?g|webp|avif|gif|svg|mp4))/i;
+
+  for (const element of candidates) {
+    for (const attribute of [...element.attributes]) {
+      const match = attribute.value.match(assetPattern);
+      if (match?.[0]) {
+        return match[0];
+      }
+    }
+  }
+
+  return '';
+}
+
+function getImageAssetValue(node) {
+  if (!node) return '';
+
+  const attributeAsset = findAssetUrlInAttributes(node);
+  if (attributeAsset.includes('/content/dam/')) {
+    return attributeAsset;
+  }
+
+  const pictureSource = node.matches('picture source[srcset], source[srcset]')
+    ? node
+    : node.querySelector('picture source[srcset], source[srcset]');
+  if (pictureSource?.srcset) {
+    return pictureSource.srcset.split(',')[0].trim().split(' ')[0];
+  }
+
+  const image = node.matches('img[src]') ? node : node.querySelector('img[src]');
+  if (image?.currentSrc || image?.src) {
+    return image.currentSrc || image.src;
+  }
+
+  const link = node.matches('a[href]') ? node : node.querySelector('a[href]');
+  if (link?.href) {
+    return link.href;
+  }
+
+  if (attributeAsset) {
+    return attributeAsset;
+  }
+
+  const textValue = node.textContent?.trim() || '';
+  return isUrlLike(textValue) ? textValue : '';
+}
+
+function resolveHeroImageField(block, fields) {
+  if (getImageAssetValue(fields.image)) {
+    return fields.image;
+  }
+
+  if (getImageAssetValue(fields.imageAlt)) {
+    return fields.imageAlt;
+  }
+
+  const rows = [...block.children];
+  const imageRow = rows.find((row) => {
+    const attributedCell = row.matches('[data-aue-prop="image"]')
+      ? row
+      : row.querySelector('[data-aue-prop="image"]');
+    return !!getImageAssetValue(attributedCell || row);
+  });
+
+  if (imageRow) {
+    return imageRow.matches('[data-aue-prop="image"]')
+      ? imageRow
+      : imageRow.querySelector('[data-aue-prop="image"]') || imageRow;
+  }
+
+  return rows.find((row) => !!getImageAssetValue(row)) || null;
 }
 
 function buildHeroBackground(fields) {
   const background = document.createElement('div');
   background.className = 'hero-background';
 
-  if (!fields.image) {
+  const fallbackAltText = fields.imageAlt?.textContent?.trim()
+    || fields.headingText?.textContent?.trim()
+    || '';
+  const authoredPicture = fields.image?.matches('picture')
+    ? fields.image
+    : fields.image?.querySelector('picture');
+  const authoredImg = fields.image?.matches('img')
+    ? fields.image
+    : fields.image?.querySelector('img');
+  const resolvedImageUrl = getImageAssetValue(fields.image);
+
+  if (!fields.image || !resolvedImageUrl) {
+    background.append(createFallbackHeroPicture(fallbackAltText));
     return background;
   }
 
-  const picture = fields.image.matches('picture')
-    ? fields.image
-    : fields.image.querySelector('picture');
-  const existingImg = fields.image.matches('img')
-    ? fields.image
-    : fields.image.querySelector('img');
-  const imageLink = fields.image.matches('a')
-    ? fields.image
-    : fields.image.querySelector('a');
-  const linkedImageUrl = imageLink?.href
-    || fields.image.textContent.trim();
   const altText = fields.imageAlt?.textContent?.trim()
-    || existingImg?.alt
+    || authoredImg?.alt
+    || fields.imageAlt?.getAttribute('title')?.trim()
     || fields.headingText?.textContent?.trim()
     || '';
 
-  if (picture) {
+  if (authoredPicture) {
+    const picture = authoredPicture.cloneNode(true);
     const img = picture.querySelector('img');
     if (img) img.alt = altText;
     moveInstrumentation(fields.image, picture);
@@ -67,36 +169,41 @@ function buildHeroBackground(fields) {
     return background;
   }
 
-  if (existingImg) {
-    const optimized = createOptimizedPicture(
-      existingImg.src,
-      altText,
-      false,
-      [{ width: '2000' }],
-    );
-    moveInstrumentation(fields.image, optimized);
-    background.append(optimized);
+  if (authoredImg) {
+    const img = authoredImg.cloneNode(true);
+    img.alt = altText;
+    moveInstrumentation(fields.image, img);
+    background.append(img);
     return background;
   }
 
-  if (linkedImageUrl) {
-    const optimized = createOptimizedPicture(
-      linkedImageUrl,
+  const isAbsoluteAssetUrl = /^https?:\/\//.test(resolvedImageUrl);
+  const media = isAbsoluteAssetUrl
+    ? (() => {
+      const img = document.createElement('img');
+      img.src = resolvedImageUrl;
+      img.alt = altText;
+      img.loading = 'eager';
+      return img;
+    })()
+    : createOptimizedPicture(
+      resolvedImageUrl,
       altText,
       false,
       [{ width: '2000' }],
     );
-    moveInstrumentation(fields.image, optimized);
-    background.append(optimized);
-  }
+  moveInstrumentation(fields.image, media);
+  background.append(media);
 
   return background;
 }
 
 export default function decorate(block) {
   const fields = parseFields(block);
+  const imageField = resolveHeroImageField(block, fields);
+
   const headingText = fields.headingText?.textContent?.trim() || 'Uncover the Magic of Marrakech';
-  const descriptionHtml = fields.description?.innerHTML?.trim();
+  const descriptionHtml = fields.description?.innerHTML?.trim() || '';
 
   block.innerHTML = `
     <section class="ram-hero">
@@ -417,7 +524,10 @@ export default function decorate(block) {
   `;
 
   const section = block.querySelector('.ram-hero');
-  section.prepend(buildHeroBackground(fields));
+  section.prepend(buildHeroBackground({
+    ...fields,
+    image: imageField,
+  }));
 
   const heading = block.querySelector('.hero-text h1');
   heading.textContent = headingText;
@@ -428,7 +538,7 @@ export default function decorate(block) {
   const description = block.querySelector('.hero-description');
   if (descriptionHtml) {
     description.innerHTML = descriptionHtml;
-    moveInstrumentation(fields.description, description);
+    if (fields.description) moveInstrumentation(fields.description, description);
   } else {
     description.textContent = 'A city of colors, scents, and timeless charm.';
   }
@@ -503,6 +613,32 @@ export default function decorate(block) {
   const datePanel = block.querySelector('.date-panel');
   const departureInput = block.querySelector('.js-departure');
   const returnInput = block.querySelector('.js-return');
+
+  // Align EDS date behaviour with AEM Cloud booking page:
+  // - always start from current date
+  // - disallow selecting past dates
+  const todayIso = (() => {
+    const now = new Date();
+    const local = new Date(now.getTime() - (now.getTimezoneOffset() * 60000));
+    return local.toISOString().split('T')[0];
+  })();
+
+  const clampDateToToday = (value) => {
+    if (!value) return todayIso;
+    return value < todayIso ? todayIso : value;
+  };
+
+  if (departureInput) {
+    departureInput.min = todayIso;
+    departureInput.value = clampDateToToday(departureInput.value);
+  }
+
+  if (returnInput) {
+    returnInput.min = departureInput?.value || todayIso;
+    if (returnInput.value && departureInput?.value && returnInput.value < departureInput.value) {
+      returnInput.value = departureInput.value;
+    }
+  }
   const dateSummary = block.querySelector('.js-date-summary');
   const dateConfirm = block.querySelector('.js-date-confirm');
 
@@ -560,6 +696,19 @@ export default function decorate(block) {
   };
 
   const updateDateSummary = () => {
+    // Keep date inputs valid (no past dates; return >= departure)
+    if (departureInput) {
+      departureInput.min = todayIso;
+      departureInput.value = clampDateToToday(departureInput.value);
+    }
+
+    if (returnInput) {
+      returnInput.min = departureInput?.value || todayIso;
+      if (returnInput.value && departureInput?.value && returnInput.value < departureInput.value) {
+        returnInput.value = departureInput.value;
+      }
+    }
+
     const departure = formatDateText(departureInput?.value);
     const returns = formatDateText(returnInput?.value);
     if (selectedTripType === 'one-way' && departure) {
@@ -593,13 +742,18 @@ export default function decorate(block) {
   };
 
   const buildFlightSearchUrl = () => {
-    const basePath = '/content/edsuedemo/us/en/ram/aem/booking/flight-search';
+    const basePath ='/content/edsuedemo/us/en/ram/aem/booking/flight-search';
     const params = new URLSearchParams();
-
     const origin = originCode?.textContent?.trim();
     const destination = destinationCode?.textContent?.trim();
     const depDate = formatDateForApi(departureInput?.value);
     const returnDate = formatDateForApi(returnInput?.value);
+
+    // Passengers / cabin
+    const adults = Number(block.querySelector('.counter-row[data-type="adult"] [data-value]')?.textContent || 1);
+    const children = Number(block.querySelector('.counter-row[data-type="child"] [data-value]')?.textContent || 0);
+    const infants = Number(block.querySelector('.counter-row[data-type="infant"] [data-value]')?.textContent || 0);
+    const cabin = (block.querySelector('input[name="cabin"]:checked')?.value || 'Economy').toLowerCase();
 
     if (origin) params.set('origin', origin);
     if (destination) params.set('destination', destination);
@@ -607,6 +761,11 @@ export default function decorate(block) {
     if (selectedTripType !== 'one-way' && returnDate) {
       params.set('returnDate', returnDate);
     }
+
+    params.set('adults', String(Number.isFinite(adults) && adults > 0 ? adults : 1));
+    params.set('children', String(Number.isFinite(children) && children >= 0 ? children : 0));
+    params.set('infants', String(Number.isFinite(infants) && infants >= 0 ? infants : 0));
+    params.set('cabin', cabin === 'business' ? 'business' : 'economy');
 
     const query = params.toString();
     return query ? `${basePath}?${query}` : basePath;
@@ -808,4 +967,5 @@ export default function decorate(block) {
       }, 1200);
     });
   });
+  initializeEventTracking(block);
 }

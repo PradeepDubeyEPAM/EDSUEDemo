@@ -638,7 +638,8 @@ function decorateBlocks(main) {
  * @returns {Promise}
  */
 async function loadHeader(header) {
-  const headerBlock = buildBlock('header', '');
+  //const headerBlock = buildBlock('header', '');
+  const headerBlock = buildBlock('royal-header','');
   header.append(headerBlock);
   decorateBlock(headerBlock);
   return loadBlock(headerBlock);
@@ -650,7 +651,8 @@ async function loadHeader(header) {
  * @returns {Promise}
  */
 async function loadFooter(footer) {
-  const footerBlock = buildBlock('footer', '');
+  // const footerBlock = buildBlock('footer', '');
+  const footerBlock = buildBlock('royal-footer', '');
   footer.append(footerBlock);
   decorateBlock(footerBlock);
   return loadBlock(footerBlock);

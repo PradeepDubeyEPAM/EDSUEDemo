@@ -33,48 +33,6 @@
       "components": [
         {
           "...": "../blocks/*/_*.json#/definitions"
-        },
-        {
-          "...": "../blocks/product/_product.json#/definitions"
-        },
-        {
-          "...": "../blocks/product-list/_product-list.json#/definitions"
-        },
-        {
-          "...": "../blocks/product-list/_product-list.json#/definitions"
-        },
-         {
-          "...": "../blocks/ram-download-app/_ram-download-app.json#/definitions"
-        },
-         {
-          "...": "../blocks/ram-flying-benefits-cards/_ram-flying-benefits-cards.json#/definitions"
-        },
-         {
-          "...": "../blocks/ram-footer/_ram-footer.json#/definitions"
-        },
-        {
-          "...": "../blocks/ram-header/_ram-header.json#/definitions"
-        },
-        {
-          "...": "../blocks/ram-hero/_ram-hero.json#/definitions"
-        },
-        {
-          "...": "../blocks/ram-news-letter/_ram-news-letter.json#/definitions"
-        },
-        {
-          "...": "../blocks/ram-offers/_ram-offers.json#/definitions"
-        },
-        {
-          "...": "../blocks/ram-offers-carousel/_ram-offers-carousel.json#/definitions"
-        },
-        {
-          "...": "../blocks/ram-safar-flyer/_ram-safar-flyer.json#/definitions"
-        },
-        {
-          "...": "../blocks/ram-service-shortcuts/_ram-service-shortcuts.json#/definitions"
-        },
-        {
-          "...": "../blocks/ram-our-fleet/_ram-our-fleet.json#/definitions"
         }
       ]
     }

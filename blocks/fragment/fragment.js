@@ -25,7 +25,11 @@ export async function loadFragment(path) {
       finalPath += `/promo-${promoLang}/${device}`;
     }
 
-    const resp = await fetch(`${finalPath}.plain.html`);
+    let resp = await fetch(`${finalPath}.plain.html`);
+    if (!resp.ok && isXF) {
+      resp = await fetch(`${finalPath}.html`);
+    }
+
     if (resp.ok) {
       const main = document.createElement('main');
       main.innerHTML = await resp.text();
@@ -50,22 +54,17 @@ export default async function decorate(block) {
   const link = block.querySelector('a');
   const path = link ? link.getAttribute('href') : block.textContent.trim();
 
-
   const cleanPath = path.replace(/(\.plain)?\.html$/, '');
   const isOfferBlock = cleanPath.includes('/offers/');
 
   if (isOfferBlock) {
-    
     const edsPath = cleanPath.replace(/^\/content\/[^/]+/, '');
     block.setAttribute('data-offer-base', edsPath);
 
-    
     block.style.display = 'none';
 
-    
     return;
   }
-
 
   const fragment = await loadFragment(path);
   if (fragment) {

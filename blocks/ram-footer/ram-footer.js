@@ -3,11 +3,29 @@ export default function decorate(block) {
     {
       title: 'About us',
       links: [
-        'Our Fleet',
-        'Our Network',
-        'Our Partners',
-        'Dreamliner',
-        'Mobile App',
+        {
+          label: 'Our Fleet',
+          href: '/content/edsuedemo/us/en/ram/eds/about-us/our-fleet',
+        },
+        
+        {
+          label: 'Our Network',
+          href: '/content/edsuedemo/us/en/ram/eds/about-us/our-network',
+          
+        },
+        {
+          label: 'Our Partners',
+          href: '/content/edsuedemo/us/en/ram/eds/about-us/alliance-partnerships',
+        },
+        {
+          label: 'Dreamliner',
+          href: '/content/edsuedemo/us/en/ram/eds/about-us/dreamliner',
+        },
+       
+        {
+          label: 'Mobile App',
+          href: '/content/edsuedemo/us/en/ram/eds/about-us/ram-assistant',
+        },
         'Royal Air Marco Cargo',
         'International United for Wildlife Taskforce',
       ],
@@ -192,10 +210,16 @@ export default function decorate(block) {
       <path d="m16 16 4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
     </svg>`;
 
-  const renderLinkItems = (links) => links.map((link) => `
+  const renderLinkItems = (links) => links.map((link) => {
+    const linkData = typeof link === 'string'
+      ? { label: link, href: '#' }
+      : { label: link.label, href: link.href || '#' };
+
+    return `
     <li>
-      <a href="#">${link}</a>
-    </li>`).join('');
+      <a href="${linkData.href}">${linkData.label}</a>
+    </li>`;
+  }).join('');
 
   const renderPanelContent = (group) => {
     if (group.sections) {

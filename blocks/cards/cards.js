@@ -1,5 +1,6 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
+import { addAIDescriptions } from './ai-descriptions.js';  
 
 export default function decorate(block) {
   const ul = document.createElement('ul');
@@ -12,16 +13,19 @@ export default function decorate(block) {
 
     const children = [...li.children];
 
-    // assign image/body classes safely
     children.forEach((div) => {
       if (div.querySelector('picture')) {
         div.className = 'cards-card-image';
       } else {
         div.className = 'cards-card-body';
+        const rawTitle = div.textContent.trim();
+        if (rawTitle) {
+          div.innerHTML = `<p class="cards-card-title">${rawTitle}</p>`;
+        }
       }
     });
 
-    // last column = productId
+    // product id
     const last = children[children.length - 1];
     if (last && !last.querySelector('picture')) {
       const productId = last.textContent.trim();
@@ -35,15 +39,22 @@ export default function decorate(block) {
   });
 
   ul.querySelectorAll('picture > img').forEach((img) => {
-    const optimizedPic = createOptimizedPicture(
-      img.src,
-      img.alt,
-      false,
-      [{ width: '750' }]
-    );
+    const optimizedPic = createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }]);
     moveInstrumentation(img, optimizedPic.querySelector('img'));
     img.closest('picture').replaceWith(optimizedPic);
   });
 
+  ul.querySelectorAll('li').forEach((li) => {
+    const productId = li.dataset.productId;
+    if (!productId) return;
+
+    const link = document.createElement('a');
+    link.href = `/us/en/offer-products/product-detail?id=${encodeURIComponent(productId)}`;
+    link.className = 'cards-card-link';
+    while (li.firstChild) link.append(li.firstChild);
+    li.append(link);
+  });
+
   block.replaceChildren(ul);
+  addAIDescriptions(block);
 }

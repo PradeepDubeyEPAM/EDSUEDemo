@@ -1,0 +1,114 @@
+.ram-network-accordion {
+  width: 100%;
+  max-width: 1253px;
+  margin: 20px auto 60px;
+  padding: 0 10px;
+}
+
+.ram-network-accordion-item {
+  border-bottom: 0;
+}
+
+.ram-network-accordion-header {
+  margin: 0;
+  border-bottom: 1px solid rgba(210, 11, 11, 0.09);
+}
+
+.ram-network-accordion-trigger {
+  width: 100%;
+  min-height: 70px;
+  padding: 12px 20px 12px 0;
+  border: 0;
+  background: transparent;
+  color: rgb(194, 0, 47);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: left;
+  cursor: pointer;
+  text-decoration: none;
+  outline: none;
+  box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ram-network-accordion-trigger:hover,
+.ram-network-accordion-trigger:focus,
+.ram-network-accordion-trigger:focus-visible,
+.ram-network-accordion-trigger:active {
+  color: rgb(194, 0, 47);
+  text-decoration: none;
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+.ram-network-accordion-panel {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  padding: 0;
+  transition: max-height 0.36s ease, opacity 0.24s ease, padding-top 0.36s ease;
+}
+
+.ram-network-accordion-item.is-open .ram-network-accordion-panel {
+  opacity: 1;
+  padding-top: 16px;
+}
+
+.ram-network-accordion-table-wrap {
+  overflow-x: auto;
+}
+
+.ram-network-accordion-table-wrap table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ram-network-accordion-table-wrap tbody {
+  vertical-align: text-top;
+}
+
+.ram-network-accordion-table-wrap td {
+  width: 20%;
+  vertical-align: text-top;
+  padding: 1px;
+}
+
+.ram-network-accordion-table-wrap td:empty {
+  display: none;
+}
+
+.ram-network-accordion-table-wrap .coltitle {
+  display: inline;
+  color: #000;
+  font-size: 16px;
+  font-weight: 1000;
+  line-height: 24px;
+}
+
+.ram-network-accordion-table-wrap ul {
+  margin: 0;
+  padding: 0;
+}
+
+.ram-network-accordion-table-wrap li {
+  list-style: none;
+  margin: 0;
+  color: #000;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 24px;
+}
+
+@media (max-width: 1200px) {
+  .ram-network-accordion {
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 992px) {
+  .ram-network-accordion-table-wrap td {
+    min-width: 240px;
+  }
+}

@@ -26,24 +26,22 @@
       "language-navigation",
       "login",
       "hero-section",
-      "product",
-      "product-list",
-      "feature-section",
-      "api-mesh-data",
-      "product-detail",
-      "related-products",
-      "recently-viewed-products",
+      "ram-alliance-accordion",
+      "ram-assistant-tab",
       "ram-download-app",
       "ram-flying-benefits-cards",
       "ram-footer",
       "ram-header",
       "ram-hero",
+      "ram-network-accordion",
+      "ram-network-tab",
       "ram-news-letter",
-      "ram-offers",
       "ram-offers-carousel",
+      "ram-offers",
       "ram-safar-flyer",
       "ram-service-shortcuts",
-      "ram-our-fleet"
+      "royal-footer",
+      "royal-header"
     ]
   },
   {
@@ -57,6 +55,10 @@
     "components": [
       "card"
     ]
+  },
+  {
+    "id": "chatbot",
+    "components": []
   },
   {
     "id": "columns",
