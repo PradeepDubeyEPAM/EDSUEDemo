@@ -12,6 +12,7 @@
   padding: 0;
 }
 
+/* Banner stays full width - this is your "12 grid" */
 .product-detail-banner {
   width: 100%;
   height: 700px;
@@ -26,17 +27,23 @@
   display: block;
 }
 
-/* Constrain ONLY the text elements, not the banner */
+/* Content constrained to ~9-grid equivalent, centered like Pradeep asked */
 .product-detail-title {
   max-width: 900px;
-  margin: 24px 0 16px 40px; /* left margin instead of auto, adjust 40px to match your padding */
-  padding: 0 16px;
+  margin: 24px auto 16px auto;
+  padding: 0 24px;
+  text-align: center;
 }
+
 
 .product-detail-description {
   max-width: 900px;
-  margin: 0 0 16px 40px;
-  padding: 0 16px;
+  margin: 0 auto 16px auto;
+  padding: 0 24px;
+  text-align: center;
+  font-size: 15px;      
+  line-height: 1.6;
+   text-wrap: balance;
 }
 
 .product-detail-not-found {

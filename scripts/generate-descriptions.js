@@ -60,7 +60,7 @@ async function generateDescription(productTitle) {
       temperature: 0.3,
       max_tokens: 120,
       messages: [
-        { role: 'system', content: 'Write a short premium retail product description in 2 sentences. No markdown. Plain text only.' },
+        { role: 'system', content: 'Write a short premium retail product description in 1 sentence. No markdown. Plain text only.' },
         { role: 'user',   content: `Product: ${productTitle}` },
       ],
     }),
