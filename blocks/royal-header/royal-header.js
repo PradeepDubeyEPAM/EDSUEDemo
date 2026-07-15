@@ -3,6 +3,14 @@ import { loadCSS } from '../../scripts/aem.js';
 
 const LANGUAGE_OPTIONS = ['EN', 'FR', 'DE'];
 
+function buildLangPath(targetLang) {
+  const { pathname } = window.location;
+  return pathname.replace(
+    /((?:\/content\/[^/]+)?\/[a-z]{2}\/)[a-z]{2}(\/|$)/i,
+    `$1${targetLang.toLowerCase()}$2`,
+  );
+}
+
 // Utility: Chunk array into groups
 const chunkArray = (array, chunkSize) => {
   if (!Array.isArray(array) || array.length === 0 || chunkSize <= 0) {
@@ -144,6 +152,11 @@ const createLanguageSelector = (isMobile = false) => {
   const langSelector = document.createElement('div');
   langSelector.className = isMobile ? 'lang-selector lang-selector--mobile' : 'lang-selector';
 
+  const currentLang = (window.location.pathname.match(
+    /(?:\/content\/[^/]+)?\/[a-z]{2}\/([a-z]{2})(?:\/|$)/i,
+  )?.[1] || 'en').toUpperCase();
+  const activeLabel = LANGUAGE_OPTIONS.includes(currentLang) ? currentLang : LANGUAGE_OPTIONS[0];
+
   const trigger = document.createElement('button');
   trigger.type = 'button';
   trigger.className = 'lang-selector-trigger';
@@ -151,7 +164,7 @@ const createLanguageSelector = (isMobile = false) => {
   trigger.setAttribute('aria-label', 'Select language');
   trigger.innerHTML = `
     <span class="lang-globe">🌐</span>
-    <span class="lang-label">${LANGUAGE_OPTIONS[0]}</span>
+    <span class="lang-label">${activeLabel}</span>
     <span class="lang-caret">▾</span>
   `;
 
@@ -161,12 +174,12 @@ const createLanguageSelector = (isMobile = false) => {
   menu.setAttribute('aria-label', 'Language options');
   menu.style.display = 'none';
 
-  LANGUAGE_OPTIONS.forEach((lang, index) => {
+  LANGUAGE_OPTIONS.forEach((lang) => {
     const li = document.createElement('li');
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'lang-option';
-    if (index === 0) {
+    if (lang === activeLabel) {
       btn.classList.add('is-active');
     }
     btn.textContent = lang;
@@ -490,22 +503,7 @@ const setupInteractions = (block, header) => {
 
       options.forEach((option) => {
         option.addEventListener('click', () => {
-          const selectedLang = option.textContent;
-
-          // Update all language selectors
-          langSelectors.forEach((sel) => {
-            const lbl = sel.querySelector('.lang-label');
-            const opts = sel.querySelectorAll('.lang-option');
-            if (lbl) lbl.textContent = selectedLang;
-            opts.forEach((opt) => {
-              opt.classList.toggle('is-active', opt.textContent === selectedLang);
-            });
-            sel.classList.remove('is-open');
-            const mnu = sel.querySelector('.lang-menu');
-            const trg = sel.querySelector('.lang-selector-trigger');
-            if (mnu) mnu.style.display = 'none';
-            if (trg) trg.setAttribute('aria-expanded', 'false');
-          });
+          window.location.href = buildLangPath(option.textContent.trim());
         });
       });
     }
