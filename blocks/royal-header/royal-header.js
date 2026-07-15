@@ -1,6 +1,14 @@
 /* eslint-disable */
 import { loadCSS } from '../../scripts/aem.js';
 
+const CLIENTLIB_CSS_PATH = '/etc.clientlibs/aem-cloud-poc/clientlibs/clientlib-react.css';
+function ensureClientlibCss() {
+  const selector = `link[rel="stylesheet"][href="${CLIENTLIB_CSS_PATH}"]`;
+  if (document.querySelector(selector)) return;
+  // fire-and-forget (do not await) to avoid blocking header rendering
+  loadCSS(CLIENTLIB_CSS_PATH);
+}
+
 const LANGUAGE_OPTIONS = ['EN', 'FR', 'DE'];
 
 function buildLangPath(targetLang) {
@@ -559,11 +567,11 @@ const setupInteractions = (block, header) => {
 
 export default async function decorate(block) {
   try {
+    // Safe fallback: ensure CSS is requested even if head.html is not applied on this route
+    ensureClientlibCss();
+
     const xfPath = '/content/experience-fragments/aem-cloud-poc/us/en/site/global/header/master';
 
-    // Load AEM React clientlib CSS
-    const clientlibCSSPath = '/etc.clientlibs/aem-cloud-poc/clientlibs/clientlib-react.css';
-    await loadCSS(clientlibCSSPath);
 
     // Fetch model.json
     const resp = await fetch(`${xfPath}.model.json`);
