@@ -5,64 +5,35 @@ import { initializeEventTracking } from './event-tracker.js';
 function parseFields(block) {
   const fields = {};
   const rows = [...block.children];
-  const modelOrder = ['image', 'imageAlt', 'headingText', 'description', 'searchFlightHref'];
 
-  rows.forEach((row, index) => {
-    const attributedCell = row.matches('[data-aue-prop], [data-richtext-prop]')
-      ? row
-      : row.querySelector('[data-aue-prop], [data-richtext-prop]');
-    if (attributedCell) {
-      const prop = attributedCell.getAttribute('data-aue-prop')
-        || attributedCell.getAttribute('data-richtext-prop');
-      if (prop) fields[prop] = attributedCell;
-      return;
-    }
-
-    const [keyCell, valueCell] = [...row.children];
-    const key = keyCell?.textContent?.trim();
-    if (key && valueCell && modelOrder.includes(key)) {
-      fields[key] = valueCell;
-      return;
-    }
-
-    const fallbackCell = row.firstElementChild || row;
-    if (!fallbackCell) return;
-
-    const fallbackProp = modelOrder[index];
-    if (fallbackProp && !fields[fallbackProp]) {
-      fields[fallbackProp] = fallbackCell;
-      return;
-    }
-
-    const hasImage = !!fallbackCell.querySelector('picture, img') || fallbackCell.matches('picture, img');
-    if (hasImage && !fields.image) {
-      fields.image = fallbackCell;
-      return;
-    }
-
-    const rawValue = getFieldValue(fallbackCell);
-    if (isUrlLike(rawValue) && !fields.searchFlightHref) {
-      fields.searchFlightHref = fallbackCell;
-      return;
-    }
-
-    if (!fields.headingText) {
-      fields.headingText = fallbackCell;
-      return;
-    }
-
-    if (!fields.description) {
-      fields.description = fallbackCell;
+  rows.forEach((row) => {
+    const cell = row.querySelector('[data-aue-prop], [data-richtext-prop]');
+    if (cell) {
+      const prop = cell.getAttribute('data-aue-prop') || cell.getAttribute('data-richtext-prop');
+      if (prop) fields[prop] = cell;
     }
   });
 
-  return fields;
-}
+  if (Object.keys(fields).length > 0) return fields;
 
-function getFieldValue(field) {
-  if (!field) return '';
-  const link = field.matches('a') ? field : field.querySelector('a');
-  return link?.getAttribute('href')?.trim() || field.textContent?.trim() || '';
+  const nonImageRows = rows.filter((row) => {
+    const cell = row.firstElementChild || row;
+    return !getImageAssetValue(cell);
+  });
+
+  // Image row: first row with an image asset
+  const imageRow = rows.find((row) => getImageAssetValue(row.firstElementChild || row));
+  if (imageRow) fields.image = imageRow.firstElementChild || imageRow;
+
+  // Description: always the last row in the model
+  const lastRow = nonImageRows[nonImageRows.length - 1];
+  if (lastRow) fields.description = lastRow.firstElementChild || lastRow;
+
+  // HeadingText: second-to-last non-image row
+  const headingRow = nonImageRows[nonImageRows.length - 2];
+  if (headingRow) fields.headingText = headingRow.firstElementChild || headingRow;
+
+  return fields;
 }
 
 function isUrlLike(value) {
@@ -230,26 +201,9 @@ function buildHeroBackground(fields) {
 export default function decorate(block) {
   const fields = parseFields(block);
   const imageField = resolveHeroImageField(block, fields);
-  // console.log('Parsed fields for RAM Hero:', fields);
+
   const headingText = fields.headingText?.textContent?.trim() || 'Uncover the Magic of Marrakech';
-  let descriptionHtml = fields.description?.innerHTML?.trim();
-  const descriptionText = fields.description?.textContent?.trim() || '';
-  let searchFlightHref = getFieldValue(fields.searchFlightHref);
-  // console.log('Initial Search Flight Href:', searchFlightHref);
-
-  if (!searchFlightHref && isUrlLike(descriptionText)) {
-    searchFlightHref = descriptionText;
-    descriptionHtml = '';
-  }
-
-  if (!searchFlightHref) {
-    const fallbackUrlRow = [...block.children]
-      .map((row) => getFieldValue(row))
-      .find((value) => isUrlLike(value));
-    searchFlightHref = fallbackUrlRow || '';
-  }
-
-  // console.log('Search Flight URL:', searchFlightHref);
+  const descriptionHtml = fields.description?.innerHTML?.trim() || '';
 
   block.innerHTML = `
     <section class="ram-hero">
@@ -584,7 +538,7 @@ export default function decorate(block) {
   const description = block.querySelector('.hero-description');
   if (descriptionHtml) {
     description.innerHTML = descriptionHtml;
-    moveInstrumentation(fields.description, description);
+    if (fields.description) moveInstrumentation(fields.description, description);
   } else {
     description.textContent = 'A city of colors, scents, and timeless charm.';
   }
