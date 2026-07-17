@@ -27,11 +27,12 @@ async function getCF(productId, token) {
 }
 
 
-async function updateCF(fragment, aiDescription, token) {
+async function updateCF(fragment, aiDescription, pdpDescription, token) {
   const url = `${AEM_HOST}/adobe/sites/cf/fragments/${fragment.id}`;
 
   const updatedFields = fragment.fields.map(f => {
-    if (f.name === 'aiDescription') return { ...f, values: [aiDescription] };
+    if (f.name === 'aiDescription')  return { ...f, values: [aiDescription] };
+    if (f.name === 'pdpDescription') return { ...f, values: [pdpDescription] };
     if (f.name === 'verified')       return { ...f, values: [false] };
     return f;
   });
@@ -70,6 +71,26 @@ async function generateDescription(productTitle) {
   return data?.choices?.[0]?.message?.content?.trim() || null;
 }
 
+// Longer variant used on the PDP page — 3-4 sentences instead of 1
+async function generateLongDescription(productTitle) {
+  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${GROQ_API_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'llama-3.3-70b-versatile',
+      temperature: 0.3,
+      max_tokens: 300,
+      messages: [
+        { role: 'system', content: 'Write a premium retail product description for a product detail page, 3-4 sentences. Cover the product\'s key features, materials or craftsmanship, and why a customer would want it. No markdown, no headings, no bullet points. Plain text only.' },
+        { role: 'user',   content: `Product: ${productTitle}` },
+      ],
+    }),
+  });
+  if (!res.ok) { console.error(`[ERROR] Groq long (${res.status})`); return null; }
+  const data = await res.json();
+  return data?.choices?.[0]?.message?.content?.trim() || null;
+}
+
 async function main() {
   console.log('=== Batch Job Started ===\n');
 
@@ -99,20 +120,23 @@ async function main() {
 
     // Pull current field values
     const getVal = name => fragment.fields.find(f => f.name === name)?.values?.[0];
-    const aiDescription = getVal('aiDescription');
-    const verified      = getVal('verified');
+    const aiDescription  = getVal('aiDescription');
+    const pdpDescription = getVal('pdpDescription');
+    const verified       = getVal('verified');
 
-    // Skip if already has a verified description
-    if (aiDescription && verified === true) {
+    // Skip if already has a verified description (covers both fields)
+    if (aiDescription && pdpDescription && verified === true) {
       console.log('  Already verified — skipping');
       skipped++; continue;
     }
 
-   
     const generated_desc = await generateDescription(productTitle);
     if (!generated_desc) { failed++; continue; }
 
-    const ok = await updateCF(fragment, generated_desc, token);
+    const generated_pdp_desc = await generateLongDescription(productTitle);
+    if (!generated_pdp_desc) { failed++; continue; }
+
+    const ok = await updateCF(fragment, generated_desc, generated_pdp_desc, token);
     if (ok) { console.log(`  [OK] ${productId}`); generated++; }
     else    { failed++; }
   }
