@@ -57,7 +57,7 @@ async function generateDescription(productTitle) {
     method: 'POST',
     headers: { Authorization: `Bearer ${GROQ_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'Llama-3.1-8B-Instant.',
+      model: 'openai/gpt-oss-120b',
       temperature: 0.3,
       max_tokens: 120,
       messages: [
@@ -95,7 +95,7 @@ async function generateLongDescription(product) {
     method: 'POST',
     headers: { Authorization: `Bearer ${GROQ_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'Llama-3.1-8B-Instant',
+      model: 'openai/gpt-oss-120b',
       temperature: 0.3,
       max_tokens: 300,
       messages: [
