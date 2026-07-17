@@ -3,8 +3,10 @@ import { fetchCFFromPublish } from '../cards/ai-descriptions.js';
 const AEM_PUBLISH_ORIGIN = 'https://publish-p24103-e71623.adobeaemcloud.com';
 
 export default async function decorate(block) {
-  const params = new URLSearchParams(window.location.search);
-  const productId = params.get('id');
+  // Rewrite serves base page but URL keeps product ID in path
+  const pathParts = window.location.pathname.split('/');
+  const lastSegment = pathParts[pathParts.length - 1] || pathParts[pathParts.length - 2];
+  const productId = (lastSegment && lastSegment !== 'product-detail') ? decodeURIComponent(lastSegment) : null;
 
   if (!productId) { block.innerHTML = '<p>Product not found.</p>'; return; }
 

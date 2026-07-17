@@ -111,23 +111,17 @@ function createChatbotUI() {
 
   const textarea = document.createElement('textarea');
   textarea.className = 'chatbot-input';
-  textarea.placeholder = 'Ask about our products and offers...';
+    textarea.placeholder = 'Hi,How can I help?';
   textarea.rows = '1';
   textarea.setAttribute('aria-label', 'Type your message');
 
   const sendBtn = document.createElement('button');
-  sendBtn.className = 'chatbot-send';
+  sendBtn.className = 'chatbot-send hidden';
   sendBtn.setAttribute('aria-label', 'Send message');
-  sendBtn.innerHTML = `
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" stroke-width="2" aria-hidden="true">
-      <line x1="22" y1="2" x2="11" y2="13"></line>
-      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-    </svg>
-  `;
+  sendBtn.setAttribute('title', 'Send');
+sendBtn.innerHTML = '<span class="chatbot-send-label">Enter</span>';
 
   inputContainer.appendChild(textarea);
-  inputContainer.appendChild(sendBtn);
 
   chatWindow.appendChild(header);
   chatWindow.appendChild(messagesContainer);
@@ -220,6 +214,7 @@ export default function decorate(block) {
   toggleBtn.addEventListener('click', () => {
     const isHidden = chatWindow.classList.toggle('hidden');
     toggleBtn.setAttribute('aria-expanded', String(!isHidden));
+    toggleBtn.classList.toggle('is-open', !isHidden);
     if (!isHidden) textarea.focus();
   });
 
@@ -227,6 +222,7 @@ export default function decorate(block) {
   chatWindow.querySelector('.chatbot-close').addEventListener('click', () => {
     chatWindow.classList.add('hidden');
     toggleBtn.setAttribute('aria-expanded', 'false');
+    toggleBtn.classList.remove('is-open');
     toggleBtn.focus();
   });
 
@@ -234,6 +230,7 @@ export default function decorate(block) {
   textarea.addEventListener('input', () => {
     textarea.style.height = 'auto';
     textarea.style.height = `${Math.min(textarea.scrollHeight, 100)}px`;
+    sendBtn.classList.toggle('hidden', textarea.value.trim().length === 0);
   });
 
   // ── Send handler ──
