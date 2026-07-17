@@ -2,7 +2,7 @@ import { getAccessToken } from './auth.js';
 
 const AEM_HOST        = process.env.AEM_HOST; // https://author-p24103-e71623.adobeaemcloud.com
 const GROQ_API_KEY    = process.env.GROQ_API_KEY;
-const GROQ_MODEL       = 'Llama 4 Scout';
+const GROQ_MODEL       = 'openai/gpt-oss-20b'; 
 const AEM_SITE_ORIGIN = process.env.AEM_SITE_ORIGIN;
 const AEM_CLIENT_ID   = process.env.AEM_CLIENT_ID;
 const CF_BASE         = '/content/dam/edsuedemo/descriptions';
@@ -10,7 +10,7 @@ const CF_BASE         = '/content/dam/edsuedemo/descriptions';
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 // Shared Groq caller — retries on 429 with backoff (honors Retry-After if present)
-async function callGroq(body, label, maxRetries = 4) {
+async function callGroq(body, label, maxRetries = 3) {
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -25,7 +25,7 @@ async function callGroq(body, label, maxRetries = 4) {
 
     if (res.status === 429 && attempt < maxRetries) {
       const retryAfter = Number(res.headers.get('retry-after'));
-      const waitMs = retryAfter ? retryAfter * 1000 : 1000 * 2 ** attempt; // exponential backoff fallback
+      const waitMs = Math.min(retryAfter ? retryAfter * 1000 : 1000 * 2 ** attempt, 5000); // cap wait at 5s so the scheduler doesn't stall on one product
       console.warn(`[RATE LIMIT] ${label} — waiting ${waitMs}ms (attempt ${attempt + 1}/${maxRetries})`);
       await sleep(waitMs);
       continue;
@@ -103,7 +103,6 @@ async function generateLongDescription(product) {
     shortDescription,
     offer,
     targetAudience,
-    useCases,
   } = product;
 
   const contextLines = [
@@ -112,15 +111,14 @@ async function generateLongDescription(product) {
     shortDescription ? `Short description: ${shortDescription}` : null,
     offer             ? `Current offer: ${offer}` : null,
     targetAudience    ? `Target audience: ${targetAudience}` : null,
-    useCases          ? `Use cases: ${useCases}` : null,
   ].filter(Boolean).join('\n');
 
   return callGroq({
     model: GROQ_MODEL,
     temperature: 0.3,
-    max_tokens: 200,
+    max_tokens: 150,
     messages: [
-      { role: 'system', content: 'Write a premium retail product description for a product detail page, 3-4 sentences. Use the provided category, short description, offer, target audience, and use cases to make the description specific and grounded — do not invent details that aren\'t implied by the input. Naturally mention who the product suits and how it would be used. No markdown, no headings, no bullet points. Plain text only.' },
+      { role: 'system', content: 'Write a premium retail product description for a product detail page, 3-4 sentences. Use the provided category, short description, offer, and target audience to make the description specific and grounded — do not invent details that aren\'t implied by the input. No markdown, no headings, no bullet points. Plain text only.' },
       { role: 'user',   content: contextLines },
     ],
   }, 'long');
@@ -165,24 +163,24 @@ async function main() {
       skipped++; continue;
     }
 
-    const generated_desc = await generateDescription(productTitle);
-    if (!generated_desc) { failed++; continue; }
+    const [generated_desc, generated_pdp_desc] = await Promise.all([
+      generateDescription(productTitle),
+      generateLongDescription({
+        productTitle,
+        category:         product.category?.trim(),
+        shortDescription: product.shortDescription?.trim(),
+        offer:            product.offer?.trim(),
+        targetAudience:   product.targetAudience?.trim(),
+      }),
+    ]);
 
-    const generated_pdp_desc = await generateLongDescription({
-      productTitle,
-      category:         product.category?.trim(),
-      shortDescription: product.shortDescription?.trim(),
-      offer:            product.offer?.trim(),
-      targetAudience:   product.targetAudience?.trim(),
-      useCases:         product.useCases?.trim(),
-    });
-    if (!generated_pdp_desc) { failed++; continue; }
+    if (!generated_desc || !generated_pdp_desc) { failed++; continue; }
 
     const ok = await updateCF(fragment, generated_desc, generated_pdp_desc, token);
     if (ok) { console.log(`  [OK] ${productId}`); generated++; }
     else    { failed++; }
 
-    await sleep(400); // pace requests to stay under Groq's rate limit
+    await sleep(200); // light pacing — main throughput gain now comes from parallel calls + smaller model
   }
 
   console.log('\n=== Done ===');
