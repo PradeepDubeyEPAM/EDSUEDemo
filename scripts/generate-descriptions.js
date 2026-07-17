@@ -57,7 +57,7 @@ async function generateDescription(productTitle) {
     method: 'POST',
     headers: { Authorization: `Bearer ${GROQ_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'llama-3.3-70b-versatile',
+      model: 'Llama-3.1-8B-Instant.',
       temperature: 0.3,
       max_tokens: 120,
       messages: [
@@ -71,18 +71,36 @@ async function generateDescription(productTitle) {
   return data?.choices?.[0]?.message?.content?.trim() || null;
 }
 
-// Longer variant used on the PDP page — 3-4 sentences instead of 1
-async function generateLongDescription(productTitle) {
+// Longer variant used on the PDP page — 3-4 sentences, grounded in real catalog data
+async function generateLongDescription(product) {
+  const {
+    productTitle,
+    category,
+    shortDescription,
+    offer,
+    targetAudience,
+    useCases,
+  } = product;
+
+  const contextLines = [
+    `Product: ${productTitle}`,
+    category         ? `Category: ${category}` : null,
+    shortDescription ? `Short description: ${shortDescription}` : null,
+    offer             ? `Current offer: ${offer}` : null,
+    targetAudience    ? `Target audience: ${targetAudience}` : null,
+    useCases          ? `Use cases: ${useCases}` : null,
+  ].filter(Boolean).join('\n');
+
   const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: { Authorization: `Bearer ${GROQ_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'llama-3.3-70b-versatile',
+      model: 'Llama-3.1-8B-Instant',
       temperature: 0.3,
       max_tokens: 300,
       messages: [
-        { role: 'system', content: 'Write a premium retail product description for a product detail page, 3-4 sentences. Cover the product\'s key features, materials or craftsmanship, and why a customer would want it. No markdown, no headings, no bullet points. Plain text only.' },
-        { role: 'user',   content: `Product: ${productTitle}` },
+        { role: 'system', content: 'Write a premium retail product description for a product detail page, 3-4 sentences. Use the provided category, short description, offer, target audience, and use cases to make the description specific and grounded — do not invent details that aren\'t implied by the input. Naturally mention who the product suits and how it would be used. No markdown, no headings, no bullet points. Plain text only.' },
+        { role: 'user',   content: contextLines },
       ],
     }),
   });
@@ -101,7 +119,7 @@ async function main() {
   const token = await getAccessToken();
   console.log('Token ready.\n');
 
-  const catalog = await fetch(`${AEM_SITE_ORIGIN}/product-catalog.json`);
+  const catalog = await fetch(`${AEM_SITE_ORIGIN}/catalog.json`);
   const { data: products } = await catalog.json();
   console.log(`Found ${products.length} products\n`);
 
@@ -109,8 +127,8 @@ async function main() {
 
   for (const product of products) {
     const productId    = product.productId?.trim();
-    const productTitle = product['productTitle (AI input)']?.trim();
-    
+    const productTitle = (product.productTitle ?? product['productTitle (AI input)'])?.trim();
+
     if (!productId || !productTitle) { skipped++; continue; }
 
     console.log(`\nProcessing: ${productId}`);
@@ -133,7 +151,14 @@ async function main() {
     const generated_desc = await generateDescription(productTitle);
     if (!generated_desc) { failed++; continue; }
 
-    const generated_pdp_desc = await generateLongDescription(productTitle);
+    const generated_pdp_desc = await generateLongDescription({
+      productTitle,
+      category:         product.category?.trim(),
+      shortDescription: product.shortDescription?.trim(),
+      offer:            product.offer?.trim(),
+      targetAudience:   product.targetAudience?.trim(),
+      useCases:         product.useCases?.trim(),
+    });
     if (!generated_pdp_desc) { failed++; continue; }
 
     const ok = await updateCF(fragment, generated_desc, generated_pdp_desc, token);
