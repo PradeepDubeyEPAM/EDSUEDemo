@@ -2,7 +2,7 @@ import { getAccessToken } from './auth.js';
 
 const AEM_HOST        = process.env.AEM_HOST; // https://author-p24103-e71623.adobeaemcloud.com
 const GROQ_API_KEY    = process.env.GROQ_API_KEY;
-const GROQ_MODEL       = 'openai/gpt-oss-120b';
+const GROQ_MODEL       = 'Llama 4 Scout';
 const AEM_SITE_ORIGIN = process.env.AEM_SITE_ORIGIN;
 const AEM_CLIENT_ID   = process.env.AEM_CLIENT_ID;
 const CF_BASE         = '/content/dam/edsuedemo/descriptions';
