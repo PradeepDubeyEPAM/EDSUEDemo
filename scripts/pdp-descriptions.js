@@ -2,7 +2,7 @@ import { getAccessToken } from '../auth.js';
 
 const AEM_HOST        = process.env.AEM_HOST; // https://author-p24103-e71623.adobeaemcloud.com
 const GROQ_API_KEY    = process.env.GROQ_API_KEY;
-const GROQ_MODEL      = 'openai/gpt-oss-20b'; // smaller/faster — more rate-limit headroom than 120b
+const GROQ_MODEL      = 'openai/gpt-oss-20b';
 const AEM_SITE_ORIGIN = process.env.AEM_SITE_ORIGIN;
 const AEM_CLIENT_ID   = process.env.AEM_CLIENT_ID;
 const CF_BASE         = '/content/dam/edsuedemo/descriptions';
@@ -83,12 +83,12 @@ async function getCF(productId, token) {
   return fragment;
 }
 
-async function updateCF(fragment, aiDescription, token) {
+async function updateCF(fragment, pdpDescription, token) {
   const url = `${AEM_HOST}/adobe/sites/cf/fragments/${fragment.id}`;
 
   const updatedFields = fragment.fields.map(f => {
-    if (f.name === 'aiDescription') return { ...f, values: [aiDescription] };
-    if (f.name === 'verified')      return { ...f, values: [false] };
+    if (f.name === 'pdpDescription') return { ...f, values: [pdpDescription] };
+    if (f.name === 'verified')       return { ...f, values: [false] };
     return f;
   });
 
@@ -112,20 +112,28 @@ async function updateCF(fragment, aiDescription, token) {
   return true;
 }
 
-async function generateDescription(productTitle) {
+async function generateLongDescription({ productTitle, category, shortDescription, offer, targetAudience }) {
+  const contextLines = [
+    `Product: ${productTitle}`,
+    category         ? `Category: ${category}` : null,
+    shortDescription ? `Short description: ${shortDescription}` : null,
+    offer            ? `Current offer: ${offer}` : null,
+    targetAudience   ? `Target audience: ${targetAudience}` : null,
+  ].filter(Boolean).join('\n');
+
   return callGroq({
     model: GROQ_MODEL,
     temperature: 0.3,
-    max_tokens: 80,
+    max_tokens: 150,
     messages: [
-      { role: 'system', content: 'Write a short premium retail product description in 1 sentence. No markdown. Plain text only.' },
-      { role: 'user',   content: `Product: ${productTitle}` },
+      { role: 'system', content: 'Write a premium retail product description for a product detail page, 3-4 sentences. Use the provided category, short description, offer, and target audience to make the description specific and grounded — do not invent details that aren\'t implied by the input. No markdown, no headings, no bullet points. Plain text only.' },
+      { role: 'user',   content: contextLines },
     ],
-  }, 'short');
+  }, 'long');
 }
 
 async function main() {
-  console.log('=== Short Description Batch Job Started ===\n');
+  console.log('=== PDP Description Batch Job Started ===\n');
 
   const required = ['AEM_HOST', 'AEM_CLIENT_ID', 'AEM_CLIENT_SECRET', 'GROQ_API_KEY', 'AEM_SITE_ORIGIN'];
   const missing = required.filter(k => !process.env[k]);
@@ -152,18 +160,24 @@ async function main() {
     if (!fragment) { failed++; continue; }
 
     const getVal = name => fragment.fields.find(f => f.name === name)?.values?.[0];
-    const aiDescription = getVal('aiDescription');
-    const verified      = getVal('verified');
+    const pdpDescription = getVal('pdpDescription');
+    const verified       = getVal('verified');
 
-    if (aiDescription && verified === true) {
+    if (pdpDescription && verified === true) {
       console.log('  Already verified — skipping');
       skipped++; continue;
     }
 
-    const generated_desc = await generateDescription(productTitle);
-    if (!generated_desc) { failed++; continue; }
+    const generated_pdp_desc = await generateLongDescription({
+      productTitle,
+      category:         product.category?.trim(),
+      shortDescription: product.shortDescription?.trim(),
+      offer:            product.offer?.trim(),
+      targetAudience:   product.targetAudience?.trim(),
+    });
+    if (!generated_pdp_desc) { failed++; continue; }
 
-    const ok = await updateCF(fragment, generated_desc, token);
+    const ok = await updateCF(fragment, generated_pdp_desc, token);
     if (ok) { console.log(`  [OK] ${productId}`); generated++; }
     else    { failed++; }
 
