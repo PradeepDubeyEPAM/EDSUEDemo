@@ -2,7 +2,7 @@ import { getAccessToken } from './auth.js';
 
 const AEM_HOST        = process.env.AEM_HOST; // https://author-p24103-e71623.adobeaemcloud.com
 const GROQ_API_KEY    = process.env.GROQ_API_KEY;
-const GROQ_MODEL       = 'openai/gpt-oss-20b'; 
+const GROQ_MODEL       = 'openai/gpt-oss-20b'; // smaller/faster than 120b — higher rate-limit headroom, plenty for short descriptions
 const AEM_SITE_ORIGIN = process.env.AEM_SITE_ORIGIN;
 const AEM_CLIENT_ID   = process.env.AEM_CLIENT_ID;
 const CF_BASE         = '/content/dam/edsuedemo/descriptions';
@@ -10,7 +10,7 @@ const CF_BASE         = '/content/dam/edsuedemo/descriptions';
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 // Shared Groq caller — retries on 429 with backoff (honors Retry-After if present)
-async function callGroq(body, label, maxRetries = 3) {
+async function callGroq(body, label, maxRetries = 4) {
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -25,7 +25,9 @@ async function callGroq(body, label, maxRetries = 3) {
 
     if (res.status === 429 && attempt < maxRetries) {
       const retryAfter = Number(res.headers.get('retry-after'));
-      const waitMs = Math.min(retryAfter ? retryAfter * 1000 : 1000 * 2 ** attempt, 5000); // cap wait at 5s so the scheduler doesn't stall on one product
+      // A short backoff doesn't help if the whole minute's quota is spent — honor Retry-After
+      // if Groq sends one, otherwise wait long enough to actually clear a per-minute window.
+      const waitMs = retryAfter ? retryAfter * 1000 : Math.min(3000 * 2 ** attempt, 20000);
       console.warn(`[RATE LIMIT] ${label} — waiting ${waitMs}ms (attempt ${attempt + 1}/${maxRetries})`);
       await sleep(waitMs);
       continue;
@@ -163,24 +165,23 @@ async function main() {
       skipped++; continue;
     }
 
-    const [generated_desc, generated_pdp_desc] = await Promise.all([
-      generateDescription(productTitle),
-      generateLongDescription({
-        productTitle,
-        category:         product.category?.trim(),
-        shortDescription: product.shortDescription?.trim(),
-        offer:            product.offer?.trim(),
-        targetAudience:   product.targetAudience?.trim(),
-      }),
-    ]);
+    const generated_desc = await generateDescription(productTitle);
+    if (!generated_desc) { failed++; continue; }
 
-    if (!generated_desc || !generated_pdp_desc) { failed++; continue; }
+    const generated_pdp_desc = await generateLongDescription({
+      productTitle,
+      category:         product.category?.trim(),
+      shortDescription: product.shortDescription?.trim(),
+      offer:            product.offer?.trim(),
+      targetAudience:   product.targetAudience?.trim(),
+    });
+    if (!generated_pdp_desc) { failed++; continue; }
 
     const ok = await updateCF(fragment, generated_desc, generated_pdp_desc, token);
     if (ok) { console.log(`  [OK] ${productId}`); generated++; }
     else    { failed++; }
 
-    await sleep(200); // light pacing — main throughput gain now comes from parallel calls + smaller model
+    await sleep(1200); // pace requests to stay under Groq's per-minute quota (sequential calls, 2 requests/product)
   }
 
   console.log('\n=== Done ===');
