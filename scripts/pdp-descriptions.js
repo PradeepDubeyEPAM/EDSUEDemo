@@ -1,4 +1,4 @@
-import { getAccessToken } from '../auth.js';
+import { getAccessToken } from './auth.js';
 
 const AEM_HOST        = process.env.AEM_HOST; // https://author-p24103-e71623.adobeaemcloud.com
 const GROQ_API_KEY    = process.env.GROQ_API_KEY;
