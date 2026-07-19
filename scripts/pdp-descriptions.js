@@ -1,4 +1,4 @@
-import { getAccessToken } from '../auth.js';
+import { getAccessToken } from './auth.js';
 
 const AEM_HOST        = process.env.AEM_HOST; // https://author-p24103-e71623.adobeaemcloud.com
 const GROQ_API_KEY    = process.env.GROQ_API_KEY;
@@ -126,7 +126,7 @@ async function generateLongDescription({ productTitle, category, shortDescriptio
     temperature: 0.3,
     max_tokens: 150,
     messages: [
-      { role: 'system', content: 'Write a premium retail product description for a product detail page, 3-4 sentences. Use the provided category, short description, offer, and target audience to make the description specific and grounded — do not invent details that aren\'t implied by the input. No markdown, no headings, no bullet points. Plain text only.' },
+      { role: 'system', content: 'Write a premium retail product description for a product detail page, 3 sentences. Use the provided category, short description, offer, and target audience to make the description specific and grounded — do not invent details that aren\'t implied by the input. No markdown, no headings, no bullet points. Plain text only.' },
       { role: 'user',   content: contextLines },
     ],
   }, 'long');
