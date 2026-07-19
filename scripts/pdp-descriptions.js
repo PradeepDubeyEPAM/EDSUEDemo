@@ -1,8 +1,8 @@
-import { getAccessToken } from './auth.js';
+import { getAccessToken } from '../auth.js';
 
 const AEM_HOST        = process.env.AEM_HOST; // https://author-p24103-e71623.adobeaemcloud.com
 const GROQ_API_KEY    = process.env.GROQ_API_KEY;
-const GROQ_MODEL      = 'openai/gpt-oss-20b';
+const GROQ_MODEL      = 'openai/gpt-oss-20b'; // smaller/faster — more rate-limit headroom than 120b
 const AEM_SITE_ORIGIN = process.env.AEM_SITE_ORIGIN;
 const AEM_CLIENT_ID   = process.env.AEM_CLIENT_ID;
 const CF_BASE         = '/content/dam/edsuedemo/descriptions';
@@ -181,7 +181,7 @@ async function main() {
     if (ok) { console.log(`  [OK] ${productId}`); generated++; }
     else    { failed++; }
 
-    await sleep(1200); // pace to stay under Groq's per-minute quota
+    await sleep(4000); // confirmed via Groq dashboard: gpt-oss-20b is capped at 8K tokens/min — ~4s spacing keeps us under that
   }
 
   console.log('\n=== Done ===');
