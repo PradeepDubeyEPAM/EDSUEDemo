@@ -28,7 +28,15 @@ async function callGroq(body, label, maxRetries = 4) {
 
     if (res.ok) {
       const data = await res.json();
-      return data?.choices?.[0]?.message?.content?.trim() || null;
+      const choice = data?.choices?.[0];
+      const msg = choice?.message;
+      const content = (msg?.content || msg?.reasoning_content || msg?.reasoning || '').trim();
+
+      if (!content) {
+        console.error(`[ERROR] Groq ${label} — empty content. finish_reason: ${choice?.finish_reason}, keys: ${Object.keys(msg || {})}, raw: ${JSON.stringify(data).slice(0, 500)}`);
+        return null;
+      }
+      return content;
     }
 
     if (res.status === 429 && attempt < maxRetries) {
@@ -112,24 +120,24 @@ async function updateCF(fragment, pdpDescription, token) {
   return true;
 }
 
-async function generateLongDescription({ productTitle, category, shortDescription, offer, targetAudience }) {
+async function generateLongDescription({ productTitle, category, shortDescription, offer}) {
   const contextLines = [
     `Product: ${productTitle}`,
     category         ? `Category: ${category}` : null,
     shortDescription ? `Short description: ${shortDescription}` : null,
     offer            ? `Current offer: ${offer}` : null,
-    targetAudience   ? `Target audience: ${targetAudience}` : null,
   ].filter(Boolean).join('\n');
 
-  return callGroq({
-    model: GROQ_MODEL,
-    temperature: 0.3,
-    max_tokens: 150,
-    messages: [
-      { role: 'system', content: 'Write a premium retail product description for a product detail page, 3 sentences. Use the provided category, short description, offer, and target audience to make the description specific and grounded — do not invent details that aren\'t implied by the input. No markdown, no headings, no bullet points. Plain text only.' },
-      { role: 'user',   content: contextLines },
-    ],
-  }, 'long');
+ return callGroq({
+  model: GROQ_MODEL,
+  temperature: 0.3,
+  max_tokens: 150,
+  reasoning_effort: 'low',
+  messages: [
+    { role: 'system', content: 'Write a premium retail product description for a product detail page, 3 lines. Use the provided category, short description, offer,make the description specific and grounded — do not invent details that aren\'t implied by the input. No markdown, no headings, no bullet points. Plain text only.' },
+    { role: 'user',   content: contextLines },
+  ],
+}, 'long');
 }
 
 async function main() {
@@ -173,7 +181,6 @@ async function main() {
       category:         product.category?.trim(),
       shortDescription: product.shortDescription?.trim(),
       offer:            product.offer?.trim(),
-      targetAudience:   product.targetAudience?.trim(),
     });
     if (!generated_pdp_desc) { failed++; continue; }
 
