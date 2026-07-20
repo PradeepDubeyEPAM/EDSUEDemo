@@ -134,7 +134,7 @@ async function generateLongDescription({ productTitle, category, shortDescriptio
   max_tokens: 150,
   reasoning_effort: 'low',
   messages: [
-    { role: 'system', content: 'Write a premium retail product description for a product detail page, 3 lines. Use the provided category, short description, offer,make the description specific and grounded — do not invent details that aren\'t implied by the input. No markdown, no headings, no bullet points. Plain text only.' },
+    { role: 'system', content: 'Write a premium retail product description for a product detail page, 5 lines. Use the provided category, short description, offer,make the description specific and grounded — do not invent details that aren\'t implied by the input. No markdown, no headings, no bullet points. Plain text only.' },
     { role: 'user',   content: contextLines },
   ],
 }, 'long');
@@ -188,7 +188,7 @@ async function main() {
     if (ok) { console.log(`  [OK] ${productId}`); generated++; }
     else    { failed++; }
 
-    await sleep(4000); // confirmed via Groq dashboard: gpt-oss-20b is capped at 8K tokens/min — ~4s spacing keeps us under that
+    await sleep(4000); 
   }
 
   console.log('\n=== Done ===');
