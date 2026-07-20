@@ -19,7 +19,7 @@ jobs:
           node-version: '20'
 
       - name: Run PDP description generator
-        run: node scripts/generate-pdp-descriptions.js
+        run: node scripts/pdp-descriptions.js
         env:
           AEM_HOST: ${{ secrets.AEM_HOST }}
           AEM_CLIENT_ID: ${{ secrets.AEM_CLIENT_ID }}

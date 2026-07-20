@@ -2,18 +2,25 @@ import { fetchCFFromPublish } from '../cards/ai-descriptions.js';
 
 const AEM_PUBLISH_ORIGIN = 'https://publish-p24103-e71623.adobeaemcloud.com';
 
+function getProductIdFromQuery() {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  return id ? decodeURIComponent(id) : null;
+}
+
 export default async function decorate(block) {
-  // Rewrite serves base page but URL keeps product ID in path
-  const pathParts = window.location.pathname.split('/');
-  const lastSegment = pathParts[pathParts.length - 1] || pathParts[pathParts.length - 2];
-  const productId = (lastSegment && lastSegment !== 'product-detail') ? decodeURIComponent(lastSegment) : null;
+  const productId = getProductIdFromQuery();
 
   if (!productId) { block.innerHTML = '<p>Product not found.</p>'; return; }
 
   const cf = await fetchCFFromPublish(productId);
   if (!cf) { block.innerHTML = '<p>Product not found.</p>'; return; }
 
-  const description = (cf.verified && cf.aiDescription) || cf.defaultDescription || '';
+  // PDP uses the longer pdpDescription, falling back to aiDescription, then default
+  const description = (cf.verified && cf.pdpDescription)
+    || (cf.verified && cf.aiDescription)
+    || cf.defaultDescription
+    || '';
 
   block.innerHTML = `
     <div class="product-detail-banner"></div>

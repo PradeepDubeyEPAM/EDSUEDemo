@@ -29,8 +29,9 @@ const url = isAuthor
       verified:           elements.verified?.value === true,
       productId:          elements.productId?.value?.trim() || '',
       defaultDescription: elements.defaultDescription?.value?.trim() || '',
+      pdpDescription: elements.pdpDescription?.value?.trim() || '', 
       image: elements.image?.value?.trim() || ''
-    };
+    }
 
   } catch (err) {
     console.error('[AI] Fetch failed:', err);
