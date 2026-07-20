@@ -44,17 +44,16 @@ export default function decorate(block) {
     img.closest('picture').replaceWith(optimizedPic);
   });
 
-  ul.querySelectorAll('li').forEach((li) => {
-    const productId = li.dataset.productId;
-    if (!productId) return;
+ul.querySelectorAll('li').forEach((li) => {
+  const productId = li.dataset.productId;
+  if (!productId) return;
 
-    const link = document.createElement('a');
-    // Path-based routing: one page handles all product IDs dynamically
-    link.href = `/us/en/offer-products/product-detail/${encodeURIComponent(productId)}`;
-    link.className = 'cards-card-link';
-    while (li.firstChild) link.append(li.firstChild);
-    li.append(link);
-  });
+  const link = document.createElement('a');
+  link.href = `/us/en/offer-products/product-detail?id=${encodeURIComponent(productId)}`;
+  link.className = 'cards-card-link';
+  while (li.firstChild) link.append(li.firstChild);
+  li.append(link);
+});
 
   block.replaceChildren(ul);
   addAIDescriptions(block);
