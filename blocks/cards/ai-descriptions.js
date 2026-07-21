@@ -1,3 +1,5 @@
+
+
 export async function fetchCFFromPublish(productId) {
 const isAuthor = window.location.hostname.includes('author-');
 

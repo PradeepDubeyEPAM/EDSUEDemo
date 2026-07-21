@@ -1,6 +1,6 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
 import { moveInstrumentation } from '../../scripts/scripts.js';
-import { addAIDescriptions } from './ai-descriptions.js';  
+import { addAIDescriptions, prefetchCF } from './ai-descriptions.js';
 
 export default function decorate(block) {
   const ul = document.createElement('ul');

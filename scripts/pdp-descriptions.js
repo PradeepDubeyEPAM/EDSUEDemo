@@ -1,4 +1,6 @@
 import { getAccessToken } from './auth.js';
+import fs from 'fs/promises';
+
 
 const AEM_HOST        = process.env.AEM_HOST; // https://author-p24103-e71623.adobeaemcloud.com
 const GROQ_API_KEY    = process.env.GROQ_API_KEY;
@@ -140,6 +142,7 @@ async function generateLongDescription({ productTitle, category, shortDescriptio
 }, 'long');
 }
 
+
 async function main() {
   console.log('=== PDP Description Batch Job Started ===\n');
 
@@ -155,6 +158,7 @@ async function main() {
   console.log(`Found ${products.length} products\n`);
 
   let generated = 0, skipped = 0, failed = 0;
+  const descriptionsOutput = [];
 
   for (const product of products) {
     const productId    = product.productId?.trim();
@@ -168,28 +172,44 @@ async function main() {
     if (!fragment) { failed++; continue; }
 
     const getVal = name => fragment.fields.find(f => f.name === name)?.values?.[0];
-    const pdpDescription = getVal('pdpDescription');
-    const verified       = getVal('verified');
+    let pdpDescription  = getVal('pdpDescription');
+    const aiDescription = getVal('aiDescription');
+    const verified      = getVal('verified');
+    const image         = getVal('image');
 
     if (pdpDescription && verified === true) {
       console.log('  Already verified — skipping');
-      skipped++; continue;
+      skipped++;
+    } else {
+      const generated_pdp_desc = await generateLongDescription({
+        productTitle,
+        category:         product.category?.trim(),
+        shortDescription: product.shortDescription?.trim(),
+        offer:            product.offer?.trim(),
+      });
+
+      if (!generated_pdp_desc) {
+        failed++;
+      } else {
+        const ok = await updateCF(fragment, generated_pdp_desc, token);
+        if (ok) { console.log(`  [OK] ${productId}`); generated++; pdpDescription = generated_pdp_desc; }
+        else    { failed++; }
+      }
+
+      await sleep(4000);
     }
 
-    const generated_pdp_desc = await generateLongDescription({
-      productTitle,
-      category:         product.category?.trim(),
-      shortDescription: product.shortDescription?.trim(),
-      offer:            product.offer?.trim(),
+    descriptionsOutput.push({
+      productId,
+      aiDescription: aiDescription || '',
+      pdpDescription: pdpDescription || '',
+      image: image || null,
+      verified: verified === true,
     });
-    if (!generated_pdp_desc) { failed++; continue; }
-
-    const ok = await updateCF(fragment, generated_pdp_desc, token);
-    if (ok) { console.log(`  [OK] ${productId}`); generated++; }
-    else    { failed++; }
-
-    await sleep(4000); 
   }
+
+  await fs.writeFile('descriptions.json', JSON.stringify(descriptionsOutput, null, 2));
+  console.log(`\nWrote descriptions.json with ${descriptionsOutput.length} entries`);
 
   console.log('\n=== Done ===');
   console.log(`Generated: ${generated} | Skipped: ${skipped} | Failed: ${failed}`);

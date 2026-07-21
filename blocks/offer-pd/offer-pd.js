@@ -1,5 +1,6 @@
 import { fetchCFFromPublish } from '../cards/ai-descriptions.js';
 
+
 const AEM_PUBLISH_ORIGIN = 'https://publish-p24103-e71623.adobeaemcloud.com';
 
 function getProductIdFromQuery() {
