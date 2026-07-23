@@ -243,6 +243,12 @@ if (getMetadata('target')) {
 async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
+
+  // Kick off header decoration immediately, in parallel with atjs wait + LCP work.
+  // Don't await here — let it run concurrently with everything below.
+  const headerEl = doc.querySelector('header');
+  const headerPromise = headerEl ? loadHeader(headerEl) : Promise.resolve();
+
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
@@ -261,6 +267,10 @@ async function loadEager(doc) {
       }, 0);
     });
   }
+
+  // Ensure header is done before eager phase completes, but it's been
+  // running concurrently with atjs + LCP, not queued after all of it.
+  await headerPromise;
 
 
   try {
