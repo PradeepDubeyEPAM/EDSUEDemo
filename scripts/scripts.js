@@ -247,8 +247,12 @@ async function loadEager(doc) {
   // Kick off header decoration immediately, in parallel with atjs wait + LCP work.
   // Don't await here — let it run concurrently with everything below.
   const headerEl = doc.querySelector('header');
-  const headerPromise = headerEl ? loadHeader(headerEl) : Promise.resolve();
-
+  if (headerEl) {
+    loadHeader(headerEl).catch((err) => {
+      // eslint-disable-next-line no-console
+      console.error('Header load failed', err);
+    });
+  }
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
@@ -267,12 +271,6 @@ async function loadEager(doc) {
       }, 0);
     });
   }
-
-  // Ensure header is done before eager phase completes, but it's been
-  // running concurrently with atjs + LCP, not queued after all of it.
-  await headerPromise;
-
-
   try {
     /* if desktop (proxy for fast connection) or fonts already loaded, load fonts.css */
     if (window.innerWidth >= 900 || sessionStorage.getItem('fonts-loaded')) {
