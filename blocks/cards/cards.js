@@ -49,7 +49,7 @@ ul.querySelectorAll('li').forEach((li) => {
   if (!productId) return;
 
   const link = document.createElement('a');
-  link.href = `/us/en/offer-products/product-detail?id=${encodeURIComponent(productId)}`;
+  link.href = `https://publish-p24103-e71623.adobeaemcloud.com/products/${encodeURIComponent(productId)}`;
   link.className = 'cards-card-link';
   while (li.firstChild) link.append(li.firstChild);
   li.append(link);
