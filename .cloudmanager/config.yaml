@@ -1,0 +1,4 @@
+kind: EDS
+version: '1'
+metadata:
+  envTypes: ['dev', 'stage', 'prod']

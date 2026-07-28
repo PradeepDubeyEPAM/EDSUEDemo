@@ -1,0 +1,10 @@
+kind: 'CDN'
+version: '1'
+data:
+  originSelectors:
+    rules:
+      - name: route-to-pdp-content
+        when: { reqProperty: path, startsWith: "/products/" }
+        action:
+          type: selectAemOrigin
+          originName: edgefunction-pdp-content
