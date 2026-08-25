@@ -25,6 +25,7 @@
       "tile",
       "language-navigation",
       "login",
+      "chatbot",
       "hero-section",
       "ram-alliance-accordion",
       "ram-assistant-tab",
@@ -41,7 +42,9 @@
       "ram-safar-flyer",
       "ram-service-shortcuts",
       "royal-footer",
-      "royal-header"
+      "royal-header",
+      "offer-pd",
+      "brand-concierge"
     ]
   },
   {
