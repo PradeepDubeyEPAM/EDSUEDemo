@@ -131,6 +131,21 @@
           }
         },
         {
+          "title": "Brand Concierge",
+          "id": "brand-concierge",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block",
+                "template": {
+                  "name": "Brand Concierge",
+                  "model": "brand-concierge"
+                }
+              }
+            }
+          }
+        },
+        {
           "title": "Cards",
           "id": "cards",
           "plugins": {
@@ -825,22 +840,6 @@
           }
         },
         {
-          "title": "Offer product detail",
-          "id": "offer-pd",
-          "plugins": {
-            "xwalk": {
-              "page": {
-                "resourceType": "core/franklin/components/block/v1/block",
-                "template": {
-                  "name": "Offer-pd",
-                  "model": "offer-pd"
-                }
-              }
-            }
-          }
-        },
-
-        {
           "title": "Login",
           "id": "login",
           "plugins": {
@@ -849,7 +848,11 @@
                 "resourceType": "core/franklin/components/block/v1/block",
                 "template": {
                   "name": "Login",
-                  "model": "login" 
+                  "model": "login",
+                  "usernamePlaceholder": "Enter username",
+                  "passwordPlaceholder": "Enter password",
+                  "buttonText": "Login",
+                  "forgotPasswordText": "Forgot password?"
                 }
               }
             }

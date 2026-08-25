@@ -204,6 +204,10 @@
     ]
   },
   {
+    "id": "brand-concierge",
+    "fields": []
+  },
+  {
     "id": "card",
     "fields": [
       {
@@ -5193,10 +5197,6 @@
   },
   {
     "id": "product",
-    "fields": []
-  },
-  {
-    "id": "offer-pd",
     "fields": []
   },
   {
