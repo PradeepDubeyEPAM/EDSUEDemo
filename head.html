@@ -6,8 +6,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta name="target" content="true" />
 
-<script nonce="aem" src="/scripts/styleconfigurations.js"></script>
+<script nonce="aem" src="https://assets.adobedtm.com/ed8972503195/9229b3a2ecae/launch-504abf6dbe88-development.min.js" type="module"></script>
+<script nonce="aem" src="/scripts/aem.js" type="module"></script>
+<script nonce="aem" src="/scripts/scripts.js" type="module"></script>
 
+<<script nonce="aem" src="/scripts/styleconfigurations.js"></script>
 <script nonce="aem">
     !function (n, o) {
       o.forEach(function (o) {
@@ -18,42 +21,28 @@
           }, n[o].q = [])
       })
     }
-      (window, ["alloy"]);
+    (window, ["alloy"]);
 </script>
-
 <script nonce="aem" src="/scripts/alloy.js"></script>
-
+<script nonce="aem" src="/scripts/brandconciergemain.js"></script>
 <script nonce="aem">
     alloy("configure", {
-        defaultConsent: "in",
-        edgeDomain: "edge.adobedc.net",
-        edgeBasePath: "ee",
-        datastreamId: "15117e3a-a063-48c5-ad2d-70f4cb5d3a85",
-        orgId: "36DE898555D732137F000101@AdobeOrg",
-        debugEnabled: true,
-        idMigrationEnabled: false,
-        thirdPartyCookiesEnabled: false,
-        prehidingStyle: ".personalization-container { opacity: 0 !important }",
-    });
-
-window["alloy"]("sendEvent", {
-    conversation: {
-        fetchConversationalExperience: true
-    }
-}).then(result => {
-    console.log("Conversation experience fetched", result);
-    window["alloy"]("bootstrapConversationalExperience", {
-        selector: "#brand-concierge-mount",
-        src: "/scripts/brandconciergemain.js",
-        stylingConfigurations: window.styleConfiguration,
-        stickySession: true // create a sticky session cookie with expiration
-    })
-});
+   defaultConsent: "in",
+   edgeDomain: "edge.adobedc.net",   // changed from edge-int.adobedc.net
+   edgeBasePath: "ee",
+   datastreamId: "15117e3a-a063-48c5-ad2d-70f4cb5d3a85",
+   orgId: "36DE898555D732137F000101@AdobeOrg",
+   debugEnabled: true,
+   idMigrationEnabled: false,
+   thirdPartyCookiesEnabled: false,
+   prehidingStyle: ".personalization-container { opacity: 0 !important }",
+   conversation: {
+    region: "nld2"
+  }
+ });
+     alloy("sendEvent", {});
 </script>
 
-<script nonce="aem" src="https://assets.adobedtm.com/ed8972503195/9229b3a2ecae/launch-504abf6dbe88-development.min.js" type="module"></script>
-<script nonce="aem" src="/scripts/aem.js" type="module"></script>
-<script nonce="aem" src="/scripts/scripts.js" type="module"></script>
 <!-- <script nonce="aem" src="https://assets.adobedtm.com/ed8972503195/c6c1bf9b4c1f/launch-19250cbc0dbc-development.min.js" type="module"></script> -->
 <!-- <script nonce="aem" src="https://assets.adobedtm.com/ed8972503195/b920d40a8de7/launch-a75ae9c18b58-development.min.js" type="module"></script>-->
 
