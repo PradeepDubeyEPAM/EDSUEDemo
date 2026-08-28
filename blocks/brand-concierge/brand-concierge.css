@@ -1,0 +1,19 @@
+.bc-card__image {
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+}
+
+#brand-concierge-mount [class*="disclaimer"] {
+  position: relative !important;
+  display: block !important;
+  margin-top: 4px !important;
+  font-size: 11px !important;
+  white-space: nowrap !important;
+}
+
+#brand-concierge-mount,
+#brand-concierge-mount .brand-concierge-wrapper {
+  margin: 24px 0 !important;
+  padding: 24px !important;
+  max-width: 100% !important;
+}

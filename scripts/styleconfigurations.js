@@ -1,6 +1,6 @@
 window.styleConfiguration = {
   metadata: {
-    brandName: "CitiSignal",
+    brandName: "NewYorkLifeInsurance",
     version: "1.0.0",
     language: "en-US",
     namespace: "brand-concierge",
@@ -106,10 +106,10 @@ window.styleConfiguration = {
     ],
   },
   text: {
-    "welcome.heading": "Explore what you can do with CitiSignal",
+    "welcome.heading": "Explore what you can do with New York Life Insurance",
     "welcome.subheading":
-      "Choose an option or tell us what interests you and we'll point you in the right direction.",
-    "input.placeholder": "Tell us what you'd like to do or create",
+      "Tell us what's your need and we've got you covered",
+    "input.placeholder": "Tell us what you need help with...",
     "input.messageInput.aria": "Message input",
     "input.send.aria": "Send message",
     "input.aiChatIcon.tooltip": "Ask AI",
