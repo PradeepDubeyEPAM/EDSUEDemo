@@ -1,7 +1,10 @@
 /* eslint-disable */
 import { loadCSS } from '../../scripts/aem.js';
+import { getAemHost } from '../../scripts/aem-host.js';
 
-const CLIENTLIB_CSS_PATH = '/etc.clientlibs/aem-cloud-poc/clientlibs/clientlib-react.css';
+const AEM_HOST = getAemHost();
+
+const CLIENTLIB_CSS_PATH = `${AEM_HOST}/etc.clientlibs/aem-cloud-poc/clientlibs/clientlib-react.css`;
 function ensureClientlibCss() {
   const selector = `link[rel="stylesheet"][href="${CLIENTLIB_CSS_PATH}"]`;
   if (document.querySelector(selector)) return;
@@ -423,7 +426,7 @@ export default async function decorate(block) {
     // Safe fallback: ensure CSS is requested even if head.html is not applied on this route
     ensureClientlibCss();
 
-    const xfPath = '/content/experience-fragments/aem-cloud-poc/us/en/site/footer-xf/master';
+    const xfPath = `${AEM_HOST}/content/experience-fragments/aem-cloud-poc/us/en/site/footer-xf/master`;
 
 
 
