@@ -9,6 +9,10 @@
   padding: 40px 20px;
 }
 
+.product-detail-wrapper {
+  margin-top: 7rem !important; 
+}
+
 /* Main layout */
 .product-detail.block > .product-detail {
   display: grid;
