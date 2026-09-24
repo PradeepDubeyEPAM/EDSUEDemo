@@ -1,15 +1,51 @@
 import { fetchAPI } from '../../scripts/api.js';
 import { fetchLocalCurrency } from '../../scripts/currency-conversion.js';
 
-export default async function decorate(block) {
+const MAX_RELATED = 4;
 
+// escape values before using them in innerHTML
+function esc(value = '') {
+  return String(value).replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  }[c]));
+}
+
+// Fallback formatter used when currency conversion fails
+function formatCurrency(value, currency) {
+  return new Intl.NumberFormat(undefined, { style: 'currency', currency }).format(value);
+}
+
+function renderMessage(block, title, message, icon = '🔍') {
+  block.innerHTML = `
+    <h2 class="title">${esc(title)}</h2>
+    <div class="rp-empty">
+      <span class="rp-empty-icon" aria-hidden="true">${icon}</span>
+      <h4>${esc(message)}</h4>
+    </div>
+  `;
+}
+
+export default async function decorate(block) {
   const category = localStorage.getItem('selectedCategory');
   const pdpUrl = window.location.href;
   const title = getTitleFieldValue(block);
   const excludeSku = localStorage.getItem('selectedProduct');
 
+  // No category stored (e.g. page opened directly) -> the query needs a category
+  if (!category) {
+    renderMessage(block, title, 'No related products to show');
+    return;
+  }
+
   // Loading state
-  block.innerHTML = '<div class="related-products-loading">Loading...</div>';
+  block.innerHTML = `
+    <h2 class="title">${esc(title)}</h2>
+    <div class="rp-loading">Loading...</div>
+  `;
 
   const query = `
   query GetProducts($category: String!) {
@@ -21,23 +57,23 @@ export default async function decorate(block) {
       items {
         name
         products(
-        pageSize: 5,
-        currentPage: 1
-      ) {
+          pageSize: 5,
+          currentPage: 1
+        ) {
           items {
             name
             sku
             price_range {
-                maximum_price {
-                  final_price {
-                    value
-                    currency
-                  }
+              maximum_price {
+                final_price {
+                  value
+                  currency
                 }
+              }
             }
             thumbnail {
-                        url
-                        label
+              url
+              label
             }
           }
         }
@@ -46,88 +82,87 @@ export default async function decorate(block) {
   }
   `;
 
-  const variables = { category };
-
   try {
-    const response = await fetchAPI(query, variables);
+    const response = await fetchAPI(query, { category });
 
-    //  Validate response properly
     if (!response || !response.data) {
       throw new Error('Invalid API response');
     }
 
-    const categories = response.data.GraphQL_categories?.items;
-
-    if (!categories || categories.length === 0) {
-      block.innerHTML = `<div class="api-data-error">No data found</div>`;
-      return;
-    }
-
-    const products = categories[0].products?.items || [];
+    const products = response.data.GraphQL_categories?.items?.[0]?.products?.items || [];
 
     if (products.length === 0) {
-      block.innerHTML = `<div class="api-data-error">No products found</div>`;
+      renderMessage(block, title, 'No related products found');
       return;
     }
 
     const baseCurrency = products[0]?.price_range?.maximum_price?.final_price?.currency || 'USD';
     const formattedProducts = await Promise.all(
-       products.map(async (p) => {
-         const price = p.price_range?.maximum_price?.final_price?.value || 0;
-         let convertedPrice;
+      products.map(async (p) => {
+        const price = p.price_range?.maximum_price?.final_price?.value || 0;
+        let convertedPrice;
 
-         try {
-           convertedPrice = await fetchLocalCurrency(baseCurrency, price);
-         } catch (e) {
-           console.error('Conversion failed:', e);
-           convertedPrice = formatCurrency(price, baseCurrency); // fallback
-         }
+        try {
+          convertedPrice = await fetchLocalCurrency(baseCurrency, price);
+        } catch (e) {
+          console.error('Conversion failed:', e);
+          convertedPrice = formatCurrency(price, baseCurrency); // fallback
+        }
 
-         return {
-           ...p,
-           displayPrice: convertedPrice,
-         };
-       })
-     );
+        return { ...p, displayPrice: convertedPrice };
+      }),
+    );
 
-    const filteredProducts = formattedProducts
-    .filter(p => p.sku !== excludeSku)
-    .slice(0, 4);
+    const related = formattedProducts
+      .filter((p) => p.sku !== excludeSku)
+      .slice(0, MAX_RELATED);
 
-    //  Render
+    if (related.length === 0) {
+      renderMessage(block, title, 'No related products found');
+      return;
+    }
+
+    // Render
     block.innerHTML = `
-      <h2 class="title">${title}</h2>
-      <ul class="cards-list">
-        ${filteredProducts.map(p => `
-        <li class="card" data-sku="${p.sku}">
-        <a class="card-link">
-        <img loading="lazy" class="card-thumbnail" src="${p.thumbnail?.url}"
-              alt="${p.thumbnail?.label}"/>
-          <div class="card-details">
-            <h3>${p.name}</h3>
-            <p>SKU: ${p.sku}</p>
-            <p>Price: ${p.displayPrice}</p>
-          </div>
-        </a>
+      <h2 class="title">${esc(title)}</h2>
+      <div class="rp-header">
+        <span class="rp-badge">Venia Commerce · GraphQL</span>
+        <span class="rp-count">🏷️ More from ${esc(category)}</span>
+      </div>
+      <ul class="rp-list">
+        ${related.map((p) => `
+        <li class="rp-card" data-sku="${esc(p.sku)}" tabindex="0">
+          <a class="rp-link">
+            ${p.thumbnail?.url ? `
+            <div class="rp-thumb">
+              <img loading="lazy" class="rp-thumbnail" src="${esc(p.thumbnail.url)}"
+                   alt="${esc(p.thumbnail.label || p.name)}"/>
+            </div>` : ''}
+            <div class="rp-details">
+              <h3 title="${esc(p.name)}">${esc(p.name)}</h3>
+              <p class="rp-sku">SKU: ${esc(p.sku)}</p>
+              <p class="rp-price">${esc(p.displayPrice)}</p>
+            </div>
+          </a>
         </li>
         `).join('')}
       </ul>
-      </div>
     `;
 
+    block.querySelectorAll('.rp-card').forEach((card) => {
+      const go = () => {
+        localStorage.setItem('selectedProduct', card.dataset.sku);
+        window.location.href = pdpUrl;
+      };
+      card.addEventListener('click', go);
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') go();
+      });
+    });
   } catch (error) {
     console.error('API Mesh Block Error:', error);
-    block.innerHTML = `<div class="api-data-error">Failed to load data</div>`;
+    block.innerHTML = '<div class="api-data-error">Failed to load data</div>';
   }
-
-  block.querySelectorAll('.card').forEach(card => {
-    card.addEventListener('click', () => {
-      const sku = card.dataset.sku;
-      localStorage.setItem('selectedProduct', sku);
-      window.location.href = pdpUrl;
-    });
-  });
-
 }
 
 function getTitleFieldValue(block) {

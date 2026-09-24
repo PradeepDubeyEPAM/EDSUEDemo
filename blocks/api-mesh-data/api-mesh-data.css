@@ -1,14 +1,17 @@
-.api-data-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
+.api-mesh-data {
+  --mesh-commerce: #1d3f9e;
+  --mesh-commerce-soft: #e8eefc;
+  --mesh-pets: #e67e22;
+  --mesh-pets-soft: #fdf0e3;
+  --mesh-ink: #1f2937;
+  --mesh-muted: #6b7280;
+  --mesh-border: #e5e7eb;
 }
 
-.api-data-container .card {
-  border: 1px solid #ddd;
-  padding: 12px;
-  border-radius: 8px;
-  background: #fff;
+.api-mesh-data h2 {
+  color: darkblue;
+  padding-bottom: 1rem;
+  padding-top: 1rem;
 }
 
 .api-data-loading,
@@ -17,18 +20,249 @@
   text-align: center;
 }
 
+/* ---- Banner: shows both sources come from one mesh call ---- */
+.api-mesh-data .mesh-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, var(--mesh-commerce-soft), #fff 50%, var(--mesh-pets-soft));
+  border: 1px solid var(--mesh-border);
+}
+
+.api-mesh-data .mesh-chip {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: #fff;
+  border: 1px solid var(--mesh-border);
+}
+
+.api-mesh-data .mesh-chip small {
+  margin-left: 4px;
+  font-weight: 500;
+  opacity: 0.7;
+}
+
+.api-mesh-data .mesh-chip-commerce {
+  color: var(--mesh-commerce);
+  border-color: var(--mesh-commerce);
+}
+
+.api-mesh-data .mesh-chip-petstore {
+  color: var(--mesh-pets);
+  border-color: var(--mesh-pets);
+}
+
+.api-mesh-data .mesh-chip-mesh {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(90deg, var(--mesh-commerce), var(--mesh-pets));
+}
+
+.api-mesh-data .mesh-op {
+  color: var(--mesh-muted);
+  font-weight: 700;
+}
+
+/* ---- Section headers ---- */
+.api-mesh-data .mesh-section-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.api-mesh-data .mesh-badge {
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.api-mesh-data .mesh-badge-commerce {
+  color: var(--mesh-commerce);
+  background: var(--mesh-commerce-soft);
+}
+
+.api-mesh-data .mesh-badge-petstore {
+  color: var(--mesh-pets);
+  background: var(--mesh-pets-soft);
+}
+
+.api-mesh-data .mesh-section-title {
+  margin: 0;
+  font-size: 1.4rem;
+  color: var(--mesh-ink);
+}
+
+/* ---- Divider between the two sources ---- */
+.api-mesh-data .mesh-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 2rem 0;
+  color: var(--mesh-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.api-mesh-data .mesh-divider::before,
+.api-mesh-data .mesh-divider::after {
+  content: '';
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, var(--mesh-commerce), var(--mesh-pets));
+  opacity: 0.35;
+}
+
+/* ---- Grids ---- */
+.api-data-container {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+}
+
+/* ---- Commerce cards ---- */
 .api-data-container a.card-link {
   text-decoration: none;
   color: inherit;
   display: block;
 }
 
-.card {
+.api-data-container .card {
+  height: 100%;
+  box-sizing: border-box;
   cursor: pointer;
+  padding: 16px;
+  border: 1px solid var(--mesh-border);
+  border-top: 4px solid var(--mesh-commerce);
+  border-radius: 12px;
+  background: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.api-mesh-data h2 {
-  color : darkblue;
-  padding-bottom: 1rem;
-  padding-top: 1rem;
+.api-data-container .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(29, 63, 158, 0.15);
+}
+
+.api-data-container .card h3 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+  line-height: 1.3;
+  color: var(--mesh-ink);
+}
+
+.api-data-container .card .card-sku {
+  margin: 0 0 12px;
+  font-size: 0.8rem;
+  color: var(--mesh-muted);
+}
+
+.api-data-container .card .card-price {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--mesh-commerce);
+}
+
+/* ---- Petstore cards ---- */
+.api-data-container .pet-card {
+  box-sizing: border-box;
+  padding: 16px;
+  text-align: center;
+  border: 1px solid var(--mesh-border);
+  border-top: 4px solid var(--mesh-pets);
+  border-radius: 12px;
+  background: linear-gradient(180deg, var(--mesh-pets-soft), #fff 55%);
+  cursor: default;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.api-data-container .pet-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(230, 126, 34, 0.18);
+}
+
+.pet-icon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--mesh-pets);
+}
+
+.api-data-container .pet-card h3 {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+  color: var(--mesh-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pet-category {
+  margin: 0 0 12px;
+  font-size: 0.85rem;
+  color: var(--mesh-muted);
+}
+
+.pet-status {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  color: #92400e;
+  background: #fef3c7;
+}
+
+.pet-status-available {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.pet-status-sold {
+  color: #991b1b;
+  background: #fee2e2;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1000px) {
+  .api-data-container:not(.api-data-pets) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  /* keep pets on ONE row: swipe sideways instead of wrapping */
+  .api-data-container.api-data-pets {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 8px;
+  }
+
+  .api-data-container.api-data-pets .pet-card {
+    flex: 0 0 200px;
+    scroll-snap-align: start;
+  }
+}
+
+@media (max-width: 600px) {
+  .api-data-container:not(.api-data-pets) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
