@@ -84,6 +84,11 @@ export default async function decorate(block) {
       throw new Error('Invalid API response');
     }
 
+    // GraphQL can return data AND errors (partial result) - log them, keep rendering
+    if (response.errors?.length) {
+      console.warn('API Mesh partial errors:', response.errors);
+    }
+
     // Each source is handled independently so one failing doesn't blank the block
     const products = response.data.GraphQL_categories?.items?.[0]?.products?.items || [];
 
@@ -91,6 +96,8 @@ export default async function decorate(block) {
     const seen = new Set();
     const pets = (response.data.REST_findPetsByStatus || [])
       .filter((p) => {
+        // mesh returns null list items for pets whose (non-nullable) name is null
+        if (!p) return false;
         const key = (p.name || '').trim().toLowerCase();
         if (!key || seen.has(key)) return false;
         seen.add(key);

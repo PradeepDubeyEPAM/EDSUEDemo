@@ -18,15 +18,22 @@ export async function fetchAPI(query, variables = {}, endpoint) {
       body: JSON.stringify({ query, variables }),
     });
 
-    if (!response.ok) {
+    // Parse the body first: a mesh can return a non-200 status and still include usable data
+    let json;
+    try {
+      json = await response.json();
+    } catch (e) {
       throw new Error(`API error: ${response.status}`);
     }
 
-    const json = await response.json();
+    // Only fail when there is no data at all
+    if (!json || !json.data) {
+      throw new Error(json?.errors?.[0]?.message || `API error: ${response.status}`);
+    }
 
-    if (json.errors) {
-      console.error(json.errors);
-      throw new Error('GraphQL errors occurred');
+    // Partial result (e.g. a Petstore pet with a null name): log it and keep the data
+    if (json.errors?.length) {
+      console.warn('API Mesh partial errors:', json.errors);
     }
 
     return json;
