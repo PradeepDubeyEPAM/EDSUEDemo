@@ -52,11 +52,11 @@ async function updateCF(fragment, aiDescription, token) {
   return res.ok;
 }
 async function generateDescription(productTitle) {
-  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+  const res = await fetch('https://api.groq.com/openai/v1', {
     method: 'POST',
     headers: { Authorization: `Bearer ${GROQ_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'llama-3.3-70b-versatile',
+      model: 'openai/gpt-oss-120b',
       temperature: 0.3,
       max_tokens: 120,
       messages: [
