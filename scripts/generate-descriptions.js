@@ -63,7 +63,7 @@ async function generateDescription(productTitle) {
       body: JSON.stringify({
         model: 'openai/gpt-oss-120b',
          temperature: 0.3,
-        max_tokens: 120,
+        max_tokens: 500,
         messages: [
           { role: 'system', content: 'Write a short premium retail product description in 1 sentence. No markdown. Plain text only.' },
           { role: 'user',   content: `Product: ${productTitle}` },
