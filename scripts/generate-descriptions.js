@@ -52,23 +52,34 @@ async function updateCF(fragment, aiDescription, token) {
   return res.ok;
 }
 async function generateDescription(productTitle) {
-  const res = await fetch('https://api.groq.com/openai/v1', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${GROQ_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'openai/gpt-oss-120b',
-      temperature: 0.3,
-      max_tokens: 120,
-      messages: [
-        { role: 'system', content: 'Write a short premium retail product description in 1 sentence. No markdown. Plain text only.' },
-        { role: 'user',   content: `Product: ${productTitle}` },
-      ],
-    }),
-  });
-  if (!res.ok) { console.error(`[ERROR] Groq (${res.status})`); return null; }
-  const data = await res.json();
-  return data?.choices?.[0]?.message?.content?.trim() || null;
-}
+
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 
+        'Authorization': `Bearer ${GROQ_API_KEY}`, 
+        'Content-Type': 'application/json' 
+        
+      },
+      body: JSON.stringify({
+        model: 'openai/gpt-oss-120b',
+         temperature: 0.3,
+        max_tokens: 120,
+        messages: [
+          { role: 'system', content: 'Write a short premium retail product description in 1 sentence. No markdown. Plain text only.' },
+          { role: 'user',   content: `Product: ${productTitle}` },
+        ],
+      }),
+    });
+    
+    if (!res.ok) { 
+      console.error(`[ERROR] Groq (${res.status}):`, await res.text()); 
+      return null; 
+    }
+    
+    const data = await res.json();
+    return data?.choices?.[0]?.message?.content?.trim() || null;
+  }
+
 
 async function main() {
   console.log('=== Batch Job Started ===\n');
